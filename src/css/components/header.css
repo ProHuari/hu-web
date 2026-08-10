@@ -1,0 +1,49 @@
+
+header {
+    padding: 20px 60px;
+    background-color: var(--white);
+}
+
+header>section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+section>.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo > h2 {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-h2-bold);
+    font-weight: var(--fw-bold);
+    color: var(--text-color-black);
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-nav>a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-link);
+    font-weight: var(--fw-semibold);
+    color: var(--text-color-gray-dark);
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: all 0.4s ease;
+}   
+
+.header-nav>a:hover {
+    cursor: pointer;
+    background-color: var(--primaria-laranja);
+    color: var(--text-color-white);
+}
