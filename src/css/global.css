@@ -6,6 +6,7 @@
 @import "./pages/cta.css";
 @import "./pages/estatisticas.css";
 @import "./pages/grafico.css";
+@import "./pages/parlamentares.css";
 
 * {
     margin: 0;

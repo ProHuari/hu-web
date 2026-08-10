@@ -1,0 +1,134 @@
+/* ======================= Informação de Cima ======================= */
+.parlamentares {
+    padding: 100px 120px;
+    background-color: var(--white);
+}
+
+.cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.cards-parlamentares {
+    display: flex;
+    justify-content:space-between; 
+}
+
+.card-parlamentares {
+    padding: 30px;
+    width: 540px;
+    background-color: var(--gray);
+    border: 1px solid var(--neutra-black);
+    border-radius: 20px;
+}
+
+.card-parlamentares:hover {
+    cursor: pointer;
+    transform: scale(1) translateY(-8px);
+    box-shadow: 0 30px 15px var(--gray-dark);
+    border-color: var(--primaria-laranja);
+    transition: all 0.25s ease;
+}
+
+.parlamentar {
+    display: flex;
+    align-items: start;
+    border-bottom: 1px solid var(--gray-dark);
+    padding-bottom: 10px;
+    gap: 25px;
+}
+
+.informacao-parlamentar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nome-parlamentar {
+    display: flex;
+    flex-direction: column;
+}
+
+.nome-parlamentar > h2 {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-h2-bold);
+    font-weight: var(--fw-bold);
+    color: var(--text-color-black);
+}
+
+.nome-parlamentar > p {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-p);
+    font-weight: var(--fw-regular);
+    color: var(--text-color-gray-dark);
+}
+
+.atuacao {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+}
+
+.atuacao > p {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-p);
+    font-weight: var(--fw-regular);
+    color: var(--text-color-primary);
+    background-color: var(--secondary);
+    padding: 4px;
+    border-radius: 5px;
+}
+
+.local {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.local > p {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-p);
+    font-weight: var(--fw-regular);
+    color: var(--text-color-gray-dark);
+}
+
+.local > svg {
+    fill: var(--gray-dark);
+    color: var(--gray-dark);
+}
+
+/* ======================= Informação de Baixo ======================= */
+
+.estatisticas-parlamentar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.estatistica {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    align-items: center;
+    gap: 12px;
+}
+
+.estatistica > h2 {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-h2-bold);
+    font-weight: var(--fw-bold);
+    color: var(--text-color-black);
+}
+
+.estatistica > p {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-p);
+    font-weight: var(--fw-regular);
+    color: var(--text-color-gray-dark);
+}
+
+.estatistica > svg {
+    fill: var(--primaria-laranja);
+    color: var(--primaria-laranja);
+}
