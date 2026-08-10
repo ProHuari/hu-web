@@ -1,0 +1,90 @@
+.cta {
+    height: 600px;
+    padding: 100px 60px;
+    background-color: var(--primaria-laranja);
+}
+
+article {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cta-logo {
+    height: 400px;
+    display: flex;
+    align-items: center;
+}
+
+.containment {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.cta-text {
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.cta-text h1 {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-h1-bold);
+    font-weight: var(--fw-bold);
+    color: var(--text-color-white);
+}
+
+.cta-text h2 {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-regular);
+    color: var(--text-color-white);
+}
+
+.cta-btns {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.cta-btn-1 {
+    padding: 16px 10px;
+    font-family: "Inter",sans-serif;
+    font-size: var(--fs-link);
+    font-weight: var(--fw-semibold);
+    color: var(--text-color-black);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background-color: var(--neutra-white);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: all 0.4s ease;
+}
+
+.cta-btn-1:hover {
+    cursor: pointer;
+    border: 2px solid var(--neutra-black);
+}
+
+
+.cta-btn-2 {
+    padding: 16px 10px;
+    font-family: "Inter",sans-serif;
+    font-size: var(--fs-link);
+    font-weight: var(--fw-semibold);
+    color: var(--text-color-white);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background-color: var(--primaria-bordor);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: all 0.4s ease;
+}
+
+.cta-btn-2:hover {
+    cursor: pointer;
+    border: 2px solid var(--neutra-black);
+}

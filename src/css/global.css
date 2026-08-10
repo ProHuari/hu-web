@@ -1,6 +1,11 @@
 @import "./components/header.css";
 @import "./components/footer.css";
 
+/* ============== index ============== */
+
+@import "./pages/cta.css";
+@import "./pages/estatisticas.css";
+
 * {
     margin: 0;
     padding: 0;
