@@ -74,44 +74,87 @@
         </section>
 
         <section class="estatisticas">
-    
-                <div class="cards">
-    
-                    <article class="card">
-                        <p class="p-up">Presença Média</p>
-                        <div class="center">
-                            <h2>40%</h2>
-                            <img src="./src/assets/icons/seta-grafica-orange.svg" alt="Ícone seta grafica laranja">
-                        </div>
-                        <p class="p-low">Nas votações</p>
-                    </article>
-                    <article class="card">
-                        <p class="p-up">Gastos Totais</p>
-                        <div class="center">
-                            <h2>R$ 61 Bi</h2>
-                            <img src="./src/assets/icons/coin-orange.svg" alt="Ícone moeda laranja">
-                        </div>
-                        <p class="p-low">Neste mês</p>
-                    </article>
-                    <article class="card">
-                        <p class="p-up">Parlamentares Monitorados</p>
-                        <div class="center">
-                            <h2>65.000</h2>
-                            <img src="./src/assets/icons/grop-orange.svg" alt="Ícone grupo">
-                        </div>
-                        <p class="p-low">Deputados e Senadores</p>
-                    </article>
-                    <article class="card">
-                        <p class="p-up">Projetos de Lei</p>
-                        <div class="center">
-                            <h2>60</h2>
-                            <img src="./src/assets/icons/sheet-orange.svg" alt="Ícone folha">
-                        </div>
-                        <p class="p-low">Projetos de Lei</p>
-                    </article>
-                    
+            <div class="cards">
+                <article class="card">
+                    <p class="p-up">Presença Média</p>
+                    <div class="center">
+                        <h2>40%</h2>
+                        <img src="./src/assets/icons/seta-grafica-orange.svg" alt="Ícone seta grafica laranja">
+                    </div>
+                    <p class="p-low">Nas votações</p>
+                </article>
+                <article class="card">
+                    <p class="p-up">Gastos Totais</p>
+                    <div class="center">
+                        <h2>R$ 61 Bi</h2>
+                        <img src="./src/assets/icons/coin-orange.svg" alt="Ícone moeda laranja">
+                    </div>
+                    <p class="p-low">Neste mês</p>
+                </article>
+                <article class="card">
+                    <p class="p-up">Parlamentares Monitorados</p>
+                    <div class="center">
+                        <h2>65.000</h2>
+                        <img src="./src/assets/icons/grop-orange.svg" alt="Ícone grupo">
+                    </div>
+                    <p class="p-low">Deputados e Senadores</p>
+                </article>
+                <article class="card">
+                    <p class="p-up">Projetos de Lei</p>
+                    <div class="center">
+                        <h2>60</h2>
+                        <img src="./src/assets/icons/sheet-orange.svg" alt="Ícone folha">
+                    </div>
+                    <p class="p-low">Projetos de Lei</p>
+                </article>
                 </div>
-            </section>
+        </section>
+
+        <section class="grafico">
+            <div class="chart-container">
+                <h3>Gastos por Partido (em milhares)</h3>
+
+                <div class="chart-wrapper">
+                    <div class="chart-grid-lines">
+                        <div class="grid-line" data-value="70"><span>70</span></div>
+                        <div class="grid-line" data-value="60"><span>60</span></div>
+                        <div class="grid-line" data-value="50"><span>50</span></div>
+                        <div class="grid-line" data-value="40"><span>40</span></div>
+                        <div class="grid-line" data-value="30"><span>30</span></div>
+                        <div class="grid-line" data-value="20"><span>20</span></div>
+                        <div class="grid-line" data-value="10"><span>10</span></div>
+                        <div class="grid-line" data-value="0"></div>
+                    </div>
+
+                    <div class="chart-bars">
+                        <div class="bar-group">
+                            <div class="bar-fill" style="--val: 28;" data-val="28"></div>
+                            <span class="bar-label">PT</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar-fill" style="--val: 35;" data-val="35"></div>
+                            <span class="bar-label">PSBD</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar-fill" style="--val: 54;" data-val="54"></div>
+                            <span class="bar-label">MDB</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar-fill" style="--val: 60;" data-val="60"></div>
+                            <span class="bar-label">PL</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar-fill" style="--val: 50;" data-val="50"></div>
+                            <span class="bar-label">PSB</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar-fill" style="--val: 32;" data-val="32"></div>
+                            <span class="bar-label">PP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 </body>
 </html>
