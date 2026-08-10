@@ -1,3 +1,4 @@
+/* ============== components ============== */
 @import "./components/header.css";
 @import "./components/footer.css";
 
@@ -7,6 +8,7 @@
 @import "./pages/estatisticas.css";
 @import "./pages/grafico.css";
 @import "./pages/parlamentares.css";
+@import "./pages/apredizado.css";
 
 * {
     margin: 0;
