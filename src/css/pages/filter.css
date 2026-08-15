@@ -1,0 +1,66 @@
+.filter {
+    margin: 50px 60px;
+    background-color: var(--neutra-white);
+}
+
+.body-filter {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 2px solid var(--gray-dark);
+    border-radius: 10px;
+}
+
+.buscar {
+    padding: 8px 18px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--gray);
+    border-radius: 10px;
+}
+
+.buscar > input {
+    width: 1800px;
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-p);
+    font-weight: var(--fw-regular);
+    color: var(--text-color-gray-dark);
+    background-color: var(--gray);
+}
+
+.buscar > svg {
+    color: var(--primaria-laranja);
+}
+
+
+/* ============== select-filter ============== */
+
+.select-filter {
+    display: flex;
+    justify-content: space-between;
+}
+
+.select-filter > button {
+    padding: 8px;
+    width: 320px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-button);
+    font-weight: var(--fw-semibold);
+    background-color: var(--gray);
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--text-color-gray-dark);
+    transition: all 0.5 ease;
+}
+
+.select-filter > button:hover {
+    background-color: var(--primaria-laranja);
+    color: var(--text-color-white);
+    transition: all 0.5 ease;
+}
+
