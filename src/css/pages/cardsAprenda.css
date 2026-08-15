@@ -1,0 +1,179 @@
+/* ========================================================================================================================*/
+ /*pagina do aprenda */
+ /* Estado ativo do botão da navbar (página atual) */
+.navbar-btns .active {
+    border: 2px solid var(--primaria-laranja);
+    border-radius: 12px;
+    background-color: var(--secondary);
+    color: var(--primaria-laranja);
+}
+
+/* ========================== main-aprenda ========================= */
+
+.main-aprenda {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 40px 60px;
+    background-color: var(--neutra-white);
+}
+
+.aprenda-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: var(--primaria-laranja);
+    margin-bottom: 32px;
+}
+
+.aprenda-icon img {
+    width: 60px;
+    height: 60px;
+}
+
+.main-aprenda h1 {
+    font-family: "Inter", sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--neutra-black);
+}
+
+/* ========================== main-cursos ========================= */
+
+.main-cursos {
+    padding: 40px 40px 100px;
+    background-color: var(--neutra-white);
+}
+
+.cursos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card-curso {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 16px;
+    background-color: var(--neutra-white);
+    border: 1px solid var(--neutra-black);
+    border-radius: 16px;
+}
+
+.card-curso:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    border-color: var(--primaria-laranja);
+    transition: all 0.25s ease;
+}
+
+.card-curso-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.card-curso-header img {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    background-color: var(--primaria-laranja);
+    border-radius: 10px;
+}
+
+.card-curso-header h3 {
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--neutra-black);
+}
+
+.card-curso p {
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--neutra-gray);
+    line-height: 1.5;
+}
+
+.card-curso ul {
+    list-style: disc;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.card-curso ul li {
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--neutra-gray);
+}
+
+.btn-curso {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--neutra-white);
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-color: var(--primaria-laranja);
+}
+
+.btn-curso img {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-curso:hover {
+    cursor: pointer;
+    border: 2px solid var(--neutra-black);
+}
+
+/* ========================== main-cta-aprenda ========================= */
+
+.main-cta-aprenda {
+    padding: 0 40px 100px;
+    background-color: var(--neutra-white);
+}
+
+.cta-aprenda {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px;
+    border-radius: 20px;
+    background-color: rgb(from var(--primaria-laranja) r g b / 0.15);
+}
+
+.cta-aprenda p {
+    font-family: "Inter", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--neutra-black);
+    text-align: center;
+}
+
+.cta-aprenda .btn2-main-1 {
+    padding: 14px 20px;
+    font-size: 20px;
+}
