@@ -1,16 +1,19 @@
-# React + Vite
+# 🏛️ hu-web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Visão Geral
 
-Currently, two official plugins are available:
+No cenário político contemporâneo, analistas, pesquisadores, assessores parlamentares, consultores eleitorais e estudantes enfrentam três desafios estruturais:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* **Sobrecarga e pulverização de informações:** Pesquisas eleitorais, relatórios de conjuntura, discursos, propostas e dados públicos estão dispersos, sem padronização e de difícil cruzamento.
+* **Ausência de ferramentas especializadas:** Soluções genéricas de Inteligência Artificial não possuem o contexto, o vocabulário nem os filtros necessários para análises políticas, eleitorais e de políticas públicas, e as poucas ferramentas existentes possuem uma visão enviesada.
+* **Escassez de capacitação prática e sequencial:** Há poucas trilhas estruturadas, ministradas por especialistas e institutos de referência, que combinem teoria, interpretação de dados e aplicação estratégica.
 
-## React Compiler
+### Nosso Objetivo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+A nossa plataforma tem a função de integrar dados públicos a análises estruturadas para garantir uma fácil interpretação por parte de jornalistas políticos, membros de órgãos oficiais e toda a sociedade civil. Além disso, oferece, por meio de conteúdos educativos e cursos, uma educação política inicial para qualquer utilizador da Huari.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 💻 Sobre este Repositório
+
+Este repositório é responsável por todo o desenvolvimento da camada de **front-end** da plataforma Huari. O seu objetivo principal é construir a interface de utilizador (UI), gerir a experiência visual (UX) e integrar os serviços e APIs da aplicação, garantindo uma navegação fluida, interativa e acessível.
