@@ -1,0 +1,113 @@
+
+.header-closed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 88px;
+    min-width: 88px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 1.25rem 0.75rem;
+    background-color: var(--color-neutral-0);
+    color: var(--color-neutral-1000);
+    box-sizing: border-box;
+}
+
+.header-closed-expand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.header-closed-expand svg {
+    width: 24px;
+    height: 24px;
+}
+
+.header-closed-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+}
+
+.header-closed-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--color-neutral-1000);
+    color: var(--color-neutral-0);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.header-closed-divider {
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-neutral-600);
+}
+
+.header-closed-navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.header-closed-navigation > span {
+    align-self: flex-start;
+    font-size: 0.75rem;
+}
+
+.header-closed-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--color-neutral-900);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.header-closed-item svg {
+    width: 23px;
+    height: 23px;
+}
+
+.header-closed-item:hover {
+    background-color: var(--color-neutral-300);
+}
+
+.header-closed-item.is-active {
+    background-color: var(--color-scale-tertiary-100);
+    color: var(--color-scale-primary-700);
+}
+
+.header-closed-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 2px solid var(--color-neutral-600);
+}

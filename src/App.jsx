@@ -5,9 +5,14 @@ import Login from "./pages/login";
 import CreateAnAccount from "./pages/create-an-account";
 import RecoverPassword from "./pages/recover-password";
 import CreateNewPassword from "./pages/create-new-password";
+import Home from "./pages/home";
 
 export default function App() {
     const [currentPage, setCurrentPage] = useState("create-account");
+
+    if (currentPage === "home") {
+        return <Home />;
+    }
 
     if (currentPage === "recover-password") {
         return (
@@ -42,6 +47,7 @@ export default function App() {
             onNavigateToRecoverPassword={() =>
                 setCurrentPage("recover-password")
             }
+            onNavigateToHome={() => setCurrentPage("home")}
         />
     );
 }

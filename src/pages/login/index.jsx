@@ -16,7 +16,8 @@ import {
 
 export default function Login({ 
     onNavigateToRegister,
-     onNavigateToRecoverPassword }) {
+     onNavigateToRecoverPassword,
+    onNavigateToHome }) {
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -129,6 +130,15 @@ export default function Login({
                         identifier="btn-primary btn-radius-40 btn-submit" 
                         type="submit" 
                     />
+
+                    {abaAtiva === "entrar" && (
+                        <Button
+                            title="Visitante"
+                            identifier="btn-visitor btn-radius-40"
+                            type="button"
+                            onClick={onNavigateToHome}
+                        />
+                    )}
                 </form>
             </div>
         </div>

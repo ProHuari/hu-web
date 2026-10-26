@@ -169,6 +169,22 @@
     text-decoration: underline;
 }
 
+
+.login-form .btn-visitor {
+    width: 100%;
+    min-height: 44px;
+    background-color: var(--color-secondary);
+    color: var(--color-neutral-0);
+    border: none;
+    border-radius: 40px;
+    margin-top: -8px;
+}
+
+.login-form .btn-visitor:hover {
+    filter: brightness(1.15);
+}
+
+
 /* Telas ultra pequenas (<= 360px) */
 @media (max-width: 360px) {
     .login-tabs-navigation .btn {
