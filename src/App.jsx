@@ -1,31 +1,47 @@
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import Login from './pages/login';
-import CreateAnAccount from './pages/create-an-account';
-import RecoverPassword from './pages/recover-password';
+import Login from "./pages/login";
+import CreateAnAccount from "./pages/create-an-account";
+import RecoverPassword from "./pages/recover-password";
+import CreateNewPassword from "./pages/create-new-password";
 
 export default function App() {
-    const [currentPage, setCurrentPage] = useState('create-account');
+    const [currentPage, setCurrentPage] = useState("create-account");
+
+    if (currentPage === "recover-password") {
+        return (
+            <RecoverPassword
+                onNavigateToLogin={() => setCurrentPage("login")}
+                onNavigateToCreateNewPassword={() =>
+                    setCurrentPage("create-new-password")
+                }
+            />
+        );
+    }
+
+    if (currentPage === "create-new-password") {
+        return (
+            <CreateNewPassword
+                onNavigateToLogin={() => setCurrentPage("login")}
+            />
+        );
+    }
+
+    if (currentPage === "create-account") {
+        return (
+            <CreateAnAccount
+                onNavigateToLogin={() => setCurrentPage("login")}
+            />
+        );
+    }
 
     return (
-        <>
-            {currentPage === 'create-account' ? (
-                <CreateAnAccount
-                    onNavigateToLogin={() => setCurrentPage('login')}
-                />
-            ) : currentPage === 'recover-password' ? (
-                <RecoverPassword
-                    onNavigateToLogin={() => setCurrentPage('login')}
-                />
-            ) : (
-                <Login
-                    onNavigateToRegister={() => setCurrentPage('create-account')}
-                    onNavigateToRecoverPassword={() =>
-                        setCurrentPage('recover-password')
-                    }
-                />
-            )}
-        </>
+        <Login
+            onNavigateToRegister={() => setCurrentPage("create-account")}
+            onNavigateToRecoverPassword={() =>
+                setCurrentPage("recover-password")
+            }
+        />
     );
 }

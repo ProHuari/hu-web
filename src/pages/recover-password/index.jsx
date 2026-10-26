@@ -13,7 +13,9 @@ import {
     RiArrowRightLine,
 } from "react-icons/ri";
 
-export default function RecoverPassword({ onNavigateToLogin }) {
+export default function RecoverPassword({ 
+    onNavigateToLogin,
+    onNavigateToCreateNewPassword }) {
     const [email, setEmail] = useState("");
 
     const handleSubmit = (e) => {
@@ -71,6 +73,7 @@ export default function RecoverPassword({ onNavigateToLogin }) {
                                 </>
                             }
                             identifier="btn-primary btn-radius-40 recover-password-submit"
+                            onClick={onNavigateToCreateNewPassword}
                             type="submit"
                         />
                     </form>
