@@ -1,0 +1,236 @@
+
+.recover-password-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    background-color: var(--color-neutral-0);
+}
+
+/* Lado esquerdo: informações institucionais */
+
+.recover-password-left {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+}
+
+/* Lado direito: formulário */
+
+.recover-password-right {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 5.5%;
+    box-sizing: border-box;
+    background-color: var(--color-neutral-0);
+}
+
+.recover-password-content {
+    width: 100%;
+    max-width: 570px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Cabeçalho */
+
+.recover-password-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 44px;
+    text-align: center;
+}
+
+.recover-password-header h2 {
+    margin: 0;
+    color: var(--color-neutral-1000);
+}
+
+.recover-password-header p {
+    margin: 0;
+    color: var(--color-neutral-900);
+}
+
+/* Formulário */
+
+.recover-password-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 42px;
+}
+
+.recover-password-fields {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.recover-password-form .recover-password-submit {
+    width: 100%;
+    min-height: 42px;
+}
+
+/* Divisor OU */
+
+.recover-password-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 46px;
+    width: 100%;
+}
+
+.recover-password-divider span {
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-neutral-500);
+}
+
+.recover-password-divider p {
+    margin: 0;
+    color: var(--color-neutral-600);
+}
+
+/* Link para retornar ao Login */
+
+.recover-password-back {
+    margin: 0;
+    text-align: center;
+    color: var(--color-neutral-900);
+}
+
+.recover-password-link {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--color-scale-primary-700);
+    font: inherit;
+    cursor: pointer;
+}
+
+.recover-password-link:hover {
+    text-decoration: underline;
+}
+
+/* Links institucionais */
+
+.recover-password-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 16px;
+}
+
+.recover-password-footer a {
+    color: var(--color-neutral-1000);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.recover-password-footer a::before {
+    content: "•";
+    margin-right: 8px;
+}
+
+.recover-password-footer a:hover {
+    color: var(--color-scale-primary-700);
+}
+
+/* Telas médias */
+
+@media (max-width: 1200px) {
+    .recover-password-right {
+        padding: 40px 32px;
+    }
+
+    .recover-password-content {
+        gap: 28px;
+    }
+
+    .recover-password-header {
+        gap: 32px;
+    }
+
+    .recover-password-form {
+        gap: 32px;
+    }
+
+    .recover-password-divider {
+        gap: 24px;
+    }
+
+    .recover-password-footer {
+        gap: 16px;
+    }
+}
+
+/* Tablets e celulares */
+
+@media (max-width: 991px) {
+    .recover-password-container {
+        flex-direction: column;
+    }
+
+    .recover-password-left {
+        flex: none;
+        width: 100%;
+        min-height: 380px;
+    }
+
+    .recover-password-right {
+        flex: none;
+        width: 100%;
+        padding: 48px 24px;
+    }
+
+    .recover-password-content {
+        max-width: 570px;
+    }
+
+    .recover-password-header {
+        gap: 24px;
+    }
+}
+
+/* Celulares */
+
+@media (max-width: 540px) {
+    .recover-password-left {
+        min-height: 300px;
+    }
+
+    .recover-password-right {
+        padding: 36px 20px;
+    }
+
+    .recover-password-content {
+        gap: 26px;
+    }
+
+    .recover-password-header {
+        gap: 20px;
+    }
+
+    .recover-password-form {
+        gap: 28px;
+    }
+
+    .recover-password-divider {
+        gap: 18px;
+    }
+
+    .recover-password-footer {
+        gap: 14px 18px;
+    }
+}

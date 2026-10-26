@@ -14,7 +14,9 @@ import {
   RiEyeOffLine 
 } from "react-icons/ri";
 
-export default function Login({ onNavigateToRegister }) {
+export default function Login({ 
+    onNavigateToRegister,
+     onNavigateToRecoverPassword }) {
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -92,7 +94,17 @@ export default function Login({ onNavigateToRegister }) {
                         <InputText 
                             identifier="input-default"
                             label="Senha de acesso"
-                            labelAction={abaAtiva === "entrar" ? <a href="#recuperar-senha">Esqueci minha senha</a> : null}
+                            labelAction={
+                                abaAtiva === "entrar" ? (
+                                    <button
+                                        type="button"
+                                        className="login-forgot-password"
+                                        onClick={onNavigateToRecoverPassword}
+                                    >
+                                        Esqueci minha senha
+                                    </button>
+                                ) : null
+                            }
                             type={mostrarSenha ? "text" : "password"}
                             placeholder="Digite sua senha"
                             value={senha}

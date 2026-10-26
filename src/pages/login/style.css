@@ -156,6 +156,19 @@
     }
 }
 
+.login-forgot-password {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-scale-primary-700);
+    font: inherit;
+    cursor: pointer;
+}
+
+.login-forgot-password:hover {
+    text-decoration: underline;
+}
+
 /* Telas ultra pequenas (<= 360px) */
 @media (max-width: 360px) {
     .login-tabs-navigation .btn {
