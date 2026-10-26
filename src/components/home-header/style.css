@@ -1,6 +1,12 @@
 
+/* =========================
+   Header principal da Home
+========================= */
+
 .home-header {
     width: 100%;
+    min-height: 263px;
+    padding: 36px 40px;
     background-color: var(--color-scale-primary-700);
     color: var(--color-neutral-0);
     box-sizing: border-box;
@@ -10,19 +16,22 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0;
-    padding: 3.5rem 1.5rem 5.875rem;
-    box-sizing: border-box;
+    gap: 24px;
+    width: 100%;
+    max-width: 900px;
 }
 
 .home-header-content h1 {
-    max-width: 36rem;
+    max-width: 650px;
     color: var(--color-neutral-0);
 }
 
+.home-header-title-break {
+    display: block;
+}
+
 .home-header-description {
-    max-width: 34rem;
-    margin-top: 3rem;
+    max-width: 560px;
     color: var(--color-neutral-0);
 }
 
@@ -30,25 +39,44 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 1.875rem;
-    margin-top: 3rem;
+    gap: 24px;
     width: 100%;
+    margin-top: 20px;
 }
 
 .home-header-button {
-    min-height: 3.25rem;
-    padding: 0.875rem 1.125rem;
-    gap: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 52px;
+    padding: 12px 18px;
+    border: 1px solid transparent;
+    border-radius: 6px;
     font-family: inherit;
-    font-size: 1rem;
+    font-size: 0.9375rem;
     font-weight: 600;
-    white-space: nowrap;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .home-header-button svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 20px;
+    height: 20px;
     flex-shrink: 0;
+}
+
+.home-header-button:hover {
+    transform: translateY(-1px);
+}
+
+.home-header-button:focus-visible {
+    outline: 2px solid var(--color-neutral-0);
+    outline-offset: 3px;
 }
 
 .home-header-button-light {
@@ -56,8 +84,8 @@
     color: var(--color-scale-primary-700);
 }
 
-.home-header-button-light:hover:not(:disabled) {
-    background-color: var(--color-neutral-200);
+.home-header-button-light:hover {
+    background-color: var(--color-neutral-300);
 }
 
 .home-header-button-accent {
@@ -65,34 +93,37 @@
     color: var(--color-neutral-0);
 }
 
-.home-header-button-accent:hover:not(:disabled) {
+.home-header-button-accent:hover {
     background-color: var(--color-scale-primary-600);
 }
 
-/* Tablets */
+/* =========================
+   Responsividade
+========================= */
+
 @media (max-width: 768px) {
-    .home-header-content {
-        padding: 2.5rem 1.25rem 3rem;
+    .home-header {
+        min-height: auto;
+        padding: 32px 24px;
     }
 
-    .home-header-description {
-        margin-top: 2rem;
+    .home-header-content {
+        gap: 20px;
+    }
+
+    .home-header-title-break {
+        display: none;
     }
 
     .home-header-actions {
-        gap: 1rem;
-        margin-top: 2rem;
+        gap: 12px;
+        margin-top: 8px;
     }
 }
 
-/* Mobile */
-@media (max-width: 540px) {
-    .home-header-content {
-        padding: 2rem 1rem 2.5rem;
-    }
-
-    .home-header-content h1 br {
-        display: none;
+@media (max-width: 480px) {
+    .home-header {
+        padding: 28px 16px;
     }
 
     .home-header-actions {
@@ -102,6 +133,5 @@
 
     .home-header-button {
         width: 100%;
-        justify-content: space-between;
     }
 }

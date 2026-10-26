@@ -1,3 +1,4 @@
+
 .home-layout {
     display: flex;
     min-height: 100vh;
@@ -8,5 +9,30 @@
 .home-content {
     flex: 1;
     min-width: 0;
-    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: var(--color-neutral-200);
+    box-sizing: border-box;
+}
+
+.home-dashboard-content {
+    flex: 1;
+    min-width: 0;
+    padding: 36px;
+    box-sizing: border-box;
+}
+
+/* Responsividade */
+
+@media (max-width: 768px) {
+    .home-dashboard-content {
+        padding: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-dashboard-content {
+        padding: 16px;
+    }
 }

@@ -1,60 +1,59 @@
 
 import './style.css';
-import Button from '../button';
 
 import {
     RiArrowRightLine,
     RiSearchLine,
-    RiMessage3Line
+    RiMessage2Line,
 } from 'react-icons/ri';
 
 export default function HomeHeader({
-    onNavigateToLawmakers,
-    onNavigateToLearn,
-    onNavigateToChat
+    onViewParliamentarians,
+    onExploreLearn,
+    onOpenChat,
 }) {
     return (
         <header className="home-header">
             <div className="home-header-content">
                 <h1 className="text-h1-bold">
                     Political transparency at your
-                    <br />
+                    <br className="home-header-title-break" />
                     fingertips
                 </h1>
 
                 <p className="text-p-regular home-header-description">
-                    Track public data on lawmakers, learn about politics, and chat with
-                    Huari, your political analysis assistant.
+                    Track public data on lawmakers, learn about politics,
+                    and chat with Huari, your political analysis assistant.
                 </p>
 
-                <nav
-                    className="home-header-actions"
-                    aria-label="Main actions"
-                >
-                    <Button
-                        title="View Parliamentarians"
-                        icon={<RiArrowRightLine />}
-                        identifier="btn-radius-10 home-header-button home-header-button-light"
-                        onClick={onNavigateToLawmakers}
+                <div className="home-header-actions">
+                    <button
                         type="button"
-                    />
+                        className="home-header-button home-header-button-light"
+                        onClick={onViewParliamentarians}
+                    >
+                        <span>View Parliamentarians</span>
+                        <RiArrowRightLine aria-hidden="true" />
+                    </button>
 
-                    <Button
-                        title="Exploit Learn"
-                        icon={<RiSearchLine />}
-                        identifier="btn-radius-10 home-header-button home-header-button-light"
-                        onClick={onNavigateToLearn}
+                    <button
                         type="button"
-                    />
+                        className="home-header-button home-header-button-light"
+                        onClick={onExploreLearn}
+                    >
+                        <span>Explore Learn</span>
+                        <RiSearchLine aria-hidden="true" />
+                    </button>
 
-                    <Button
-                        title="Speak with Huari"
-                        icon={<RiMessage3Line />}
-                        identifier="btn-radius-10 home-header-button home-header-button-accent"
-                        onClick={onNavigateToChat}
+                    <button
                         type="button"
-                    />
-                </nav>
+                        className="home-header-button home-header-button-accent"
+                        onClick={onOpenChat}
+                    >
+                        <span>Speak with Huari</span>
+                        <RiMessage2Line aria-hidden="true" />
+                    </button>
+                </div>
             </div>
         </header>
     );

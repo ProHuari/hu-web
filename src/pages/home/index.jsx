@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import SideBar from '../../components/sidebar';
+import HomeHeader from '../../components/home-header';
+import HomeStats from '../../components/home-stats';
 import './style.css';
 
 export default function Home() {
@@ -7,9 +9,6 @@ export default function Home() {
 
     const handleNavigate = (label) => {
         setActiveItem(label);
-
-        // Depois você pode implementar a navegação
-        // para cada página aqui.
     };
 
     return (
@@ -22,7 +21,15 @@ export default function Home() {
             />
 
             <main className="home-content">
-                <h1 className="text-h1-bold">Home</h1>
+                <HomeHeader
+                    onViewParliamentarians={() => handleNavigate('Lawmakers')}
+                    onExploreLearn={() => handleNavigate('Learn')}
+                    onOpenChat={() => handleNavigate('Chat Huari')}
+                />
+
+                <div className="home-stats-container">
+                    <HomeStats />
+                </div>
             </main>
         </div>
     );
