@@ -1,0 +1,12 @@
+.home-layout {
+    display: flex;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--color-neutral-200);
+}
+
+.home-content {
+    flex: 1;
+    min-width: 0;
+    padding: 24px;
+}

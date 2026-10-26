@@ -1,0 +1,290 @@
+
+/* =========================
+   Estrutura principal
+========================= */
+
+.sidebar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    align-self: flex-start;
+    width: 260px;
+    height: 100vh;
+    height: 100dvh;
+    padding: 20px;
+    background-color: var(--color-neutral-0);
+    color: var(--color-neutral-1000);
+    border-right: 1px solid var(--color-neutral-400);
+    box-sizing: border-box;
+    transition: width 0.25s ease, padding 0.25s ease;
+    overflow-x: hidden;
+}
+
+.sidebar-open {
+    width: 260px;
+}
+
+.sidebar-closed {
+    width: 76px;
+    padding: 20px 12px;
+    align-items: center;
+}
+
+/* =========================
+   Botão de abrir/recolher
+========================= */
+
+.sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 12px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--color-neutral-900);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    background-color: var(--color-neutral-300);
+}
+
+.sidebar-toggle:focus-visible,
+.sidebar-item:focus-visible {
+    outline: 2px solid var(--color-scale-primary-700);
+    outline-offset: 2px;
+}
+
+.sidebar-closed .sidebar-toggle {
+    align-self: center;
+}
+
+/* =========================
+   Marca / logo
+========================= */
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 20px;
+}
+
+.sidebar-brand img {
+    display: block;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.sidebar-brand-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.sidebar-brand-text h2 {
+    color: var(--color-neutral-1000);
+}
+
+.sidebar-brand-text p {
+    color: var(--color-neutral-800);
+}
+
+.sidebar-closed .sidebar-brand {
+    justify-content: center;
+}
+
+/* =========================
+   Informações do usuário
+========================= */
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 20px;
+}
+
+.sidebar-user-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    color: var(--color-neutral-1000);
+    font-size: 2.5rem;
+}
+
+.sidebar-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sidebar-user-info strong,
+.sidebar-user-info span {
+    overflow-wrap: anywhere;
+}
+
+.sidebar-user-info strong {
+    color: var(--color-neutral-1000);
+}
+
+.sidebar-user-info span {
+    color: var(--color-neutral-700);
+}
+
+.sidebar-closed .sidebar-user {
+    justify-content: center;
+}
+
+/* =========================
+   Divisores
+========================= */
+
+.sidebar-divider {
+    width: 100%;
+    height: 1px;
+    flex-shrink: 0;
+    margin-bottom: 16px;
+    background-color: var(--color-neutral-600);
+}
+
+/* =========================
+   Navegação principal
+========================= */
+
+.sidebar-navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.sidebar-section-title {
+    margin: 0 0 8px;
+    color: var(--color-neutral-900);
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--color-neutral-900);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.sidebar-item:hover {
+    background-color: var(--color-neutral-300);
+}
+
+.sidebar-item.is-active {
+    background-color: var(--color-scale-primary-100);
+    color: var(--color-scale-primary-700);
+}
+
+.sidebar-item span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.sidebar-item-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    font-size: 1.25rem;
+}
+
+.sidebar-closed .sidebar-item {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+/* =========================
+   Ações inferiores
+========================= */
+
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-neutral-600);
+}
+
+.sidebar-closed .sidebar-bottom {
+    align-items: center;
+}
+
+.sidebar-bottom .sidebar-item {
+    flex-shrink: 0;
+}
+
+/* =========================
+   Telas menores
+========================= */
+
+@media (max-width: 540px) {
+    .sidebar-open {
+        width: 220px;
+        padding: 16px 12px;
+    }
+
+    .sidebar-closed {
+        width: 64px;
+        padding: 16px 8px;
+    }
+
+    .sidebar-brand {
+        gap: 8px;
+    }
+
+    .sidebar-brand img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .sidebar-user {
+        gap: 8px;
+    }
+
+    .sidebar-user-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 2rem;
+    }
+
+    .sidebar-item {
+        gap: 8px;
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+}
