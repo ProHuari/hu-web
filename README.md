@@ -103,3 +103,7 @@ hu-web/
 • Igor – Banco de dados
 • Lucas – Back-end
 • Kauã – Front-end
+
+## páginas que serão criadas nesse projeto:
+
+Login, criar conta, nova senha, recuperar senha, home, pesquisa parlamentar, aprenda, aprenda aula, paramentar card, perfil do úsuario, chat huari
