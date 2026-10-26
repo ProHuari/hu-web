@@ -5,13 +5,16 @@
 .input-container-group {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 0.5rem;
+    width: 100%;
 }
 
 .input-header-wrapper {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.375rem;
     width: 100%;
 }
 
@@ -23,10 +26,12 @@
     color: var(--color-scale-primary-700);
     text-decoration: none;
     transition: filter 0.2s;
+    cursor: pointer;
 }
 
 .input-label-action a:hover {
     filter: brightness(0.85);
+    text-decoration: underline;
 }
 
 .input-wrapper-field {
@@ -38,14 +43,25 @@
 
 .input-field {
     width: 100%;
-    padding: 0.9375rem 2rem;
+    min-height: 48px;
+    padding: 0.8125rem 1rem;
     border: 1px solid transparent;
     border-radius: 10px;
     outline: none;
     font-family: inherit;
+    font-size: 0.9375rem;
     background-color: transparent;
     color: inherit;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.input-field.has-icon-left {
+    padding-left: 2.75rem;
+}
+
+.input-field.has-icon-right {
+    padding-right: 2.75rem;
 }
 
 .input-icon-left,
@@ -61,11 +77,12 @@
 }
 
 .input-icon-left {
-    left: 0.4rem;
+    left: 0.9375rem;
+    pointer-events: none;
 }
 
 .input-icon-right {
-    right: 0.4rem;
+    right: 0.9375rem;
 }
 
 /* =========================
@@ -75,7 +92,11 @@
 .input-default .input-field {
     background-color: var(--color-neutral-300);
     border-color: transparent;
-    color: var(--color-neutral-700);
+    color: var(--color-neutral-900);
+}
+
+.input-default .input-field::placeholder {
+    color: var(--color-neutral-600);
 }
 
 .input-default .input-icon-left,
@@ -84,7 +105,8 @@
 }
 
 .input-default .input-field:focus {
-    border-color: var(--color-neutral-700);
+    border-color: var(--color-scale-primary-700);
+    background-color: var(--color-neutral-0);
 }
 
 /* =========================

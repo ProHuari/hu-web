@@ -2,61 +2,164 @@
     display: flex;
     width: 100%;
     min-height: 100vh;
-    overflow: hidden;
-}
-
-.container-left,
-.container-right {
-    flex: 1;
-    min-width: 0;
-    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: var(--color-neutral-0);
 }
 
 .container-left {
+    flex: 1;
+    min-width: 0;
     display: flex;
 }
 
 .container-right {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    justify-content: center;
     align-items: center;
-    padding: 60px 20px;
+    padding: 60px 32px;
     box-sizing: border-box;
     background-color: var(--color-neutral-0);
 }
 
-.login-tabs-navigation {
+.create-account-content {
+    width: 100%;
+    max-width: 520px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    width: 570px;
-    border-radius: 40px;
-    background-color: var(--color-neutral-300);
+    flex-direction: column;
+    gap: 32px;
+    align-items: stretch;
+}
+
+.create-account-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+}
+
+.create-account-header h2 {
+    color: var(--color-neutral-1000);
+    margin: 0;
+}
+
+.create-account-subtitle {
+    color: var(--color-neutral-700);
+    margin: 0;
 }
 
 .login-form {
     width: 100%;
-    max-width: 570px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
+    box-sizing: border-box;
 }
 
-.login-form h2 {
-    color: var(--color-neutral-1000);
-    text-align: center;
+.login-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
 }
 
 .btn-toggle-eye {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    padding: 4px;
     border: none;
     background: transparent;
     outline: none;
     cursor: pointer;
     color: var(--color-neutral-700);
+    transition: color 0.2s ease;
+}
+
+.btn-toggle-eye:hover {
+    color: var(--color-neutral-900);
+}
+
+.login-form .btn-submit {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 8px;
+}
+
+.login-footer-text {
+    text-align: center;
+    color: var(--color-neutral-700);
+    margin: 0;
+}
+
+.link-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--color-scale-primary-700);
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.link-btn:hover {
+    filter: brightness(0.85);
+}
+
+/* =========================================
+   Breakpoints Responsivos
+========================================= */
+
+/* Laptops e telas médias (992px a 1200px) */
+@media (max-width: 1200px) {
+    .container-right {
+        padding: 48px 24px;
+    }
+}
+
+/* Tablets e Mobile (< 992px) */
+@media (max-width: 991px) {
+    .login-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100dvh;
+    }
+
+    .container-left {
+        flex: none;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .container-right {
+        flex: none;
+        width: 100%;
+        min-height: auto;
+        padding: 48px 24px;
+        justify-content: flex-start;
+    }
+}
+
+/* Telas mobile (<= 540px) */
+@media (max-width: 540px) {
+    .container-right {
+        padding: 32px 16px;
+    }
+
+    .create-account-content {
+        gap: 24px;
+    }
+
+    .login-form {
+        gap: 20px;
+    }
+
+    .login-form-fields {
+        gap: 14px;
+    }
 }

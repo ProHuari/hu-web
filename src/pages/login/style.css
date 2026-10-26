@@ -2,26 +2,27 @@
     display: flex;
     width: 100%;
     min-height: 100vh;
-    overflow: hidden;
-}
-
-.container-left,
-.container-right {
-    flex: 1;
-    min-width: 0;
-    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: var(--color-neutral-0);
 }
 
 .container-left {
+    flex: 1;
+    min-width: 0;
     display: flex;
 }
 
 .container-right {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    justify-content: center;
     align-items: center;
-    padding: 60px 20px;
+    gap: 40px;
+    padding: 60px 32px;
     box-sizing: border-box;
     background-color: var(--color-neutral-0);
 }
@@ -30,33 +31,135 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    width: 570px;
+    padding: 6px;
+    width: 100%;
+    max-width: 520px;
     border-radius: 40px;
     background-color: var(--color-neutral-300);
+    box-sizing: border-box;
+    gap: 6px;
+}
+
+.login-tabs-navigation .btn {
+    flex: 1;
+    min-width: 0;
+    padding: 0.625rem 1rem;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    border-radius: 40px;
 }
 
 .login-form {
     width: 100%;
-    max-width: 570px;
+    max-width: 520px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
+    box-sizing: border-box;
 }
 
 .login-form h2 {
     color: var(--color-neutral-1000);
     text-align: center;
+    margin: 0;
+}
+
+.login-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
 }
 
 .btn-toggle-eye {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    padding: 4px;
     border: none;
     background: transparent;
     outline: none;
     cursor: pointer;
     color: var(--color-neutral-700);
+    transition: color 0.2s ease;
+}
+
+.btn-toggle-eye:hover {
+    color: var(--color-neutral-900);
+}
+
+.login-form .btn-submit {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 8px;
+}
+
+/* =========================================
+   Breakpoints Responsivos
+========================================= */
+
+/* Laptops e telas médias (992px a 1200px) */
+@media (max-width: 1200px) {
+    .container-right {
+        padding: 48px 24px;
+        gap: 32px;
+    }
+}
+
+/* Tablets e Mobile (< 992px) */
+@media (max-width: 991px) {
+    .login-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100dvh;
+    }
+
+    .container-left {
+        flex: none;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .container-right {
+        flex: none;
+        width: 100%;
+        min-height: auto;
+        padding: 48px 24px;
+        justify-content: flex-start;
+    }
+}
+
+/* Telas mobile (<= 540px) */
+@media (max-width: 540px) {
+    .container-right {
+        padding: 32px 16px;
+        gap: 24px;
+    }
+
+    .login-tabs-navigation {
+        padding: 4px;
+        gap: 4px;
+    }
+
+    .login-tabs-navigation .btn {
+        padding: 0.5rem 0.5rem;
+        font-size: 0.8125rem;
+        gap: 0.35rem;
+    }
+
+    .login-form {
+        gap: 20px;
+    }
+
+    .login-form-fields {
+        gap: 14px;
+    }
+}
+
+/* Telas ultra pequenas (<= 360px) */
+@media (max-width: 360px) {
+    .login-tabs-navigation .btn {
+        font-size: 0.75rem;
+        padding: 0.45rem 0.25rem;
+    }
 }

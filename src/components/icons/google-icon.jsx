@@ -1,6 +1,4 @@
-import React from 'react';
-
-export default function googleIcon({ size = 24 }) {
+export default function GoogleIcon({ size = 24 }) {
   return (
     <svg 
       xmlns="http://www.w3.org/2000/svg" 

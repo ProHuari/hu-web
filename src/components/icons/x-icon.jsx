@@ -1,7 +1,4 @@
-// src/components/icons/XIcon.jsx
-import React from 'react';
-
-export default function xIcon({ size = 24, color = 'currentColor' }) {
+export default function XIcon({ size = 24, color = 'currentColor' }) {
     return (
         <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -11,8 +8,8 @@ export default function xIcon({ size = 24, color = 'currentColor' }) {
             fill="none"
         >
             <path 
-                d="M3 1.5C1.34531 1.5 0 2.84531 0 4.5V19.5C0 21.1547 1.34531 22.5 3 22.5H18C19.6547 22.5 21 21.1547 21 19.5V4.5C21 2.84531 19.6547 1.5 18 1.5H3ZM16.9266 5.4375L12.0609 10.9969L17.7844 18.5625H13.3031L9.79688 13.9734L5.77969 18.5625H3.55313L8.75625 12.6141L3.26719 5.4375H7.86094L11.0344 9.63281L14.7 5.4375H16.9266ZM15.1547 17.2313L7.19062 6.69844H5.86406L13.9172 17.2313H15.15H15.1547Z" 
-                fill={color} 
+                d="M16.5414 1.95459H19.7004L12.7989 9.84364L20.9189 20.573H14.5614L9.58286 14.0638L3.88582 20.573H0.724817L8.08182 12.1633L0.287109 1.95459H6.80582L11.3069 7.90484L16.5414 1.95459ZM15.4328 18.6797H17.1834L5.85077 3.70014H3.97232L15.4328 18.6797Z" 
+                fill={color}
             />
         </svg>
     );

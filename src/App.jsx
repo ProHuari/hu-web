@@ -1,12 +1,17 @@
+import { useState } from 'react';
 import Login from './pages/login';
-import CreateAnAccout from './pages/create-an-account';
+import CreateAnAccount from './pages/create-an-account';
 
 export default function App() {
+  const [currentPage, setCurrentPage] = useState('create-account');
+
   return (
     <>
-      <CreateAnAccout />
+      {currentPage === 'create-account' ? (
+        <CreateAnAccount onNavigateToLogin={() => setCurrentPage('login')} />
+      ) : (
+        <Login onNavigateToRegister={() => setCurrentPage('create-account')} />
+      )}
     </>
   );
 }
-
-
