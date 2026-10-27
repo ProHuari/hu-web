@@ -1,4 +1,3 @@
-
 .recover-password-container {
     display: flex;
     width: 100%;
@@ -25,7 +24,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 48px 5.5%;
+    padding: 60px 20px;
     box-sizing: border-box;
     background-color: var(--color-neutral-0);
 }
@@ -35,7 +34,7 @@
     max-width: 570px;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 20px;
 }
 
 /* Cabeçalho */
@@ -44,7 +43,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 44px;
+    gap: 10px;
     text-align: center;
 }
 
@@ -64,14 +63,14 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 42px;
+    gap: 20px;
 }
 
 .recover-password-fields {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
 .recover-password-form .recover-password-submit {
@@ -85,7 +84,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 46px;
+    gap: 20px;
     width: 100%;
 }
 
@@ -128,7 +127,7 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 28px;
+    gap: 20px;
     margin-top: 16px;
 }
 
