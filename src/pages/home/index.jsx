@@ -4,6 +4,7 @@ import SideBar from '../../components/sidebar';
 import HomeHeader from '../../components/home-header';
 import HomeStats from '../../components/home-stats';
 import ParliamentariansGrid from '../../components/parliamentarians-grid';
+import EducationalBanner from '../../components/educational-banner';
 
 import './style.css';
 
@@ -43,6 +44,15 @@ export default function Home() {
                 <section className="home-parliamentarians">
                     <ParliamentariansGrid />
                 </section>
+
+                <div className="home-educational-container">
+                    <EducationalBanner
+                        onAccessLessons={() => {
+                            console.log('Navegação para a página de ensino');
+                        }}
+                    />
+                </div>
+                
             </main>
         </div>
     );
