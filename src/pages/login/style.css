@@ -21,8 +21,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 40px;
-    padding: 60px 32px;
+    gap: 20px;
+    padding: 60px 20px;
     box-sizing: border-box;
     background-color: var(--color-neutral-0);
 }
@@ -37,7 +37,7 @@
     border-radius: 40px;
     background-color: var(--color-neutral-300);
     box-sizing: border-box;
-    gap: 6px;
+    gap: 10px;
 }
 
 .login-tabs-navigation .btn {
@@ -54,7 +54,7 @@
     max-width: 520px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
     box-sizing: border-box;
 }
 
@@ -67,7 +67,7 @@
 .login-form-fields {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
     width: 100%;
 }
 
