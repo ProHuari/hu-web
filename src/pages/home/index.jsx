@@ -6,6 +6,7 @@ import HomeHeader from '../../components/home-header';
 import HomeStats from '../../components/home-stats';
 import ParliamentariansGrid from '../../components/parliamentarians-grid';
 import EducationalBanner from '../../components/educational-banner';
+import Footer from '../../components/footer';
 
 import './style.css';
 
@@ -62,6 +63,9 @@ export default function Home({ onNavigateToLogin }) {
                         onAccessLessons={handleAccessLessons}
                     />
                 </div>
+
+                <Footer />
+            
             </main>
         </div>
     );
