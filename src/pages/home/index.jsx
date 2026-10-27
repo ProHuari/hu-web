@@ -1,7 +1,10 @@
 import { useState } from 'react';
+
 import SideBar from '../../components/sidebar';
 import HomeHeader from '../../components/home-header';
 import HomeStats from '../../components/home-stats';
+import ParliamentariansGrid from '../../components/parliamentarians-grid';
+
 import './style.css';
 
 export default function Home() {
@@ -22,14 +25,24 @@ export default function Home() {
 
             <main className="home-content">
                 <HomeHeader
-                    onViewParliamentarians={() => handleNavigate('Lawmakers')}
-                    onExploreLearn={() => handleNavigate('Learn')}
-                    onOpenChat={() => handleNavigate('Chat Huari')}
+                    onViewParliamentarians={() =>
+                        handleNavigate('Lawmakers')
+                    }
+                    onExploreLearn={() =>
+                        handleNavigate('Learn')
+                    }
+                    onOpenChat={() =>
+                        handleNavigate('Chat Huari')
+                    }
                 />
 
                 <div className="home-stats-container">
                     <HomeStats />
                 </div>
+
+                <section className="home-parliamentarians">
+                    <ParliamentariansGrid />
+                </section>
             </main>
         </div>
     );

@@ -1,0 +1,196 @@
+
+.parliamentarian-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+    padding: 1.125rem;
+    background-color: var(--color-neutral-0);
+    border-radius: 1rem;
+    box-sizing: border-box;
+}
+
+.parliamentarian-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.parliamentarian-avatar {
+    width: 3.125rem;
+    height: 3.125rem;
+    color: var(--color-neutral-1000);
+}
+
+.parliamentarian-bookmark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border: none;
+    background: transparent;
+    color: var(--color-neutral-900);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.parliamentarian-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.parliamentarian-info h2,
+.parliamentarian-position {
+    margin: 0;
+}
+
+.parliamentarian-position {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: var(--color-neutral-900);
+}
+
+.parliamentarian-tags {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.parliamentarian-party,
+.parliamentarian-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.3rem;
+    color: var(--color-neutral-0);
+    font-size: 0.875rem;
+    line-height: 1.2;
+}
+
+.parliamentarian-party {
+    background-color: var(--color-scale-primary-500);
+}
+
+.parliamentarian-state {
+    background-color: var(--color-secondary);
+}
+
+.parliamentarian-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.625rem 0.5rem;
+    background-color: var(--color-neutral-300);
+    border-radius: 0.75rem;
+}
+
+.parliamentarian-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+    min-width: 0;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.parliamentarian-stat span:last-child {
+    overflow-wrap: anywhere;
+}
+
+.parliamentarian-view-button {
+    width: 100%;
+    margin-top: auto;
+    padding: 0.625rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--color-scale-primary-500);
+    color: var(--color-neutral-0);
+    font: inherit;
+    cursor: pointer;
+}
+
+.parliamentarian-view-button:hover {
+    background-color: var(--color-scale-primary-600);
+}
+
+.parliamentarian-bookmark:focus-visible,
+.parliamentarian-view-button:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 3px;
+}
+
+
+.parliamentarian-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+    padding: 1.125rem;
+    background-color: var(--color-neutral-0);
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    box-sizing: border-box;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.parliamentarian-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-neutral-400);
+    box-shadow: 0 8px 20px rgb(0 0 0 / 8%);
+}
+
+.parliamentarian-bookmark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border: none;
+    border-radius: 0.375rem;
+    background: transparent;
+    color: var(--color-neutral-900);
+    font-size: 1.5rem;
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.parliamentarian-bookmark:hover {
+    transform: scale(1.12);
+    color: var(--color-scale-primary-500);
+}
+
+.parliamentarian-bookmark.is-favorite {
+    color: var(--color-scale-primary-500);
+}
+
+.parliamentarian-bookmark:active {
+    transform: scale(0.92);
+}
+
+.parliamentarian-bookmark:focus-visible {
+    outline: 2px solid var(--color-scale-primary-500);
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .parliamentarian-card,
+    .parliamentarian-bookmark {
+        transition: none;
+    }
+
+    .parliamentarian-card:hover,
+    .parliamentarian-bookmark:hover,
+    .parliamentarian-bookmark:active {
+        transform: none;
+    }
+}
