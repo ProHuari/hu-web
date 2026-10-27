@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 
 import SideBar from '../../components/sidebar';
@@ -8,11 +9,24 @@ import EducationalBanner from '../../components/educational-banner';
 
 import './style.css';
 
-export default function Home() {
+export default function Home({ onNavigateToLogin }) {
     const [activeItem, setActiveItem] = useState('Home');
 
     const handleNavigate = (label) => {
         setActiveItem(label);
+
+        if (label === 'Home') {
+            setActiveItem('Home');
+        }
+    };
+
+    const handleLogout = () => {
+        onNavigateToLogin?.();
+    };
+
+    const handleAccessLessons = () => {
+        handleNavigate('Learn');
+        console.log('Navegação para a página de ensino');
     };
 
     return (
@@ -21,7 +35,7 @@ export default function Home() {
                 activeItem={activeItem}
                 onNavigate={handleNavigate}
                 onSettings={() => console.log('Configurações')}
-                onLogout={() => console.log('Logout')}
+                onLogout={handleLogout}
             />
 
             <main className="home-content">
@@ -29,9 +43,7 @@ export default function Home() {
                     onViewParliamentarians={() =>
                         handleNavigate('Lawmakers')
                     }
-                    onExploreLearn={() =>
-                        handleNavigate('Learn')
-                    }
+                    onExploreLearn={handleAccessLessons}
                     onOpenChat={() =>
                         handleNavigate('Chat Huari')
                     }
@@ -47,12 +59,9 @@ export default function Home() {
 
                 <div className="home-educational-container">
                     <EducationalBanner
-                        onAccessLessons={() => {
-                            console.log('Navegação para a página de ensino');
-                        }}
+                        onAccessLessons={handleAccessLessons}
                     />
                 </div>
-                
             </main>
         </div>
     );

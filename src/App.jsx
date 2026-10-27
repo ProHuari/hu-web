@@ -11,7 +11,11 @@ export default function App() {
     const [currentPage, setCurrentPage] = useState("create-account");
 
     if (currentPage === "home") {
-        return <Home />;
+    return (
+        <Home
+            onNavigateToLogin={() => setCurrentPage("login")}
+        />
+    );
     }
 
     if (currentPage === "recover-password") {
