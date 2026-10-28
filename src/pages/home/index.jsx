@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 import SideBar from '../../components/sidebar';
@@ -10,14 +9,18 @@ import Footer from '../../components/footer';
 
 import './style.css';
 
-export default function Home({ onNavigateToLogin }) {
+export default function Home({
+    onNavigateToLogin,
+    onNavigateToParliamentarians,
+    onViewParliamentarian,
+}) {
     const [activeItem, setActiveItem] = useState('Home');
 
     const handleNavigate = (label) => {
         setActiveItem(label);
 
-        if (label === 'Home') {
-            setActiveItem('Home');
+        if (label === 'Lawmakers') {
+            onNavigateToParliamentarians?.();
         }
     };
 
@@ -55,7 +58,9 @@ export default function Home({ onNavigateToLogin }) {
                 </div>
 
                 <section className="home-parliamentarians">
-                    <ParliamentariansGrid />
+                    <ParliamentariansGrid
+                        onViewParliamentarian={onViewParliamentarian}
+                    />
                 </section>
 
                 <div className="home-educational-container">
@@ -65,7 +70,6 @@ export default function Home({ onNavigateToLogin }) {
                 </div>
 
                 <Footer />
-            
             </main>
         </div>
     );
