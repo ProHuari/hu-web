@@ -1,0 +1,432 @@
+/* Layout principal */
+.analysis-layout {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    background-color: var(--color-neutral-200);
+}
+
+.analysis-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2rem;
+    min-width: 0;
+    padding: 2rem;
+    box-sizing: border-box;
+    background-color: var(--color-neutral-200);
+}
+
+/* Voltar */
+.analysis-back {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.4rem;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-neutral-700);
+    cursor: pointer;
+}
+
+.analysis-back:hover {
+    color: var(--color-scale-primary-700);
+}
+
+/* Cabeçalho do parlamentar */
+.analysis-profile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    min-width: 0;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background-color: var(--color-neutral-0);
+    box-sizing: border-box;
+}
+
+.analysis-avatar {
+    display: flex;
+    flex: 0 0 4rem;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background-color: var(--color-neutral-1000);
+    color: var(--color-neutral-0);
+    font-size: 3.5rem;
+    overflow: hidden;
+}
+
+.analysis-profile-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.analysis-name-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+}
+
+.analysis-profile-info > p {
+    color: var(--color-neutral-900);
+}
+
+.analysis-status {
+    margin-top: 0.25rem;
+    color: var(--color-neutral-700) !important;
+}
+
+.analysis-tags {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.analysis-party {
+    padding: 0.3rem 0.65rem;
+    background-color: var(--color-primary);
+    color: var(--color-neutral-0);
+}
+
+.analysis-state {
+    padding: 0.3rem 0.65rem;
+    background-color: var(--color-scale-secondary-900);
+    color: var(--color-neutral-0);
+}
+
+/* Botão Seguir */
+.btn-follow-parliamentarian {
+    flex-shrink: 0;
+    padding: 0.65rem 1rem;
+    border-radius: 2rem;
+    background-color: var(--color-primary);
+    color: var(--color-neutral-0);
+}
+
+.btn-follow-parliamentarian:hover:not(:disabled) {
+    background-color: var(--color-scale-primary-600);
+}
+
+/* Indicadores */
+.analysis-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+}
+
+.analysis-stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    min-width: 0;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background-color: var(--color-neutral-0);
+    box-sizing: border-box;
+}
+
+.analysis-stat-card h2 {
+    color: var(--color-neutral-900);
+    text-transform: uppercase;
+}
+
+.analysis-stat-value {
+    color: var(--color-neutral-1000);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.analysis-stat-card p {
+    color: var(--color-neutral-800);
+}
+
+/* Painéis */
+.analysis-panel {
+    width: 100%;
+    min-width: 0;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background-color: var(--color-neutral-0);
+    box-sizing: border-box;
+}
+
+.analysis-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-neutral-400);
+}
+
+.analysis-panel-header > span {
+    flex-shrink: 0;
+    color: var(--color-neutral-800);
+}
+
+.analysis-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.analysis-panel-title > svg {
+    flex-shrink: 0;
+    color: var(--color-primary);
+    font-size: 1.4rem;
+}
+
+/* Gastos */
+.analysis-expenses {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1rem;
+}
+
+.analysis-expense {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.analysis-expense-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.analysis-expense-info > span {
+    color: var(--color-neutral-900);
+}
+
+.analysis-expense-info > strong {
+    flex-shrink: 0;
+    color: var(--color-neutral-900);
+    text-align: right;
+}
+
+.analysis-progress-track {
+    width: 100%;
+    height: 0.45rem;
+    overflow: hidden;
+    border-radius: 1rem;
+    background-color: var(--color-neutral-400);
+}
+
+.analysis-progress-value {
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--color-scale-primary-700);
+}
+
+.analysis-expense:nth-child(2) .analysis-progress-value {
+    background-color: var(--color-primary);
+}
+
+.analysis-expense:nth-child(3) .analysis-progress-value {
+    background-color: var(--color-scale-primary-400);
+}
+
+/* Votações */
+.analysis-vote-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding-top: 1rem;
+}
+
+.analysis-vote-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--color-neutral-200);
+}
+
+.analysis-vote-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.analysis-vote-heading h3 {
+    color: var(--color-neutral-900);
+}
+
+.analysis-vote-card > p {
+    color: var(--color-neutral-900);
+}
+
+.analysis-vote-status {
+    flex-shrink: 0;
+    padding: 0.35rem 0.65rem;
+    border-radius: 2rem;
+    color: var(--color-neutral-0);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.vote-positive {
+    background-color: #24c96b;
+}
+
+.vote-negative {
+    background-color: #dc2626;
+}
+
+/* Banner da IA */
+.analysis-ai-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background-color: var(--color-scale-tertiary-100);
+    box-sizing: border-box;
+}
+
+.analysis-ai-banner > svg {
+    flex-shrink: 0;
+    color: var(--color-scale-primary-700);
+    font-size: 2.5rem;
+}
+
+.analysis-ai-text {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+}
+
+.analysis-ai-text h2 {
+    margin-bottom: 0.5rem;
+    color: var(--color-scale-secondary-900);
+}
+
+.analysis-ai-text p {
+    color: var(--color-scale-secondary-800);
+}
+
+.btn-analysis-ai {
+    flex-shrink: 0;
+    padding: 0.65rem 1rem;
+    border-radius: 2rem;
+    background-color: var(--color-scale-primary-700);
+    color: var(--color-neutral-0);
+}
+
+.btn-analysis-ai:hover:not(:disabled) {
+    background-color: var(--color-scale-primary-800);
+}
+
+/* Footer */
+.analysis-content > footer {
+    width: 100%;
+    min-width: 0;
+    margin-top: auto;
+}
+
+/* Responsividade */
+@media (max-width: 1000px) {
+    .analysis-content {
+        padding: 1.25rem;
+        gap: 1.5rem;
+    }
+
+    .analysis-stats {
+        gap: 0.75rem;
+    }
+
+    .analysis-stat-card {
+        padding: 1rem;
+    }
+
+    .analysis-ai-banner {
+        flex-wrap: wrap;
+    }
+
+    .analysis-ai-text {
+        text-align: left;
+    }
+}
+
+@media (max-width: 700px) {
+    .analysis-content {
+        padding: 1rem;
+    }
+
+    .analysis-profile {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .analysis-avatar {
+        flex-basis: 3.25rem;
+        width: 3.25rem;
+        height: 3.25rem;
+        font-size: 2.8rem;
+    }
+
+    .analysis-profile-info {
+        flex-basis: calc(100% - 4.5rem);
+    }
+
+    .btn-follow-parliamentarian {
+        margin-left: auto;
+    }
+
+    .analysis-stats {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .analysis-stat-card {
+        gap: 0.5rem;
+    }
+
+    .analysis-expense-info {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .analysis-expense-info > strong {
+        text-align: left;
+    }
+
+    .analysis-vote-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .analysis-ai-banner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .analysis-ai-text {
+        text-align: left;
+    }
+}
