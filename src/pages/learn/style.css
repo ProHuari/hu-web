@@ -1,0 +1,420 @@
+
+.learn-layout {
+  display: flex;
+  align-items: stretch;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  background-color: var(--color-neutral-200);
+}
+
+.learn-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2rem;
+  width: 0;
+  min-width: 0;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.learn-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 3rem;
+  border-radius: 1rem;
+  color: var(--color-neutral-0);
+  background: linear-gradient(
+    110deg,
+    var(--color-scale-secondary-1000) 0%,
+    var(--color-scale-secondary-1000) 60%,
+    var(--color-primary) 100%
+  );
+}
+
+.learn-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 48rem;
+}
+
+.learn-eyebrow {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--color-scale-primary-200);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.learn-hero h1 {
+  margin: 0 0 1rem;
+  max-width: 42rem;
+}
+
+.learn-hero p {
+  max-width: 42rem;
+  margin: 0;
+  color: var(--color-neutral-200);
+}
+
+.learn-search {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  max-width: 42rem;
+}
+
+.learn-search .input-container-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.learn-search .input-header-wrapper {
+  display: none;
+}
+
+.learn-search .input-wrapper-field {
+  min-height: 3rem;
+  background-color: var(--color-neutral-0);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 0.5rem;
+}
+
+.learn-search .input-field {
+  width: 100%;
+  min-width: 0;
+  color: var(--color-neutral-900);
+}
+
+.learn-search .input-field::placeholder {
+  color: var(--color-neutral-600);
+}
+
+.learn-search > button {
+  flex-shrink: 0;
+  min-height: 3rem;
+}
+
+.learn-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.learn-catalog-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.learn-catalog-heading h2 {
+  margin: 0 0 0.5rem;
+}
+
+.learn-catalog-heading p {
+  margin: 0;
+  color: var(--color-neutral-700);
+}
+
+
+.learn-results-count {
+    flex-shrink: 0;
+    color: var(--color-neutral-800);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+
+.learn-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.learn-lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.learn-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  background-color: var(--color-neutral-0);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 0.875rem;
+}
+
+.learn-card-image-wrapper {
+  position: relative;
+  height: 12rem;
+  overflow: hidden;
+  background-color: var(--color-scale-secondary-100);
+}
+
+.learn-card-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.learn-card-duration {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.375rem 0.625rem;
+  color: var(--color-neutral-900);
+  background-color: var(--color-neutral-0);
+  border-radius: 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.learn-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 1.25rem;
+}
+
+.learn-card-level {
+  color: var(--color-primary);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.learn-card-content h3 {
+  margin: 0;
+}
+
+.learn-card-content p {
+  flex: 1;
+  margin: 0;
+  color: var(--color-neutral-700);
+}
+
+.learn-card-content button {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.learn-empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-neutral-700);
+}
+
+.learn-content > footer {
+  width: 100%;
+  min-width: 0;
+  margin-top: auto;
+}
+
+
+.learn-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+    background-color: var(--color-neutral-0);
+    border: 1px solid var(--color-neutral-300);
+    border-radius: 0.875rem;
+}
+
+.learn-card-image-wrapper {
+    position: relative;
+    height: 12rem;
+    overflow: hidden;
+    background-color: var(--color-scale-secondary-100);
+}
+
+.learn-card-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.learn-card-badges {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.learn-card-duration {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.625rem;
+    color: var(--color-neutral-0);
+    background-color: #cbd0d5;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.learn-card-duration svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.learn-card-level {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.625rem;
+    color: var(--color-neutral-0);
+    background-color: var(--color-primary);
+    border-radius: 2rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.learn-card-bookmark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    margin-left: auto;
+    padding: 0;
+    color: var(--color-neutral-0);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.learn-card-bookmark svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.learn-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1.25rem;
+}
+
+.learn-card-content h3 {
+    margin: 0;
+    color: var(--color-neutral-1000);
+}
+
+.learn-card-topics {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.learn-card-topics li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: var(--color-neutral-900);
+    font-size: 0.9375rem;
+    line-height: 1.4;
+}
+
+.learn-topic-check {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.125rem;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: 50%;
+}
+
+.learn-topic-check svg {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+.learn-card-content > button {
+    width: 100%;
+    margin-top: auto;
+}
+
+
+.learn-categories .btn {
+    border-radius: 0.625rem;
+    min-height: 2.75rem;
+    padding: 0.625rem 1rem;
+    white-space: nowrap;
+}
+
+
+@media (max-width: 1100px) {
+  .learn-lessons-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learn-content {
+    padding: 1.5rem;
+  }
+
+  .learn-hero {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .learn-content {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .learn-hero {
+    padding: 1.5rem;
+  }
+
+  .learn-search {
+    flex-direction: column;
+  }
+
+  .learn-search > button {
+    width: 100%;
+  }
+
+  .learn-lessons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .learn-catalog-heading {
+    align-items: flex-start;
+  }
+
+  .learn-categories {
+    gap: 0.5rem;
+  }
+
+  .learn-categories .btn {
+        padding: 0.5rem 0.75rem;
+        min-height: 2.5rem;
+        font-size: 0.875rem;
+    }
+
+}

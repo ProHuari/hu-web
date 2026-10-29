@@ -12,7 +12,8 @@ import './style.css';
 export default function Home({
     onNavigateToLogin,
     onNavigateToParliamentarians,
-    onViewParliamentarian,
+    onNavigateToLearn,
+    onViewParliamentarian
 }) {
     const [activeItem, setActiveItem] = useState('Home');
 
@@ -22,7 +23,11 @@ export default function Home({
         if (label === 'Lawmakers') {
             onNavigateToParliamentarians?.();
         }
-    };
+
+        if (label === 'Learn') {
+            onNavigateToLearn?.();
+        }
+    }  ;
 
     const handleLogout = () => {
         onNavigateToLogin?.();
@@ -30,7 +35,6 @@ export default function Home({
 
     const handleAccessLessons = () => {
         handleNavigate('Learn');
-        console.log('Navegação para a página de ensino');
     };
 
     return (
@@ -68,7 +72,7 @@ export default function Home({
                         onAccessLessons={handleAccessLessons}
                     />
                 </div>
-
+                    
                 <Footer />
             </main>
         </div>

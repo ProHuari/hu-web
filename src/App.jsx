@@ -7,12 +7,14 @@ import CreateNewPassword from "./pages/create-new-password";
 import Home from "./pages/home";
 import Parliamentarians from "./pages/parliamentarians";
 import ParliamentarianAnalysis from "./pages/parliamentarian-analysis";
+import Learn from "./pages/learn";
 
 export default function App() {
     const [currentPage, setCurrentPage] = useState("create-account");
     const [selectedParliamentarian, setSelectedParliamentarian] =
         useState(null);
 
+    
     if (currentPage === "home") {
         return (
             <Home
@@ -20,6 +22,7 @@ export default function App() {
                 onNavigateToParliamentarians={() =>
                     setCurrentPage("parliamentarians")
                 }
+                onNavigateToLearn={() => setCurrentPage("learn")}
             />
         );
     }
@@ -70,6 +73,14 @@ export default function App() {
         return (
             <CreateAnAccount
                 onNavigateToLogin={() => setCurrentPage("login")}
+            />
+        );
+    }
+
+    if (currentPage === "learn") {
+        return (
+            <Learn
+                onNavigateToHome={() => setCurrentPage("home")}
             />
         );
     }
