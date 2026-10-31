@@ -1,0 +1,12 @@
+/* =========================================
+   Componente: ProtectedRoute
+========================================= */
+.huari-protected-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: #4B5563;
+}
+
