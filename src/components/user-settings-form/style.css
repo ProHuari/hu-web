@@ -1,0 +1,283 @@
+.user-settings-card {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.user-settings-tabs {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #E5E7EB;
+    background-color: #FAFAFC;
+    overflow-x: auto;
+}
+
+.settings-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 22px;
+    border: none;
+    background: transparent;
+    color: #6B7280;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.settings-tab-btn:hover {
+    color: #111827;
+    background-color: #F3F4F6;
+}
+
+.settings-tab-btn.is-active {
+    color: #D4460E;
+    border-bottom-color: #F15A24;
+    background-color: #FFFFFF;
+    font-weight: 700;
+}
+
+/* Painel de Formulário */
+.settings-form-panel,
+.settings-security-panel,
+.settings-saved-panel,
+.settings-notifications-panel {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.settings-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.form-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-field-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.field-label {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.field-input,
+.field-select,
+.field-textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #E5E7EB;
+    background-color: #F9FAFB;
+    color: #111827;
+    font-family: inherit;
+    font-size: 0.92rem;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus {
+    border-color: #F15A24;
+    background-color: #FFFFFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(241, 90, 36, 0.1);
+}
+
+.field-hint {
+    font-size: 0.76rem;
+    color: #9CA3AF;
+}
+
+.settings-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #F3F4F6;
+}
+
+.save-success-msg {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #059669;
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.btn-save-settings {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #D4460E 0%, #F15A24 100%);
+    color: #FFFFFF;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-save-settings:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(241, 90, 36, 0.3);
+}
+
+/* Painel de Favoritos */
+.saved-panel-header h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 4px 0;
+}
+
+.saved-panel-header p {
+    font-size: 0.85rem;
+    color: #6B7280;
+    margin: 0;
+}
+
+.saved-lawmakers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saved-lawmaker-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background-color: #F9FAFB;
+    border: 1px solid #E5E7EB;
+}
+
+.saved-lawmaker-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.saved-lawmaker-name strong {
+    font-size: 0.96rem;
+    color: #111827;
+}
+
+.saved-badge-party {
+    padding: 2px 8px;
+    border-radius: 4px;
+    background-color: #F15A24;
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.saved-badge-state {
+    padding: 2px 8px;
+    border-radius: 4px;
+    background-color: #2B2D42;
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.saved-lawmaker-role {
+    font-size: 0.82rem;
+    color: #6B7280;
+}
+
+.btn-remove-bookmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #FCA5A5;
+    background-color: #FEF2F2;
+    color: #DC2626;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-remove-bookmark:hover {
+    background-color: #FEE2E2;
+}
+
+/* Painel de Notificações */
+.notification-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.notification-row:last-child {
+    border-bottom: none;
+}
+
+.notification-text strong {
+    display: block;
+    font-size: 0.92rem;
+    color: #111827;
+    margin-bottom: 3px;
+}
+
+.notification-text p {
+    font-size: 0.82rem;
+    color: #6B7280;
+    margin: 0;
+}
+
+.toggle-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-active {
+    color: #F15A24;
+}
+
+.toggle-inactive {
+    color: #D1D5DB;
+}
+
+@media (max-width: 768px) {
+    .settings-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-form-panel,
+    .settings-security-panel,
+    .settings-saved-panel,
+    .settings-notifications-panel {
+        padding: 20px 16px;
+    }
+}
