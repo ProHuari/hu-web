@@ -1,0 +1,112 @@
+/* =========================================
+   Componente Atômico: Pagination
+========================================= */
+.huari-pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 18px 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.huari-pagination-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1.5px solid #E5E7EB;
+    background-color: #FFFFFF;
+    color: #4B5563;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.huari-pagination-nav-btn:hover:not(:disabled) {
+    border-color: #D1D5DB;
+    background-color: #F9FAFB;
+    color: #111827;
+}
+
+.huari-pagination-nav-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background-color: #F3F4F6;
+    border-color: #E5E7EB;
+}
+
+.huari-pagination-numbers {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.huari-pagination-page-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1.5px solid #E5E7EB;
+    background-color: #FFFFFF;
+    color: #374151;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.huari-pagination-page-btn:hover:not(.is-active) {
+    border-color: #F15A24;
+    background-color: #FFF3ED;
+    color: #D4460E;
+}
+
+.huari-pagination-page-btn.is-active {
+    background: linear-gradient(135deg, #D4460E 0%, #F15A24 100%);
+    border-color: transparent;
+    color: #FFFFFF;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(241, 90, 36, 0.28);
+}
+
+.huari-pagination-ellipsis {
+    min-width: 32px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #9CA3AF;
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 540px) {
+    .huari-pagination-container {
+        gap: 4px;
+    }
+
+    .huari-pagination-nav-btn span {
+        display: none;
+    }
+
+    .huari-pagination-nav-btn {
+        padding: 0 10px;
+    }
+
+    .huari-pagination-page-btn {
+        min-width: 36px;
+        height: 36px;
+        font-size: 0.82rem;
+    }
+}
+
