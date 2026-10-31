@@ -10,6 +10,8 @@ import ParliamentarianAnalysis from "./pages/parliamentarian-analysis";
 import Learn from "./pages/learn";
 import LessonDetails from "./pages/lesson-details";
 import Dashboard from "./pages/dashboard";
+import ChatHuari from "./pages/chat-huari";
+import UserProfile from "./pages/user-profile";
 
 export default function App() {
     const [currentPage, setCurrentPage] = useState("dashboard");
@@ -26,7 +28,8 @@ export default function App() {
                     if (page === "Home") setCurrentPage("dashboard");
                     if (page === "Lawmakers") setCurrentPage("parliamentarians");
                     if (page === "Learn") setCurrentPage("learn");
-                    if (page === "Chat Huari") alert("O Chat Huari com IA estará disponível em breve!");
+                    if (page === "Chat Huari") setCurrentPage("chat-huari");
+                    if (page === "Config") setCurrentPage("user-profile");
                     if (page === "Logout") setCurrentPage("login");
                 }}
                 onViewParliamentarian={(parliamentarian) => {
@@ -34,6 +37,33 @@ export default function App() {
                     setCurrentPage("parliamentarian-analysis");
                 }}
                 onLogout={() => setCurrentPage("login")}
+            />
+        );
+    }
+
+    if (currentPage === "user-profile") {
+        return (
+            <UserProfile
+                onNavigateToHome={() => setCurrentPage("dashboard")}
+                onNavigateToParliamentarians={() =>
+                    setCurrentPage("parliamentarians")
+                }
+                onNavigateToLearn={() => setCurrentPage("learn")}
+                onNavigateToChat={() => setCurrentPage("chat-huari")}
+                onNavigateToLogin={() => setCurrentPage("login")}
+            />
+        );
+    }
+
+    if (currentPage === "chat-huari") {
+        return (
+            <ChatHuari
+                onNavigateToHome={() => setCurrentPage("dashboard")}
+                onNavigateToParliamentarians={() =>
+                    setCurrentPage("parliamentarians")
+                }
+                onNavigateToLearn={() => setCurrentPage("learn")}
+                onNavigateToLogin={() => setCurrentPage("login")}
             />
         );
     }
@@ -72,6 +102,7 @@ export default function App() {
                 onNavigateToHome={() => setCurrentPage("dashboard")}
                 onNavigateToLearn={() => setCurrentPage("learn")}
                 onNavigateToLogin={() => setCurrentPage("login")}
+                onNavigateToChat={() => setCurrentPage("chat-huari")}
             />
         );
     }
