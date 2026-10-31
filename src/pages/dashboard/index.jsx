@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import logoHuari from '../../assets/images/logoHuari.svg';
 import {
     GithubIcon,
@@ -38,9 +39,9 @@ import './style.css';
 const initialParliamentarians = [
     {
         id: 1,
-        name: 'Parlamentar',
-        position: 'Deputado Federal',
-        party: 'PL',
+        name: 'Tabata Amaral',
+        position: 'Deputada Federal',
+        party: 'PSB',
         state: 'SP',
         attendance: '96%',
         projects: '42',
@@ -48,83 +49,55 @@ const initialParliamentarians = [
     },
     {
         id: 2,
-        name: 'Parlamentar',
-        position: 'Deputado Federal',
-        party: 'PL',
-        state: 'SP',
-        attendance: '92%',
+        name: 'Randolfe Rodrigues',
+        position: 'Senador',
+        party: 'PT',
+        state: 'AP',
+        attendance: '94%',
         projects: '38',
         expenses: 'R$ 27,4 mil',
     },
     {
         id: 3,
-        name: 'Parlamentar',
-        position: 'Deputado Federal',
-        party: 'PL',
-        state: 'SP',
+        name: 'Alessandro Vieira',
+        position: 'Senador',
+        party: 'MDB',
+        state: 'SE',
         attendance: '89%',
         projects: '31',
         expenses: 'R$ 29,1 mil',
     },
     {
         id: 4,
-        name: 'Parlamentar',
-        position: 'Deputado Federal',
-        party: 'PL',
+        name: 'Erika Hilton',
+        position: 'Deputada Federal',
+        party: 'PSOL',
         state: 'SP',
-        attendance: '94%',
-        projects: '27',
-        expenses: 'R$ 33,2 mil',
+        attendance: '93%',
+        projects: '35',
+        expenses: 'R$ 32,5 mil',
     },
 ];
 
 const footerNavigationLinks = [
-    { label: 'Painel Inicial', href: '#home', targetPage: 'Home' },
-    { label: 'Academia Cívica e Cursos', href: '#cursos', targetPage: 'Learn' },
-    { label: 'Gastos e Cotas Parlamentares', href: '#parlamentares', targetPage: 'Lawmakers' },
-    { label: 'Assistência Cívica Virtual', href: '#chat', targetPage: 'Chat Huari' },
+    { label: 'Painel Inicial', path: '/dashboard' },
+    { label: 'Academia Cívica e Cursos', path: '/learn' },
+    { label: 'Gastos e Cotas Parlamentares', path: '/lawmakers' },
+    { label: 'Assistência Cívica Virtual', path: '/chat' },
 ];
 
 const officialSources = [
-    {
-        label: 'Dados Abertos / Câmara',
-        href: 'https://dadosabertos.camara.leg.br/',
-    },
-    {
-        label: 'Portal da Transparência',
-        href: 'https://www12.senado.leg.br/transparencia',
-    },
-    {
-        label: 'TCU (Tribunal de Contas da União)',
-        href: 'https://www.tcu.gov.br/',
-    },
-    {
-        label: 'CGU (Controladoria-Geral da União)',
-        href: 'https://www.gov.br/cgu/pt-br',
-    },
+    { label: 'Dados Abertos / Câmara', href: 'https://dadosabertos.camara.leg.br/' },
+    { label: 'Portal da Transparência', href: 'https://www12.senado.leg.br/transparencia' },
+    { label: 'TCU (Tribunal de Contas da União)', href: 'https://www.tcu.gov.br/' },
+    { label: 'CGU (Controladoria-Geral da União)', href: 'https://www.gov.br/cgu/pt-br' },
 ];
 
 const transparencyLinks = [
-    {
-        label: 'Termos e Metodologia',
-        href: '#termos',
-        Icon: RiHammerLine,
-    },
-    {
-        label: 'Privacidade',
-        href: '#privacidade',
-        Icon: RiShieldCheckLine,
-    },
-    {
-        label: 'API Pública',
-        href: '#api',
-        Icon: RiCodeBoxLine,
-    },
-    {
-        label: 'Ouvidoria',
-        href: '#ouvidoria',
-        Icon: RiMailLine,
-    },
+    { label: 'Termos e Metodologia', href: '#termos', Icon: RiHammerLine },
+    { label: 'Privacidade', href: '#privacidade', Icon: RiShieldCheckLine },
+    { label: 'API Pública', href: '#api', Icon: RiCodeBoxLine },
+    { label: 'Ouvidoria', href: '#ouvidoria', Icon: RiMailLine },
 ];
 
 export default function Dashboard({
@@ -133,18 +106,15 @@ export default function Dashboard({
         email: 'carlos.oliveira@huari.org',
         avatar: null,
     },
-    onNavigate,
-    onViewParliamentarian,
-    onLogout,
 }) {
-    const [activeMenu, setActiveMenu] = useState('Home');
+    const navigate = useNavigate();
     const [favorites, setFavorites] = useState({});
 
     const navigationItems = [
-        { label: 'Home', icon: RiHome4Line },
-        { label: 'Lawmakers', icon: RiGovernmentLine },
-        { label: 'Learn', icon: RiBookOpenLine },
-        { label: 'Chat Huari', icon: RiChatSmile3Line, badge: 'IA' },
+        { label: 'Home', path: '/dashboard', icon: RiHome4Line },
+        { label: 'Lawmakers', path: '/lawmakers', icon: RiGovernmentLine },
+        { label: 'Learn', path: '/learn', icon: RiBookOpenLine },
+        { label: 'Chat Huari', path: '/chat', icon: RiChatSmile3Line, badge: 'IA' },
     ];
 
     const statisticsCards = [
@@ -186,18 +156,16 @@ export default function Dashboard({
         },
     ];
 
-    const handleMenuClick = (itemLabel) => {
-        setActiveMenu(itemLabel);
-        if (onNavigate) {
-            onNavigate(itemLabel);
-        }
-    };
-
     const toggleFavorite = (id) => {
         setFavorites((prev) => ({
             ...prev,
             [id]: !prev[id],
         }));
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('huari_token');
+        navigate('/');
     };
 
     return (
@@ -206,7 +174,7 @@ export default function Dashboard({
             <aside className="huari-sidebar" aria-label="Navegação Principal">
                 <div className="sidebar-top">
                     {/* Logótipo Huari */}
-                    <div className="huari-logo-container">
+                    <NavLink to="/dashboard" className="huari-logo-container" style={{ textDecoration: 'none' }}>
                         <img
                             src={logoHuari}
                             alt="Logo Huari"
@@ -216,10 +184,10 @@ export default function Dashboard({
                             <span className="logo-brand">HUARI</span>
                             <span className="logo-tag">Transparência &amp; Cidadania</span>
                         </div>
-                    </div>
+                    </NavLink>
 
                     {/* Perfil do Utilizador */}
-                    <div className="sidebar-user-card">
+                    <NavLink to="/profile" className="sidebar-user-card" style={{ textDecoration: 'none' }}>
                         <div className="user-avatar">
                             {user.avatar ? (
                                 <img src={user.avatar} alt={user.name} />
@@ -235,7 +203,7 @@ export default function Dashboard({
                                 {user.email}
                             </p>
                         </div>
-                    </div>
+                    </NavLink>
 
                     {/* Menu de Navegação */}
                     <nav className="sidebar-nav">
@@ -243,21 +211,21 @@ export default function Dashboard({
                         <ul className="nav-list">
                             {navigationItems.map((item) => {
                                 const Icon = item.icon;
-                                const isActive = activeMenu === item.label;
 
                                 return (
                                     <li key={item.label}>
-                                        <button
-                                            type="button"
-                                            className={`nav-button ${isActive ? 'active' : ''}`}
-                                            onClick={() => handleMenuClick(item.label)}
+                                        <NavLink
+                                            to={item.path}
+                                            className={({ isActive }) =>
+                                                `nav-button ${isActive ? 'active' : ''}`
+                                            }
                                         >
                                             <Icon className="nav-icon" size={20} />
                                             <span className="nav-label">{item.label}</span>
                                             {item.badge && (
                                                 <span className="nav-badge">{item.badge}</span>
                                             )}
-                                        </button>
+                                        </NavLink>
                                     </li>
                                 );
                             })}
@@ -267,25 +235,19 @@ export default function Dashboard({
 
                 {/* Ações inferiores da Sidebar: Config e Logout account */}
                 <div className="sidebar-bottom">
-                    <button
-                        type="button"
+                    <NavLink
+                        to="/profile"
                         className="sidebar-bottom-button"
-                        onClick={() => handleMenuClick('Config')}
+                        style={{ textDecoration: 'none' }}
                     >
                         <RiSettings3Line size={20} />
                         <span>Config</span>
-                    </button>
+                    </NavLink>
 
                     <button
                         type="button"
                         className="sidebar-bottom-button sidebar-logout-button"
-                        onClick={() => {
-                            if (onLogout) {
-                                onLogout();
-                            } else {
-                                handleMenuClick('Logout');
-                            }
-                        }}
+                        onClick={handleLogout}
                     >
                         <RiShutDownLine size={20} />
                         <span>Logout account</span>
@@ -311,7 +273,7 @@ export default function Dashboard({
                         <button
                             type="button"
                             className="btn-action btn-action-primary"
-                            onClick={() => handleMenuClick('Lawmakers')}
+                            onClick={() => navigate('/lawmakers')}
                         >
                             <span>View Parliamentarians</span>
                             <RiArrowRightUpLine size={18} />
@@ -320,16 +282,16 @@ export default function Dashboard({
                         <button
                             type="button"
                             className="btn-action btn-action-secondary"
-                            onClick={() => handleMenuClick('Learn')}
+                            onClick={() => navigate('/learn')}
                         >
-                            <span>Exploit Learn</span>
+                            <span>Explore Learn</span>
                             <RiBookOpenLine size={18} />
                         </button>
 
                         <button
                             type="button"
                             className="btn-action btn-action-accent"
-                            onClick={() => handleMenuClick('Chat Huari')}
+                            onClick={() => navigate('/chat')}
                         >
                             <RiChatSmile3Line size={18} />
                             <span>Speak with Huari</span>
@@ -381,7 +343,7 @@ export default function Dashboard({
                         <button
                             type="button"
                             className="view-all-link"
-                            onClick={() => handleMenuClick('Lawmakers')}
+                            onClick={() => navigate('/lawmakers')}
                         >
                             Ver todos os parlamentares
                             <RiArrowRightLine size={16} />
@@ -449,13 +411,7 @@ export default function Dashboard({
                                     <button
                                         type="button"
                                         className="lawmaker-view-btn"
-                                        onClick={() => {
-                                            if (onViewParliamentarian) {
-                                                onViewParliamentarian(lawmaker);
-                                            } else {
-                                                handleMenuClick('Lawmakers');
-                                            }
-                                        }}
+                                        onClick={() => navigate(`/lawmakers/${lawmaker.id}`)}
                                     >
                                         Ver Deputado
                                     </button>
@@ -484,7 +440,7 @@ export default function Dashboard({
                         <button
                             type="button"
                             className="edu-banner-btn"
-                            onClick={() => handleMenuClick('Learn')}
+                            onClick={() => navigate('/learn')}
                         >
                             <span>Acessa Aulas</span>
                             <RiArrowRightLine size={20} />
@@ -533,16 +489,10 @@ export default function Dashboard({
                             <ul className="footer-link-list">
                                 {footerNavigationLinks.map((item) => (
                                     <li key={item.label}>
-                                        <a
-                                            href={item.href}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                handleMenuClick(item.targetPage);
-                                            }}
-                                        >
+                                        <NavLink to={item.path}>
                                             <RiArrowRightSLine className="footer-icon-arrow" size={18} />
                                             <span>{item.label}</span>
-                                        </a>
+                                        </NavLink>
                                     </li>
                                 ))}
                             </ul>
