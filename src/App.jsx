@@ -84,6 +84,10 @@ export default function App() {
         return (
             <Parliamentarians
                 onNavigateToHome={() => setCurrentPage("dashboard")}
+                onNavigateToLearn={() => setCurrentPage("learn")}
+                onNavigateToChat={() => setCurrentPage("chat-huari")}
+                onNavigateToConfig={() => setCurrentPage("user-profile")}
+                onNavigateToLogin={() => setCurrentPage("login")}
                 onViewParliamentarian={(parliamentarian) => {
                     setSelectedParliamentarian(parliamentarian);
                     setCurrentPage("parliamentarian-analysis");
