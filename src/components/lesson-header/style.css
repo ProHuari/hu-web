@@ -1,0 +1,88 @@
+.lesson-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 194px;
+    padding: 2.5rem;
+    border-radius: 12px;
+    background-color: var(--color-secondary, #2B2D42);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    gap: 1.5rem;
+    box-sizing: border-box;
+}
+
+.lesson-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.lesson-header-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.lesson-header-tag {
+    padding: 0.3rem 0.65rem;
+    border-radius: 20px;
+    color: var(--color-neutral-0, #FFFFFF);
+    background-color: rgba(255, 255, 255, 0.2);
+    white-space: nowrap;
+}
+
+.lesson-header-tag-primary {
+    background-color: var(--color-primary, #F15A24);
+}
+
+.lesson-header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 650px;
+    gap: 0.5rem;
+    color: var(--color-neutral-0, #FFFFFF);
+}
+
+.lesson-header-eyebrow,
+.lesson-header-content h1,
+.lesson-header-content p {
+    color: var(--color-neutral-0, #FFFFFF);
+    margin: 0;
+}
+
+/* Botão voltar */
+.lesson-header .lesson-header-back {
+    padding: 0.45rem 0.75rem;
+    border: none;
+    border-radius: 20px;
+    color: var(--color-neutral-0, #FFFFFF);
+    background-color: rgba(0, 0, 0, 0.35);
+    white-space: nowrap;
+}
+
+.lesson-header .lesson-header-back:hover {
+    background-color: rgba(0, 0, 0, 0.55);
+}
+
+@media (max-width: 768px) {
+    .lesson-header {
+        padding: 1.25rem;
+        min-height: 220px;
+    }
+
+    .lesson-header-top {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .lesson-header-content {
+        gap: 0.65rem;
+    }
+}
