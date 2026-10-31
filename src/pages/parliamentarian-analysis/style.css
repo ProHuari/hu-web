@@ -1,432 +1,553 @@
-/* Layout principal */
+/* =========================================
+   Layout Principal (Sidebar à Esquerda + Conteúdo à Direita)
+========================================= */
 .analysis-layout {
     display: flex;
     align-items: stretch;
     min-height: 100vh;
-    min-height: 100dvh;
     width: 100%;
-    background-color: var(--color-neutral-200);
+    background-color: #F4F5F7;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1F2937;
+    box-sizing: border-box;
+}
+
+.analysis-sidebar-wrapper {
+    flex-shrink: 0;
 }
 
 .analysis-content {
-    display: flex;
     flex: 1;
+    display: flex;
     flex-direction: column;
-    gap: 2rem;
+    justify-content: space-between;
     min-width: 0;
-    padding: 2rem;
     box-sizing: border-box;
-    background-color: var(--color-neutral-200);
 }
 
-/* Voltar */
-.analysis-back {
+.analysis-container {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 40px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-sizing: border-box;
+}
+
+/* =========================================
+   Topo de Navegação: Link Voltar
+========================================= */
+.analysis-back-link {
     display: inline-flex;
     align-items: center;
     align-self: flex-start;
-    gap: 0.4rem;
-    padding: 0;
+    gap: 8px;
+    padding: 6px 10px;
+    margin-left: -10px;
     border: none;
+    border-radius: 8px;
     background: transparent;
-    color: var(--color-neutral-700);
+    color: #6B7280;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
 }
 
-.analysis-back:hover {
-    color: var(--color-scale-primary-700);
+.analysis-back-link:hover {
+    color: #D4460E;
+    background-color: rgba(241, 90, 36, 0.08);
+    transform: translateX(-2px);
 }
 
-/* Cabeçalho do parlamentar */
-.analysis-profile {
+/* =========================================
+   Card de Cabeçalho do Perfil
+========================================= */
+.analysis-profile-card {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 28px 32px;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    width: 100%;
-    min-width: 0;
-    padding: 1.25rem;
-    border-radius: 1rem;
-    background-color: var(--color-neutral-0);
+    gap: 24px;
     box-sizing: border-box;
 }
 
-.analysis-avatar {
+.analysis-avatar-large {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background-color: #2B2D42;
+    color: #FFFFFF;
     display: flex;
-    flex: 0 0 4rem;
     align-items: center;
     justify-content: center;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
-    background-color: var(--color-neutral-1000);
-    color: var(--color-neutral-0);
-    font-size: 3.5rem;
-    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(43, 45, 66, 0.18);
 }
 
 .analysis-profile-info {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.analysis-name-line {
+.analysis-name-row {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-bottom: 0.4rem;
+    gap: 12px;
 }
 
-.analysis-profile-info > p {
-    color: var(--color-neutral-900);
+.analysis-profile-name {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+    line-height: 1.2;
 }
 
-.analysis-status {
-    margin-top: 0.25rem;
-    color: var(--color-neutral-700) !important;
-}
-
-.analysis-tags {
+.analysis-badges {
     display: inline-flex;
     align-items: center;
-    overflow: hidden;
-    border-radius: 2rem;
-    font-size: 0.75rem;
-    font-weight: 600;
+    gap: 8px;
 }
 
-.analysis-party {
-    padding: 0.3rem 0.65rem;
-    background-color: var(--color-primary);
-    color: var(--color-neutral-0);
+.analysis-badge-party {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background-color: #F15A24;
+    color: #FFFFFF;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
 }
 
-.analysis-state {
-    padding: 0.3rem 0.65rem;
-    background-color: var(--color-scale-secondary-900);
-    color: var(--color-neutral-0);
-}
-
-/* Botão Seguir */
-.btn-follow-parliamentarian {
-    flex-shrink: 0;
-    padding: 0.65rem 1rem;
-    border-radius: 2rem;
-    background-color: var(--color-primary);
-    color: var(--color-neutral-0);
-}
-
-.btn-follow-parliamentarian:hover:not(:disabled) {
-    background-color: var(--color-scale-primary-600);
-}
-
-/* Indicadores */
-.analysis-stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.25rem;
-    width: 100%;
-}
-
-.analysis-stat-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.85rem;
-    min-width: 0;
-    padding: 1.25rem;
-    border-radius: 1rem;
-    background-color: var(--color-neutral-0);
-    box-sizing: border-box;
-}
-
-.analysis-stat-card h2 {
-    color: var(--color-neutral-900);
-    text-transform: uppercase;
-}
-
-.analysis-stat-value {
-    color: var(--color-neutral-1000);
-    font-size: 1rem;
+.analysis-badge-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background-color: #2B2D42;
+    color: #FFFFFF;
+    font-size: 0.78rem;
     font-weight: 700;
 }
 
-.analysis-stat-card p {
-    color: var(--color-neutral-800);
+.analysis-profile-role {
+    font-size: 1rem;
+    color: #4B5563;
+    font-weight: 500;
+    margin: 0;
 }
 
-/* Painéis */
-.analysis-panel {
-    width: 100%;
-    min-width: 0;
-    padding: 1.25rem;
-    border-radius: 1rem;
-    background-color: var(--color-neutral-0);
-    box-sizing: border-box;
-}
-
-.analysis-panel-header {
-    display: flex;
+.analysis-status-row {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--color-neutral-400);
+    gap: 8px;
+    margin-top: 2px;
 }
 
-.analysis-panel-header > span {
-    flex-shrink: 0;
-    color: var(--color-neutral-800);
+.status-dot-green {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #16A34A;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.18);
 }
 
-.analysis-panel-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-width: 0;
-}
-
-.analysis-panel-title > svg {
-    flex-shrink: 0;
-    color: var(--color-primary);
-    font-size: 1.4rem;
-}
-
-/* Gastos */
-.analysis-expenses {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-top: 1rem;
-}
-
-.analysis-expense {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    min-width: 0;
-}
-
-.analysis-expense-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    min-width: 0;
-}
-
-.analysis-expense-info > span {
-    color: var(--color-neutral-900);
-}
-
-.analysis-expense-info > strong {
-    flex-shrink: 0;
-    color: var(--color-neutral-900);
-    text-align: right;
-}
-
-.analysis-progress-track {
-    width: 100%;
-    height: 0.45rem;
-    overflow: hidden;
-    border-radius: 1rem;
-    background-color: var(--color-neutral-400);
-}
-
-.analysis-progress-value {
-    height: 100%;
-    border-radius: inherit;
-    background-color: var(--color-scale-primary-700);
-}
-
-.analysis-expense:nth-child(2) .analysis-progress-value {
-    background-color: var(--color-primary);
-}
-
-.analysis-expense:nth-child(3) .analysis-progress-value {
-    background-color: var(--color-scale-primary-400);
-}
-
-/* Votações */
-.analysis-vote-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    padding-top: 1rem;
-}
-
-.analysis-vote-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    padding: 1rem;
-    border-radius: 1rem;
-    background-color: var(--color-neutral-200);
-}
-
-.analysis-vote-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-.analysis-vote-heading h3 {
-    color: var(--color-neutral-900);
-}
-
-.analysis-vote-card > p {
-    color: var(--color-neutral-900);
-}
-
-.analysis-vote-status {
-    flex-shrink: 0;
-    padding: 0.35rem 0.65rem;
-    border-radius: 2rem;
-    color: var(--color-neutral-0);
-    font-size: 0.75rem;
+.status-label {
+    font-size: 0.85rem;
     font-weight: 600;
+    color: #15803D;
 }
 
-.vote-positive {
-    background-color: #24c96b;
+/* Botão + Seguir / Seguindo */
+.btn-follow-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 22px;
+    border-radius: 999px;
+    border: none;
+    background-color: #F15A24;
+    color: #FFFFFF;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
-.vote-negative {
-    background-color: #dc2626;
+.btn-follow-toggle:hover {
+    background-color: #D4460E;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(241, 90, 36, 0.25);
 }
 
-/* Banner da IA */
-.analysis-ai-banner {
+.btn-follow-toggle.is-following {
+    background-color: #2B2D42;
+    color: #FFFFFF;
+}
+
+.btn-follow-toggle.is-following:hover {
+    background-color: #1F2030;
+    box-shadow: 0 4px 12px rgba(43, 45, 66, 0.25);
+}
+
+/* =========================================
+   Grid de Métricas (3 Colunas)
+========================================= */
+.analysis-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.analysis-metric-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.analysis-metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.metric-card-header {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #6B7280;
+    text-transform: uppercase;
+}
+
+.metric-card-value {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.1;
+}
+
+.metric-card-value.highlight-orange {
+    color: #F15A24;
+}
+
+.metric-card-subtext {
+    font-size: 0.86rem;
+    color: #6B7280;
+    margin: 0;
+}
+
+/* =========================================
+   Seções em Card Branco (Gastos & Votações)
+========================================= */
+.analysis-section-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.analysis-section-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
-    width: 100%;
-    padding: 1.25rem;
-    border-radius: 1rem;
-    background-color: var(--color-scale-tertiary-100);
-    box-sizing: border-box;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F3F4F6;
 }
 
-.analysis-ai-banner > svg {
+.analysis-section-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #FFF3ED;
+    color: #F15A24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    color: var(--color-scale-primary-700);
-    font-size: 2.5rem;
 }
 
-.analysis-ai-text {
+.analysis-section-title-group h2 {
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.analysis-quota-select {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid #D1D5DB;
+    background-color: #F9FAFB;
+    color: #374151;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.analysis-quota-select:focus {
+    border-color: #F15A24;
+}
+
+/* Barras de Progresso de Gastos */
+.analysis-expenses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.analysis-expense-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.analysis-expense-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.expense-item-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.expense-item-amount {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.analysis-progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    background-color: #E5E7EB;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.analysis-progress-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+.analysis-progress-bar-fill.tone-dark {
+    background-color: #AD3300;
+}
+
+.analysis-progress-bar-fill.tone-medium {
+    background-color: #F15A24;
+}
+
+.analysis-progress-bar-fill.tone-light {
+    background-color: #FF8B66;
+}
+
+/* =========================================
+   Últimas Votações de Destaque
+========================================= */
+.analysis-civic-tag {
+    padding: 5px 12px;
+    border-radius: 999px;
+    background-color: #F3F4F6;
+    color: #4B5563;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.analysis-votes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.analysis-vote-item {
+    background-color: #F3F4F6;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid #E5E7EB;
+}
+
+.analysis-vote-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.vote-item-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.vote-item-desc {
+    font-size: 0.88rem;
+    color: #4B5563;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.vote-item-badge {
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.vote-item-badge.vote-positive {
+    background-color: #16A34A;
+}
+
+.vote-item-badge.vote-negative {
+    background-color: #DC2626;
+}
+
+/* =========================================
+   Banner de IA Cívica
+========================================= */
+.analysis-ai-civic-banner {
+    background-color: #FFF3ED;
+    border: 1px solid #FAD1C0;
+    border-radius: 16px;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.ai-banner-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background-color: #FFEDE8;
+    color: #F15A24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ai-banner-content {
     flex: 1;
     min-width: 0;
-    text-align: center;
 }
 
-.analysis-ai-text h2 {
-    margin-bottom: 0.5rem;
-    color: var(--color-scale-secondary-900);
+.ai-banner-content h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #2B2D42;
+    margin: 0 0 6px 0;
 }
 
-.analysis-ai-text p {
-    color: var(--color-scale-secondary-800);
+.ai-banner-content p {
+    font-size: 0.9rem;
+    color: #453B37;
+    margin: 0;
+    line-height: 1.5;
 }
 
-.btn-analysis-ai {
+.btn-ask-ai {
+    padding: 13px 24px;
+    border-radius: 999px;
+    border: none;
+    background-color: #AD3300;
+    color: #FFFFFF;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
     flex-shrink: 0;
-    padding: 0.65rem 1rem;
-    border-radius: 2rem;
-    background-color: var(--color-scale-primary-700);
-    color: var(--color-neutral-0);
+    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
-.btn-analysis-ai:hover:not(:disabled) {
-    background-color: var(--color-scale-primary-800);
+.btn-ask-ai:hover {
+    background-color: #842500;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(173, 51, 0, 0.25);
 }
 
-/* Footer */
-.analysis-content > footer {
-    width: 100%;
-    min-width: 0;
-    margin-top: auto;
-}
-
-/* Responsividade */
-@media (max-width: 1000px) {
-    .analysis-content {
-        padding: 1.25rem;
-        gap: 1.5rem;
+/* =========================================
+   Responsividade
+========================================= */
+@media (max-width: 960px) {
+    .analysis-container {
+        padding: 24px 20px 36px;
     }
 
-    .analysis-stats {
-        gap: 0.75rem;
+    .analysis-metrics-grid {
+        grid-template-columns: 1fr;
     }
 
-    .analysis-stat-card {
-        padding: 1rem;
-    }
-
-    .analysis-ai-banner {
-        flex-wrap: wrap;
-    }
-
-    .analysis-ai-text {
-        text-align: left;
-    }
-}
-
-@media (max-width: 700px) {
-    .analysis-content {
-        padding: 1rem;
-    }
-
-    .analysis-profile {
-        align-items: flex-start;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .analysis-avatar {
-        flex-basis: 3.25rem;
-        width: 3.25rem;
-        height: 3.25rem;
-        font-size: 2.8rem;
-    }
-
-    .analysis-profile-info {
-        flex-basis: calc(100% - 4.5rem);
-    }
-
-    .btn-follow-parliamentarian {
-        margin-left: auto;
-    }
-
-    .analysis-stats {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .analysis-stat-card {
-        gap: 0.5rem;
-    }
-
-    .analysis-expense-info {
-        align-items: flex-start;
+    .analysis-ai-civic-banner {
         flex-direction: column;
-        gap: 0.3rem;
-    }
-
-    .analysis-expense-info > strong {
-        text-align: left;
-    }
-
-    .analysis-vote-heading {
         align-items: flex-start;
-        flex-direction: column;
     }
 
-    .analysis-ai-banner {
+    .btn-ask-ai {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .analysis-profile-card {
+        flex-direction: column;
         align-items: flex-start;
-        flex-direction: column;
+        padding: 22px;
     }
 
-    .analysis-ai-text {
-        text-align: left;
+    .btn-follow-toggle {
+        width: 100%;
+    }
+
+    .analysis-vote-top,
+    .analysis-expense-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
     }
 }
