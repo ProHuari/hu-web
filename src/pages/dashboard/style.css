@@ -9,7 +9,9 @@
     box-sizing: border-box;
 }
 
-/* Sidebar Fixa */
+/* =========================================
+   Sidebar Fixa
+========================================= */
 .huari-sidebar {
     position: fixed;
     top: 0;
@@ -41,16 +43,11 @@
     padding: 4px 8px;
 }
 
-.logo-badge {
+.huari-logo-img {
     width: 42px;
     height: 42px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #F15A24, #D4460E);
-    color: #FFFFFF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(241, 90, 36, 0.25);
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .logo-text {
@@ -127,7 +124,7 @@
     margin: 0;
 }
 
-/* Navegação */
+/* Navegação Principal */
 .nav-section-title {
     display: block;
     font-size: 0.7rem;
@@ -193,20 +190,34 @@
     color: #FFFFFF;
 }
 
-.sidebar-logout-button {
+/* Ações Inferiores da Sidebar (Config & Logout account) */
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 16px;
+    border-top: 1px solid #F3F4F6;
+}
+
+.sidebar-bottom-button {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
+    gap: 12px;
+    padding: 11px 14px;
     border: none;
     border-radius: 10px;
     background: transparent;
-    color: #6B7280;
-    font-size: 0.88rem;
+    color: #4B5563;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
+}
+
+.sidebar-bottom-button:hover {
+    background-color: #F3F4F6;
+    color: #111827;
 }
 
 .sidebar-logout-button:hover {
@@ -214,12 +225,15 @@
     color: #DC2626;
 }
 
-/* Área Principal */
+/* =========================================
+   Área Principal
+========================================= */
 .huari-main-content {
     margin-left: 270px;
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 0;
     box-sizing: border-box;
 }
 
@@ -314,9 +328,11 @@
     color: #FFFFFF;
 }
 
-/* Seção de Estatísticas */
+/* =========================================
+   Seção de Estatísticas (4 Cartões)
+========================================= */
 .stats-section {
-    padding: 40px 48px;
+    padding: 40px 48px 20px;
 }
 
 .stats-section-header {
@@ -327,7 +343,7 @@
 }
 
 .stats-section-header h2 {
-    font-size: 1.28rem;
+    font-size: 1.35rem;
     font-weight: 700;
     color: #1F2937;
     margin: 0;
@@ -338,10 +354,9 @@
     color: #6B7280;
 }
 
-/* Grid de Cartões */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 22px;
 }
 
@@ -382,6 +397,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .stat-icon-wrapper.orange {
@@ -438,7 +454,409 @@
     line-height: 1.4;
 }
 
-/* Responsividade */
+/* =========================================
+   Grelha de Parlamentares 2x2
+========================================= */
+.lawmakers-section {
+    padding: 24px 48px 36px;
+}
+
+.section-title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.section-title-bar h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0;
+}
+
+.view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    color: #D4460E;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.view-all-link:hover {
+    color: #AD3300;
+    gap: 10px;
+}
+
+.lawmakers-grid-2x2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.lawmaker-card {
+    background-color: #FFFFFF;
+    border: 1px solid #ECEFF2;
+    border-radius: 16px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.lawmaker-card:hover {
+    transform: translateY(-4px);
+    border-color: #D1D5DB;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.lawmaker-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.lawmaker-avatar-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #F3F4F6;
+    color: #2B2D42;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #E5E7EB;
+}
+
+.lawmaker-bookmark-btn {
+    background: transparent;
+    border: none;
+    color: #6B7280;
+    padding: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.lawmaker-bookmark-btn:hover {
+    color: #F15A24;
+    background-color: #FFF3ED;
+    transform: scale(1.1);
+}
+
+.lawmaker-bookmark-btn.is-favorite {
+    color: #F15A24;
+}
+
+.lawmaker-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lawmaker-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.lawmaker-role {
+    font-size: 0.95rem;
+    color: #6B7280;
+    margin: 0;
+}
+
+.lawmaker-badges {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.badge-party,
+.badge-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+.badge-party {
+    background-color: #F15A24;
+}
+
+.badge-state {
+    background-color: #2B2D42;
+}
+
+.lawmaker-metrics-box {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding: 12px 10px;
+    background-color: #F3F4F6;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.lawmaker-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric-label {
+    font-size: 0.78rem;
+    color: #6B7280;
+    font-weight: 500;
+}
+
+.metric-val {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.lawmaker-view-btn {
+    width: 100%;
+    padding: 11px 16px;
+    margin-top: auto;
+    border: none;
+    border-radius: 10px;
+    background-color: #F15A24;
+    color: #FFFFFF;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.lawmaker-view-btn:hover {
+    background-color: #D4460E;
+}
+
+/* =========================================
+   Banner Educativo
+========================================= */
+.educational-banner-wrapper {
+    padding: 12px 48px 48px;
+}
+
+.huari-educational-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    padding: 56px 32px;
+    border-radius: 20px;
+    background-color: #FFEDE8;
+    border: 1px solid #FAD1C0;
+    color: #3A0B00;
+}
+
+.edu-banner-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: #AD3300;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(173, 51, 0, 0.25);
+}
+
+.edu-banner-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #3A0B00;
+    max-width: 640px;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.edu-banner-text {
+    font-size: 1.02rem;
+    color: #5D1800;
+    max-width: 660px;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.edu-banner-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-width: 240px;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 999px;
+    background-color: #AD3300;
+    color: #FFFFFF;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edu-banner-btn:hover {
+    background-color: #842500;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(132, 37, 0, 0.3);
+}
+
+/* =========================================
+   Rodapé (Footer 4 Colunas)
+========================================= */
+.huari-footer {
+    margin-top: auto;
+    background-color: #EBECEF;
+    color: #1F2937;
+    padding: 48px 48px 0;
+    border-top: 1px solid #D1D5DB;
+}
+
+.huari-footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1.15fr 1.15fr;
+    gap: 32px;
+    padding-bottom: 40px;
+}
+
+.footer-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-brand-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.footer-logo-img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+
+.footer-brand-name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #2B2D42;
+}
+
+.footer-about-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #4B5563;
+    max-width: 340px;
+    margin: 0 0 28px 0;
+}
+
+.footer-social-list {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: auto;
+}
+
+.footer-social-list a {
+    color: #2B2D42;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-social-list a:hover {
+    color: #F15A24;
+    transform: translateY(-2px);
+}
+
+.footer-col-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 24px 0;
+}
+
+.footer-link-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.footer-link-list li a {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #374151;
+    font-size: 0.86rem;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-link-list li a:hover {
+    color: #D4460E;
+}
+
+.footer-icon-arrow,
+.footer-icon-ethics {
+    color: #F15A24;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.footer-icon-link {
+    color: #2B2D42;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.huari-footer-copyright {
+    border-top: 1px solid #D1D5DB;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.huari-footer-copyright p {
+    margin: 0;
+    font-size: 0.78rem;
+    color: #6B7280;
+}
+
+/* =========================================
+   Responsividade
+========================================= */
+@media (max-width: 1100px) {
+    .huari-footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 36px 24px;
+    }
+}
+
 @media (max-width: 1024px) {
     .huari-sidebar {
         width: 80px;
@@ -454,12 +872,17 @@
     .nav-label,
     .nav-badge,
     .nav-section-title,
-    .sidebar-logout-button span {
+    .sidebar-bottom-button span {
         display: none;
     }
 
+    .huari-logo-container {
+        justify-content: center;
+        padding: 0;
+    }
+
     .nav-button,
-    .sidebar-logout-button {
+    .sidebar-bottom-button {
         justify-content: center;
         padding: 12px;
     }
@@ -472,8 +895,18 @@
     }
 
     .dashboard-header,
-    .stats-section {
-        padding: 30px 24px;
+    .stats-section,
+    .lawmakers-section,
+    .educational-banner-wrapper,
+    .huari-footer {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .lawmakers-grid-2x2 {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -495,8 +928,29 @@
         justify-content: center;
     }
 
-    .stats-section {
-        padding: 24px 16px;
+    .stats-section,
+    .lawmakers-section,
+    .educational-banner-wrapper,
+    .huari-footer {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .huari-educational-banner {
+        padding: 36px 20px;
+    }
+
+    .edu-banner-title {
+        font-size: 1.45rem;
+    }
+
+    .edu-banner-btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .huari-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
     }
 }
-
