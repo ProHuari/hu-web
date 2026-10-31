@@ -15,13 +15,9 @@ export default function LessonDetails({
                 <LessonHeader
                     title={lesson?.title}
                     description={lesson?.description}
+                    level={lesson?.level}
+                    onNavigateToLearn={onNavigateToLearn}
                 />
-
-                <div className="lesson-details-actions">
-                    <button onClick={onNavigateToLearn}>
-                        Voltar ao Catálogo
-                    </button>
-                </div>
             </section>
         </main>
     );
