@@ -81,6 +81,7 @@ export default function ParliamentarianAnalysis({
     onNavigateToHome,
     onNavigateToLearn,
     onNavigateToLogin,
+    onNavigateToChat,
 }) {
     const [isFollowing, setIsFollowing] = useState(false);
     const [selectedQuotaYear, setSelectedQuotaYear] = useState("Cota 2026");
@@ -105,7 +106,9 @@ export default function ParliamentarianAnalysis({
         } else if (label === "Learn") {
             onNavigateToLearn?.();
         } else if (label === "Chat Huari") {
-            alert("O Chat Huari com IA estará disponível em breve!");
+            if (onNavigateToChat) {
+                onNavigateToChat();
+            }
         }
     };
 
@@ -357,11 +360,11 @@ export default function ParliamentarianAnalysis({
                         <button
                             type="button"
                             className="btn-ask-ai"
-                            onClick={() =>
-                                alert(
-                                    "O Chat Huari com IA estará disponível em breve!"
-                                )
-                            }
+                            onClick={() => {
+                                if (onNavigateToChat) {
+                                    onNavigateToChat();
+                                }
+                            }}
                         >
                             Tirar dúvidas com a IA
                         </button>
