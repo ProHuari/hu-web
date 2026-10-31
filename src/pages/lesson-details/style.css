@@ -1,12 +1,256 @@
-.lesson-details-layout {
+/* =========================================
+   Página: LessonPage (/learn/:courseId/:lessonId)
+========================================= */
+.lesson-page-layout {
     display: flex;
+    align-items: stretch;
     min-height: 100vh;
     width: 100%;
-    background-color: var(--color-neutral-200);
+    background-color: #F8F9FB;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1F2937;
+    box-sizing: border-box;
 }
 
-.lesson-details-content {
+.lesson-sidebar-wrapper {
+    flex-shrink: 0;
+}
+
+.lesson-page-main {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     min-width: 0;
-    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.lesson-page-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 36px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-sizing: border-box;
+}
+
+/* Barra Superior de Navegação */
+.lesson-nav-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.lesson-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6B7280;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.lesson-back-btn:hover {
+    color: #D4460E;
+    transform: translateX(-2px);
+}
+
+.lesson-progress-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    color: #4B5563;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.chip-progress-bar {
+    width: 90px;
+}
+
+.lesson-progress-chip strong {
+    color: #111827;
+}
+
+/* Layout Split: 70% / 30% */
+.lesson-content-split {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    width: 100%;
+}
+
+.lesson-primary-col {
+    flex: 0 0 70%;
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+}
+
+.lesson-sidebar-col {
+    flex: 0 0 calc(30% - 28px);
+    max-width: calc(30% - 28px);
+    position: sticky;
+    top: 24px;
+    box-sizing: border-box;
+}
+
+/* Informações da Aula */
+.lesson-info-card {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #E5E7EB;
+    padding: 28px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.lesson-header-action-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid #F3F4F6;
+    padding-bottom: 18px;
+}
+
+.lesson-course-name {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #D4460E;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+.lesson-main-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 6px 0;
+    line-height: 1.25;
+}
+
+.lesson-instructor {
+    font-size: 0.86rem;
+    color: #6B7280;
+    margin: 0;
+}
+
+.btn-complete-lesson {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1.5px solid #E5E7EB;
+    background-color: #F9FAFB;
+    color: #4B5563;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-complete-lesson:hover {
+    background-color: #ECFDF5;
+    border-color: #A7F3D0;
+    color: #065F46;
+}
+
+.btn-complete-lesson.is-completed {
+    background-color: #DCFCE7;
+    border-color: #86EFAC;
+    color: #166534;
+}
+
+.lesson-summary-box h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 8px 0;
+}
+
+.lesson-summary-box p {
+    font-size: 0.92rem;
+    color: #4B5563;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.lesson-resources-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid #F3F4F6;
+}
+
+.btn-resource {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+    background-color: #FFFFFF;
+    color: #374151;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-resource:hover {
+    background-color: #F9FAFB;
+    border-color: #D1D5DB;
+    color: #111827;
+}
+
+/* =========================================
+   Responsividade
+========================================= */
+@media (max-width: 1024px) {
+    .lesson-content-split {
+        flex-direction: column;
+    }
+
+    .lesson-primary-col,
+    .lesson-sidebar-col {
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+        position: static;
+    }
+}
+
+@media (max-width: 640px) {
+    .lesson-page-container {
+        padding: 20px 16px 36px;
+    }
+
+    .lesson-header-action-row {
+        flex-direction: column;
+    }
+
+    .btn-complete-lesson {
+        width: 100%;
+        justify-content: center;
+    }
 }
