@@ -11,7 +11,7 @@ import {
     RiArrowRightUpLine,
     RiUser3Line,
     RiLogoutBoxRLine,
-    RiTrendingUpLine,
+    RiArrowUpLine,
     RiShieldCheckLine
 } from 'react-icons/ri';
 import './style.css';
@@ -213,7 +213,7 @@ export default function Dashboard({
                                     <div className="stat-card-body">
                                         <div className="stat-card-value">{card.value}</div>
                                         <div className="stat-card-trend">
-                                            <RiTrendingUpLine size={14} />
+                                            <RiArrowUpLine size={14} />
                                             <span>{card.trend}</span>
                                         </div>
                                     </div>
