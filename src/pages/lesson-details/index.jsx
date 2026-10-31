@@ -1,6 +1,7 @@
 import "./style.css";
 
 import SideBar from "../../components/sidebar";
+import LessonHeader from "../../components/lesson-header";
 
 export default function LessonDetails({
     lesson,
@@ -11,15 +12,16 @@ export default function LessonDetails({
             <SideBar activeItem="Learn" />
 
             <section className="lesson-details-content">
-                <h1>Descrição da Aula</h1>
+                <LessonHeader
+                    title={lesson?.title}
+                    description={lesson?.description}
+                />
 
-                <p>
-                    {lesson?.title || "Título da aula"}
-                </p>
-
-                <button onClick={onNavigateToLearn}>
-                    Voltar ao Catálogo
-                </button>
+                <div className="lesson-details-actions">
+                    <button onClick={onNavigateToLearn}>
+                        Voltar ao Catálogo
+                    </button>
+                </div>
             </section>
         </main>
     );

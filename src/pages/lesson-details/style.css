@@ -8,5 +8,8 @@
 .lesson-details-content {
     flex: 1;
     min-width: 0;
+}
+
+.lesson-details-actions {
     padding: 2rem;
 }
