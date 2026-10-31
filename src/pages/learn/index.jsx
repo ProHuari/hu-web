@@ -90,7 +90,10 @@ const lessons = [
     },
 ];
 
-export default function Learn({ onNavigateToHome }) {
+export default function Learn({
+    onNavigateToHome,
+    onViewLesson,
+}) {
     const [activeCategory, setActiveCategory] = useState('Todos');
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -262,11 +265,7 @@ export default function Learn({ onNavigateToHome }) {
                                         title="Entrar na Aula"
                                         icon={<RiArrowRightLine />}
                                         identifier="btn-primary btn-radius-10"
-                                        onClick={() =>
-                                            console.log(
-                                                `Aula selecionada: ${lesson.title}`
-                                            )
-                                        }
+                                        onClick={() => onViewLesson?.(lesson)}
                                     />
                                 </div>
                             </article>

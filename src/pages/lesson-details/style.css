@@ -1,0 +1,12 @@
+.lesson-details-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--color-neutral-200);
+}
+
+.lesson-details-content {
+    flex: 1;
+    min-width: 0;
+    padding: 2rem;
+}

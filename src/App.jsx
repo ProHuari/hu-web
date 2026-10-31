@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 import Login from "./pages/login";
@@ -8,13 +9,16 @@ import Home from "./pages/home";
 import Parliamentarians from "./pages/parliamentarians";
 import ParliamentarianAnalysis from "./pages/parliamentarian-analysis";
 import Learn from "./pages/learn";
+import LessonDetails from "./pages/lesson-details";
 
 export default function App() {
     const [currentPage, setCurrentPage] = useState("create-account");
+
     const [selectedParliamentarian, setSelectedParliamentarian] =
         useState(null);
 
-    
+    const [selectedLesson, setSelectedLesson] = useState(null);
+
     if (currentPage === "home") {
         return (
             <Home
@@ -81,6 +85,19 @@ export default function App() {
         return (
             <Learn
                 onNavigateToHome={() => setCurrentPage("home")}
+                onViewLesson={(lesson) => {
+                    setSelectedLesson(lesson);
+                    setCurrentPage("lesson-details");
+                }}
+            />
+        );
+    }
+
+    if (currentPage === "lesson-details") {
+        return (
+            <LessonDetails
+                lesson={selectedLesson}
+                onNavigateToLearn={() => setCurrentPage("learn")}
             />
         );
     }
