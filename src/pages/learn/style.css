@@ -256,6 +256,9 @@
 }
 
 .learn-card-duration {
+    position: static;
+    top: auto;
+    right: auto;
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
