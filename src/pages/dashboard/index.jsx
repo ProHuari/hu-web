@@ -19,7 +19,6 @@ import {
     RiArrowRightUpLine,
     RiUser3Line,
     RiUser3Fill,
-    RiTrendingUpLine,
     RiSettings3Line,
     RiShutDownLine,
     RiBookmarkLine,
@@ -322,7 +321,7 @@ export default function Dashboard({
                                     <div className="stat-card-body">
                                         <div className="stat-card-value">{card.value}</div>
                                         <div className="stat-card-trend">
-                                            <RiTrendingUpLine size={14} />
+                                            <RiArrowRightUpLine size={14} />
                                             <span>{card.trend}</span>
                                         </div>
                                     </div>

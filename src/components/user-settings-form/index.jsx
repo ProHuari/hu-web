@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
     RiUserLine,
-    RiShieldLockLine,
+    RiLockLine,
     RiBookmarkLine,
     RiNotification3Line,
     RiSave3Line,
@@ -97,7 +97,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                     className={`settings-tab-btn ${activeTab === "seguranca" ? "is-active" : ""}`}
                     onClick={() => setActiveTab("seguranca")}
                 >
-                    <RiShieldLockLine size={18} />
+                    <RiLockLine size={18} />
                     <span>Segurança & Senha</span>
                 </button>
             </div>
@@ -328,7 +328,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
 
                     <div className="settings-form-footer">
                         <button type="submit" className="btn-save-settings">
-                            <RiShieldLockLine size={18} />
+                            <RiLockLine size={18} />
                             <span>Atualizar Senha</span>
                         </button>
                     </div>

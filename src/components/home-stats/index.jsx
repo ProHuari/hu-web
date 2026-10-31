@@ -1,11 +1,10 @@
-
 import './style.css';
 import Card from '../card';
 
 import {
     RiTeamFill,
     RiMoneyDollarCircleLine,
-    RiLineChartLine,
+    RiArrowRightUpLine, 
     RiFileList3Line,
 } from 'react-icons/ri';
 
@@ -29,7 +28,7 @@ const stats = [
         title: 'Presença Média',
         value: '88,4%',
         description: 'Presença nas votações',
-        icon: RiLineChartLine,
+        icon: RiArrowRightUpLine,
     },
     {
         id: 4,
