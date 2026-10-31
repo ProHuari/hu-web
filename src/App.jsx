@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import Login from "./pages/login";
@@ -10,14 +9,28 @@ import Parliamentarians from "./pages/parliamentarians";
 import ParliamentarianAnalysis from "./pages/parliamentarian-analysis";
 import Learn from "./pages/learn";
 import LessonDetails from "./pages/lesson-details";
+import Dashboard from "./pages/dashboard";
 
 export default function App() {
-    const [currentPage, setCurrentPage] = useState("create-account");
+    const [currentPage, setCurrentPage] = useState("dashboard");
 
     const [selectedParliamentarian, setSelectedParliamentarian] =
         useState(null);
 
     const [selectedLesson, setSelectedLesson] = useState(null);
+
+    if (currentPage === "dashboard") {
+        return (
+            <Dashboard
+                onNavigate={(page) => {
+                    if (page === "Home") setCurrentPage("home");
+                    if (page === "Lawmakers") setCurrentPage("parliamentarians");
+                    if (page === "Learn") setCurrentPage("learn");
+                    if (page === "Chat Huari") alert("O Chat Huari com IA estará disponível em breve!");
+                }}
+            />
+        );
+    }
 
     if (currentPage === "home") {
         return (
@@ -34,7 +47,7 @@ export default function App() {
     if (currentPage === "parliamentarians") {
         return (
             <Parliamentarians
-                onNavigateToHome={() => setCurrentPage("home")}
+                onNavigateToHome={() => setCurrentPage("dashboard")}
                 onViewParliamentarian={(parliamentarian) => {
                     setSelectedParliamentarian(parliamentarian);
                     setCurrentPage("parliamentarian-analysis");
@@ -84,7 +97,7 @@ export default function App() {
     if (currentPage === "learn") {
         return (
             <Learn
-                onNavigateToHome={() => setCurrentPage("home")}
+                onNavigateToHome={() => setCurrentPage("dashboard")}
                 onViewLesson={(lesson) => {
                     setSelectedLesson(lesson);
                     setCurrentPage("lesson-details");
@@ -108,7 +121,7 @@ export default function App() {
             onNavigateToRecoverPassword={() =>
                 setCurrentPage("recover-password")
             }
-            onNavigateToHome={() => setCurrentPage("home")}
+            onNavigateToHome={() => setCurrentPage("dashboard")}
         />
     );
 }

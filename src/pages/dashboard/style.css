@@ -1,0 +1,502 @@
+/* Layout Principal */
+.huari-dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #F8F9FA;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #2B2D42;
+    box-sizing: border-box;
+}
+
+/* Sidebar Fixa */
+.huari-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 270px;
+    background-color: #FFFFFF;
+    border-right: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 18px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.03);
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+.sidebar-top {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Logotipo */
+.huari-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 8px;
+}
+
+.logo-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #F15A24, #D4460E);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(241, 90, 36, 0.25);
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-brand {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #2B2D42;
+    line-height: 1.1;
+}
+
+.logo-tag {
+    font-size: 0.72rem;
+    color: #6D729E;
+    font-weight: 500;
+}
+
+/* Perfil do Utilizador */
+.sidebar-user-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: #F8F9FB;
+    border: 1px solid #EEF0F4;
+    border-radius: 14px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #FFEDE8;
+    color: #D4460E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.user-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1F2937;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.user-email {
+    font-size: 0.75rem;
+    color: #6B7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+/* Navegação */
+.nav-section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9CA3AF;
+    margin-bottom: 8px;
+    padding-left: 8px;
+}
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #4B5563;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-button:hover {
+    background-color: #F3F4F6;
+    color: #111827;
+}
+
+.nav-button.active {
+    background-color: #FFF3ED;
+    color: #D4460E;
+    font-weight: 700;
+}
+
+.nav-button.active .nav-icon {
+    color: #D4460E;
+}
+
+.nav-label {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.nav-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background-color: #D4460E;
+    color: #FFFFFF;
+}
+
+.sidebar-logout-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #6B7280;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.sidebar-logout-button:hover {
+    background-color: #FEE2E2;
+    color: #DC2626;
+}
+
+/* Área Principal */
+.huari-main-content {
+    margin-left: 270px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* Cabeçalho Laranja Escuro */
+.dashboard-header {
+    background: linear-gradient(135deg, #AD3300 0%, #D4460E 60%, #F15A24 100%);
+    padding: 44px 48px;
+    color: #FFFFFF;
+    box-shadow: 0 4px 20px rgba(173, 51, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.header-text-block {
+    max-width: 820px;
+}
+
+.header-chip {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
+    margin-bottom: 12px;
+}
+
+.header-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    margin: 0 0 10px 0;
+    line-height: 1.2;
+}
+
+.header-subtitle {
+    font-size: 1.05rem;
+    color: #FFEDE8;
+    line-height: 1.6;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Ações do Cabeçalho */
+.header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    border: none;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn-action-primary {
+    background-color: #FFFFFF;
+    color: #AD3300;
+}
+
+.btn-action-secondary {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.btn-action-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-action-accent {
+    background-color: #2B2D42;
+    color: #FFFFFF;
+}
+
+/* Seção de Estatísticas */
+.stats-section {
+    padding: 40px 48px;
+}
+
+.stats-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 22px;
+}
+
+.stats-section-header h2 {
+    font-size: 1.28rem;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0;
+}
+
+.stats-update-time {
+    font-size: 0.8rem;
+    color: #6B7280;
+}
+
+/* Grid de Cartões */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 22px;
+}
+
+.stat-card {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    border: 1px solid #ECEFF2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.stat-card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4B5563;
+}
+
+.stat-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon-wrapper.orange {
+    background-color: #FFEDE8;
+    color: #D4460E;
+}
+
+.stat-icon-wrapper.red {
+    background-color: #FEE2E2;
+    color: #DC2626;
+}
+
+.stat-icon-wrapper.green {
+    background-color: #DCFCE7;
+    color: #16A34A;
+}
+
+.stat-icon-wrapper.blue {
+    background-color: #E0F2FE;
+    color: #0284C7;
+}
+
+.stat-card-body {
+    margin-bottom: 16px;
+}
+
+.stat-card-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+}
+
+.stat-card-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #059669;
+}
+
+.stat-card-footer {
+    padding-top: 14px;
+    border-top: 1px solid #F3F4F6;
+}
+
+.stat-card-footer p {
+    font-size: 0.78rem;
+    color: #6B7280;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .huari-sidebar {
+        width: 80px;
+        padding: 20px 10px;
+    }
+
+    .huari-main-content {
+        margin-left: 80px;
+    }
+
+    .logo-text,
+    .user-details,
+    .nav-label,
+    .nav-badge,
+    .nav-section-title,
+    .sidebar-logout-button span {
+        display: none;
+    }
+
+    .nav-button,
+    .sidebar-logout-button {
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .sidebar-user-card {
+        padding: 6px;
+        justify-content: center;
+        background: transparent;
+        border: none;
+    }
+
+    .dashboard-header,
+    .stats-section {
+        padding: 30px 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-header {
+        padding: 24px 16px;
+    }
+
+    .header-title {
+        font-size: 1.7rem;
+    }
+
+    .header-actions {
+        flex-direction: column;
+    }
+
+    .btn-action {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .stats-section {
+        padding: 24px 16px;
+    }
+}
+
