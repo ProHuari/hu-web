@@ -1,0 +1,63 @@
+.user-profile-layout {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #F8F9FB;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1F2937;
+    box-sizing: border-box;
+}
+
+.user-profile-sidebar-wrapper {
+    flex-shrink: 0;
+}
+
+.user-profile-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.user-profile-container {
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 40px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-sizing: border-box;
+}
+
+.user-profile-back-link {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 8px;
+    padding: 6px 10px;
+    margin-left: -10px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #6B7280;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.user-profile-back-link:hover {
+    color: #D4460E;
+    background-color: rgba(241, 90, 36, 0.08);
+    transform: translateX(-2px);
+}
+
+@media (max-width: 900px) {
+    .user-profile-container {
+        padding: 24px 20px 36px;
+    }
+}
