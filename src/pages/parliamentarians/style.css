@@ -1,404 +1,211 @@
-
-/* ========================================
-   Layout principal
-======================================== */
-
-.parliamentarians-layout {
+/* =========================================
+   Página: LawmakersPage (Listagem de Parlamentares)
+========================================= */
+.lawmakers-page-layout {
     display: flex;
     align-items: stretch;
     min-height: 100vh;
-    min-height: 100dvh;
     width: 100%;
-    background-color: var(--color-neutral-200);
-}
-
-/* Conteúdo ao lado da sidebar */
-
-.parliamentarians-content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 0;
-    min-width: 0;
-    padding: 2rem;
+    background-color: #F8F9FB;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1F2937;
     box-sizing: border-box;
 }
 
-/* ========================================
-   Cabeçalho
-======================================== */
+.lawmakers-sidebar-wrapper {
+    flex-shrink: 0;
+}
 
-.parliamentarians-header {
+.lawmakers-main-content {
+    flex: 1;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: space-between;
-    gap: 1.5rem;
-    width: 100%;
-}
-
-.parliamentarians-header > div {
     min-width: 0;
+    box-sizing: border-box;
 }
 
-.parliamentarians-breadcrumb {
+.lawmakers-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 36px 40px 48px;
     display: flex;
-    gap: 0.4rem;
-    margin: 0 0 0.5rem;
-    color: var(--color-primary);
-    font-size: 0.8rem;
+    flex-direction: column;
+    gap: 28px;
+    box-sizing: border-box;
 }
 
-.parliamentarians-header h1 {
+/* Header Institucional */
+.lawmakers-page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background-color: #FFF3ED;
+    border: 1px solid #FFEAE0;
+    color: #D4460E;
+    font-size: 0.76rem;
+    font-weight: 700;
+    width: fit-content;
+}
+
+.header-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.title-group h1 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.02em;
+}
+
+.title-group p {
+    font-size: 0.94rem;
+    color: #6B7280;
     margin: 0;
-    font-size: 1.75rem;
-    line-height: 1.3;
-}
-
-.parliamentarians-description {
-    max-width: 36rem;
-    margin: 0.4rem 0 0;
-    color: var(--color-neutral-700);
-    font-size: 0.9rem;
+    max-width: 640px;
     line-height: 1.5;
 }
 
-/* ========================================
-   Pesquisa e filtros
-======================================== */
+.congress-stat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    color: #2B2D42;
+    font-size: 0.88rem;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
 
-.parliamentarians-filters {
+.congress-stat-chip svg {
+    color: #F15A24;
+}
+
+/* Grid de Cards */
+.lawmakers-grid-section {
+    width: 100%;
+}
+
+.lawmakers-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+
+/* Loading State */
+.lawmakers-loading-state {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 0.9rem;
-    width: 100%;
-    min-width: 0;
-    padding: 1.25rem;
-    border-radius: 1rem;
-    background-color: var(--color-neutral-0);
-    box-sizing: border-box;
-}
-
-.parliamentarians-search {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-    min-width: 0;
-}
-
-.parliamentarians-search .input-container-group {
-    min-width: 0;
-    width: 100%;
-}
-
-.parliamentarians-search .input-wrapper-field {
-    width: 100%;
-    min-width: 0;
-}
-
-.parliamentarians-search .input-search-parliamentarians {
-    background-color: var(--color-neutral-300);
-    border-radius: 0.4rem;
-}
-
-.parliamentarians-search .input-search-parliamentarians .input-field {
-    min-height: 2.75rem;
-    border: none;
-    color: var(--color-neutral-900);
-}
-
-.parliamentarians-search
-.input-search-parliamentarians
-.input-field::placeholder {
-    color: var(--color-neutral-700);
-}
-
-.parliamentarians-search
-.input-search-parliamentarians
-.input-icon-left {
-    color: var(--color-primary);
-}
-
-.parliamentarians-filter-options {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    width: 100%;
-}
-
-/* ========================================
-   Resultados
-======================================== */
-
-.parliamentarians-results-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    width: 100%;
-}
-
-.parliamentarians-results-heading span {
-    color: var(--color-neutral-700);
-    font-size: 0.75rem;
-}
-
-/* ========================================
-   Lista de parlamentares
-======================================== */
-
-.parliamentarians-list {
-    width: 100%;
-    min-width: 0;
-    overflow: hidden;
-    border-radius: 1rem;
-    background-color: var(--color-neutral-0);
-}
-
-.parliamentarian-row {
-    display: grid;
-    grid-template-columns:
-        minmax(0, 2.5fr)
-        minmax(4rem, 0.7fr)
-        minmax(3rem, 0.5fr)
-        minmax(7rem, 1fr)
-        auto;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-    min-width: 0;
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--color-neutral-400);
-    box-sizing: border-box;
-}
-
-.parliamentarian-row:last-child {
-    border-bottom: none;
-}
-
-.parliamentarian-identity,
-.parliamentarian-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-width: 0;
-}
-
-.parliamentarian-details {
-    min-width: 0;
-}
-
-.parliamentarian-details h2 {
-    margin: 0;
-    font-size: 0.95rem;
-}
-
-.parliamentarian-details p {
-    margin: 0.25rem 0;
-    color: var(--color-neutral-600);
-    font-size: 0.75rem;
-}
-
-.parliamentarian-avatar {
-    display: flex;
-    flex: 0 0 3rem;
     align-items: center;
     justify-content: center;
-    width: 3rem;
-    height: 3rem;
+    padding: 64px 20px;
+    gap: 16px;
+    color: #6B7280;
+}
+
+.loading-spinner {
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    background-color: var(--color-neutral-400);
-    color: var(--color-neutral-800);
+    border: 3px solid #E5E7EB;
+    border-top-color: #F15A24;
+    animation: spin 0.8s linear infinite;
 }
 
-.parliamentarian-metric {
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Empty State */
+.lawmakers-empty-state {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    min-width: 0;
-}
-
-.parliamentarian-metric span {
-    color: var(--color-neutral-600);
-    font-size: 0.6rem;
-}
-
-.parliamentarian-metric strong {
-    font-size: 0.9rem;
-}
-
-/* Verde semântico: ainda não existe na variables.css */
-.attendance-value {
-    color: #078443;
-}
-
-.parliamentarian-actions {
-    justify-content: flex-end;
-}
-
-.parliamentarians-empty {
-    padding: 2rem;
-    text-align: center;
-    color: var(--color-neutral-700);
-}
-
-/* ========================================
-   Botões
-======================================== */
-
-.btn-saved-parliamentarians {
-    padding: 0.75rem 1rem;
-    border-radius: 0.4rem;
-    background-color: var(--color-scale-tertiary-100);
-    color: var(--color-scale-primary-700);
-}
-
-.btn-filter,
-.btn-filter-active {
-    gap: 0.35rem;
-    padding: 0.55rem 0.8rem;
-    border: 1px solid var(--color-neutral-400);
-    border-radius: 2rem;
-    background-color: var(--color-neutral-0);
-    color: var(--color-neutral-900);
-    font-size: 0.75rem;
-}
-
-.btn-filter-active {
-    border-color: var(--color-primary);
-    background-color: var(--color-scale-tertiary-100);
-    color: var(--color-scale-primary-700);
-}
-
-.btn-clear-filters {
-    padding: 0.5rem 0.75rem;
-    color: var(--color-scale-primary-700);
-    font-size: 0.75rem;
-}
-
-.btn-bookmark-parliamentarian {
-    width: 2.5rem;
-    height: 2.5rem;
-    padding: 0.5rem;
-    border: 1px solid var(--color-neutral-400);
-    border-radius: 0.4rem;
-    background-color: var(--color-scale-tertiary-100);
-    color: var(--color-primary);
-}
-
-.btn-view-parliamentarian {
-    min-height: 2.5rem;
-    padding: 0.65rem 0.8rem;
-    border-radius: 0.4rem;
-    background-color: var(--color-scale-primary-700);
-    color: var(--color-neutral-0);
-    font-size: 0.75rem;
-}
-
-.btn-view-parliamentarian:hover:not(:disabled) {
-    background-color: var(--color-scale-primary-800);
-}
-
-/* ========================================
-   Paginação
-======================================== */
-
-.parliamentarians-pagination {
-    display: flex;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    width: 100%;
+    text-align: center;
+    padding: 64px 20px;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    border: 1px dashed #D1D5DB;
+    gap: 12px;
 }
 
-.btn-pagination,
-.btn-pagination-active,
-.btn-pagination-next {
-    min-width: 2.5rem;
-    min-height: 2.25rem;
-    padding: 0.4rem 0.65rem;
-    border-radius: 0.4rem;
-    background-color: var(--color-neutral-0);
-    color: var(--color-neutral-900);
-    font-size: 0.75rem;
+.lawmakers-empty-state svg {
+    color: #9CA3AF;
 }
 
-.btn-pagination-active,
-.btn-pagination-next {
-    background-color: var(--color-scale-primary-700);
-    color: var(--color-neutral-0);
+.lawmakers-empty-state h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
 }
 
-/* ========================================
-   Rodapé
-======================================== */
-
-.parliamentarians-content > footer {
-    margin-top: auto;
-    width: 100%;
-    min-width: 0;
+.lawmakers-empty-state p {
+    font-size: 0.9rem;
+    color: #6B7280;
+    margin: 0;
+    max-width: 400px;
 }
 
-/* ========================================
+.btn-empty-reset {
+    margin-top: 6px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background-color: #F15A24;
+    color: #FFFFFF;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-empty-reset:hover {
+    background-color: #D4460E;
+}
+
+.lawmakers-pagination-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 12px;
+}
+
+/* =========================================
    Responsividade
-======================================== */
-
+========================================= */
 @media (max-width: 1100px) {
-    .parliamentarians-content {
-        padding: 1.25rem;
-    }
-
-    .parliamentarian-row {
-        grid-template-columns: minmax(0, 1fr) minmax(4rem, auto);
-    }
-
-    .parliamentarian-metric {
-        padding: 0.25rem 0;
-    }
-
-    .parliamentarian-actions {
-        grid-column: 1 / -1;
-        justify-content: flex-start;
+    .lawmakers-cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
-@media (max-width: 700px) {
-    .parliamentarians-content {
-        padding: 1rem;
+@media (max-width: 768px) {
+    .lawmakers-container {
+        padding: 24px 20px 36px;
     }
 
-    .parliamentarians-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .parliamentarians-search {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .parliamentarians-search select {
-        width: 100%;
-        max-width: none;
-    }
-
-    .parliamentarians-results-heading {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .parliamentarian-row {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 1rem;
-    }
-
-    .parliamentarian-identity,
-    .parliamentarian-actions {
-        grid-column: 1 / -1;
+    .lawmakers-cards-grid {
+        grid-template-columns: 1fr;
     }
 }
