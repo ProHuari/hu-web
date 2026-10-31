@@ -1,0 +1,171 @@
+/* =========================================
+   Molécula: LessonAccordion
+========================================= */
+.huari-lesson-accordion {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.accordion-header-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    background-color: #FAFAFC;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.accordion-header-title h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+}
+
+.accordion-modules-count {
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background-color: #FFF3ED;
+    color: #D4460E;
+}
+
+.accordion-modules-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.accordion-module-group {
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.accordion-module-group:last-child {
+    border-bottom: none;
+}
+
+.module-toggle-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.15s ease;
+}
+
+.module-toggle-trigger:hover {
+    background-color: #F9FAFB;
+}
+
+.module-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.module-index-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #9CA3AF;
+    text-transform: uppercase;
+}
+
+.module-title {
+    font-size: 0.92rem;
+    color: #1F2937;
+    line-height: 1.3;
+}
+
+.module-arrow {
+    color: #9CA3AF;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.module-arrow.rotated {
+    transform: rotate(180deg);
+    color: #F15A24;
+}
+
+.module-lessons-list {
+    list-style: none;
+    padding: 4px 10px 10px 10px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background-color: #F8F9FB;
+}
+
+.lesson-item-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #374151;
+    font-size: 0.86rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.lesson-item-btn:hover {
+    background-color: #ECEFF2;
+    color: #111827;
+}
+
+.lesson-item-btn.is-current {
+    background-color: #FFF3ED;
+    color: #D4460E;
+    font-weight: 700;
+}
+
+.lesson-item-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.lesson-item-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lesson-check-done {
+    color: #16A34A;
+    flex-shrink: 0;
+}
+
+.lesson-play-icon {
+    color: #9CA3AF;
+    flex-shrink: 0;
+}
+
+.lesson-item-btn.is-current .lesson-play-icon {
+    color: #F15A24;
+}
+
+.lesson-duration {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.74rem;
+    color: #9CA3AF;
+    flex-shrink: 0;
+}
+
