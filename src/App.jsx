@@ -23,11 +23,17 @@ export default function App() {
         return (
             <Dashboard
                 onNavigate={(page) => {
-                    if (page === "Home") setCurrentPage("home");
+                    if (page === "Home") setCurrentPage("dashboard");
                     if (page === "Lawmakers") setCurrentPage("parliamentarians");
                     if (page === "Learn") setCurrentPage("learn");
                     if (page === "Chat Huari") alert("O Chat Huari com IA estará disponível em breve!");
+                    if (page === "Logout") setCurrentPage("login");
                 }}
+                onViewParliamentarian={(parliamentarian) => {
+                    setSelectedParliamentarian(parliamentarian);
+                    setCurrentPage("parliamentarian-analysis");
+                }}
+                onLogout={() => setCurrentPage("login")}
             />
         );
     }
@@ -63,6 +69,9 @@ export default function App() {
                 onNavigateToParliamentarians={() =>
                     setCurrentPage("parliamentarians")
                 }
+                onNavigateToHome={() => setCurrentPage("dashboard")}
+                onNavigateToLearn={() => setCurrentPage("learn")}
+                onNavigateToLogin={() => setCurrentPage("login")}
             />
         );
     }
