@@ -1,0 +1,104 @@
+/* =========================================
+   Átomo: VideoPlayer (16:9 Responsivo)
+========================================= */
+.huari-video-player-container {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: #0F101A;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+}
+
+.huari-video-aspect-ratio {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* Proporção 16:9 perfeita */
+}
+
+.huari-video-frame,
+.huari-video-element {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.huari-video-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2B2D42 0%, #151624 100%);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.huari-video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.huari-play-btn {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    border: none;
+    color: #F15A24;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 4px 12px rgba(241, 90, 36, 0.4));
+}
+
+.huari-play-btn:hover {
+    color: #FF8B66;
+    transform: scale(1.1);
+}
+
+.huari-video-meta {
+    position: absolute;
+    bottom: 20px;
+    left: 24px;
+    right: 24px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.huari-video-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background-color: rgba(241, 90, 36, 0.85);
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.huari-video-title {
+    color: #FFFFFF;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
