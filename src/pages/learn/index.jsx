@@ -1,283 +1,186 @@
-
-import { useState } from 'react';
-
-import SideBar from '../../components/sidebar';
-import Button from '../../components/button';
-import InputText from '../../components/input-text';
-import Footer from '../../components/footer';
-
+import React, { useState, useMemo } from 'react';
 import {
+    RiGraduationCapLine,
+    RiSearchLine,
+    RiFilter3Line,
+    RiBookOpenLine,
     RiTimeLine,
-    RiBookmarkLine,
-    RiCheckLine,
-    RiArrowRightLine,
 } from 'react-icons/ri';
 
+import SideBar from '../../components/sidebar';
+import Footer from '../../components/footer';
+import CourseCard from '../../components/course-card';
 import './style.css';
 
-const lessonCategories = [
-    'Todos',
-    'O Básico',
-    'Seu Voto',
-    'Seu Dinheiro',
-    'Seus Direitos',
-];
-
-const lessons = [
+const MOCK_COURSES = [
     {
-        id: 1,
-        category: 'O Básico',
-        duration: '3 H',
-        level: 'INICIANTE',
-        title: 'O que faz um vereador de verdade?',
-        topics: [
-            'Diferença real entre legislar e fiscalizar a prefeitura',
-            'O que o vereador pode e o que não pode fazer no seu bairro',
-            'Como identificar se um Projeto de Lei traz benefícios reais para a cidade',
-            'Como acompanhar os gastos de gabinete, presença e votações na Câmara',
-        ],
-        image: '/images/learn/politica-brasileira.jpg',
+        id: 'introducao-politica',
+        title: 'Introdução ao Sistema Político Brasileiro',
+        description:
+            'Aprenda como funciona a divisão dos Três Poderes, o pacto federativo e as funções de deputados, senadores e prefeitos.',
+        category: 'Iniciantes',
+        level: 'Básico',
+        duration: '2h 15m',
+        progress: 65,
+        lessonsCount: 6,
     },
     {
-        id: 2,
-        category: 'Seu Voto',
-        duration: '1H 10MIN',
-        level: 'INTERMEDIÁRIO',
-        title: 'O Poder do Seu Voto',
+        id: 'orcamento-e-ceap',
+        title: 'Orçamento Público & Cota Parlamentar (CEAP)',
         description:
-            'Descubra como suas escolhas nas urnas influenciam as decisões e os rumos do país.',
-        image: '/images/learn/poder-do-voto.jpg',
+            'Entenda de onde vem o dinheiro público, como ler a LOA e auditar despesas de notas fiscais de gabinetes parlamentares.',
+        category: 'Economia',
+        level: 'Intermediário',
+        duration: '3h 40m',
+        progress: 25,
+        lessonsCount: 8,
     },
     {
-        id: 3,
-        category: 'Seu Dinheiro',
-        duration: '50 MIN',
-        level: 'INICIANTE',
-        title: 'Para Onde Vai o Dinheiro Público?',
+        id: 'processo-legislativo',
+        title: 'Processo Legislativo: Como Leis são Aprovadas',
         description:
-            'Aprenda como os recursos públicos são arrecadados, distribuídos e utilizados.',
-        image: '/images/learn/dinheiro-publico.jpg',
+            'Do protocolo da proposta à sanção presidencial: desvende como tramitam Projetos de Lei (PL), PECs e Medidas Provisórias.',
+        category: 'Direito',
+        level: 'Avançado',
+        duration: '4h 10m',
+        progress: 0,
+        lessonsCount: 10,
     },
     {
-        id: 4,
-        category: 'Seus Direitos',
-        duration: '1H',
-        level: 'INICIANTE',
-        title: 'Conheça Seus Direitos',
+        id: 'fiscalizacao-e-lai',
+        title: 'Fiscalização Cidadã e a Lei de Acesso à Informação',
         description:
-            'Entenda seus direitos fundamentais e saiba como buscar informações e serviços públicos.',
-        image: '/images/learn/seus-direitos.jpg',
+            'Guia prático para formular pedidos via LAI, auditar contratos de compras públicas e fiscalizar o Diário Oficial.',
+        category: 'Iniciantes',
+        level: 'Básico',
+        duration: '1h 50m',
+        progress: 100,
+        lessonsCount: 5,
     },
     {
-        id: 5,
-        category: 'O Básico',
-        duration: '1H 10MIN',
-        level: 'INTERMEDIÁRIO',
-        title: 'Os Três Poderes',
+        id: 'sistema-eleitoral',
+        title: 'Sistema Eleitoral e Quociente Partidário',
         description:
-            'Entenda as funções do Executivo, Legislativo e Judiciário e como eles se relacionam.',
-        image: '/images/learn/tres-poderes.jpg',
+            'Compreenda o cálculo do quociente eleitoral, a distribuição das sobras de votos e o financiamento de campanhas eleitorais.',
+        category: 'Direito',
+        level: 'Intermediário',
+        duration: '2h 30m',
+        progress: 0,
+        lessonsCount: 6,
     },
     {
-        id: 6,
-        category: 'Seu Voto',
-        duration: '35 MIN',
-        level: 'INICIANTE',
-        title: 'Como Acompanhar um Parlamentar',
+        id: 'politicas-publicas',
+        title: 'Avaliação de Políticas Públicas com Evidências',
         description:
-            'Aprenda a acompanhar votações, projetos de lei e a atuação dos representantes eleitos.',
-        image: '/images/learn/acompanhar-parlamentar.jpg',
+            'Metodologias de mensuração de impacto social, custo-efetividade e transparência de programas sociais governamentais.',
+        category: 'Economia',
+        level: 'Avançado',
+        duration: '3h 15m',
+        progress: 0,
+        lessonsCount: 7,
     },
 ];
 
-export default function Learn({
-    onNavigateToHome,
-    onViewLesson,
-}) {
-    const [activeCategory, setActiveCategory] = useState('Todos');
-    const [searchTerm, setSearchTerm] = useState('');
+const CATEGORIES = ['Todos', 'Iniciantes', 'Economia', 'Direito'];
 
-    const handleNavigate = (label) => {
-        if (label === 'Home') {
-            onNavigateToHome?.();
-        }
-    };
+/**
+ * LearnCatalog - Página da Academia Cívica (/learn)
+ * Catálogo de trilhas com filtros por categoria e busca em tempo real.
+ */
+export default function LearnCatalog() {
+    const [selectedCategory, setSelectedCategory] = useState('Todos');
+    const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredLessons = lessons.filter((lesson) => {
-        const matchesCategory =
-            activeCategory === 'Todos' ||
-            lesson.category === activeCategory;
-
-        const searchableContent = [
-            lesson.title,
-            lesson.description,
-            ...(lesson.topics ?? []),
-        ]
-            .filter(Boolean)
-            .join(' ')
-            .toLowerCase();
-
-        const matchesSearch = searchableContent.includes(
-            searchTerm.trim().toLowerCase()
-        );
-
-        return matchesCategory && matchesSearch;
-    });
+    const filteredCourses = useMemo(() => {
+        return MOCK_COURSES.filter((course) => {
+            const matchesCategory =
+                selectedCategory === 'Todos' || course.category === selectedCategory;
+            const matchesSearch =
+                course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                course.description.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesCategory && matchesSearch;
+        });
+    }, [selectedCategory, searchQuery]);
 
     return (
-        <div className="learn-layout">
-            <SideBar
-                activeItem="Learn"
-                onNavigate={handleNavigate}
-            />
+        <div className="learn-catalog-layout">
+            <div className="learn-sidebar-wrapper">
+                <SideBar />
+            </div>
 
-            <main className="learn-content">
-                <section className="learn-hero">
-                    <div className="learn-hero-content">
-                        <span className="learn-eyebrow">
-                            HUARI EDUCAÇÃO CÍVICA
-                        </span>
-
-                        <h1 className="text-h1-bold">
-                            Catálogo de Aulas &amp; Trilhas Práticas
-                        </h1>
-
-                        <p className="text-p-regular">
-                            Aprenda sobre política, cidadania e transparência.
-                            Explore conteúdos práticos para entender melhor o
-                            funcionamento do poder público.
-                        </p>
-
-                        <div className="learn-search">
-                            <InputText
-                                identifier="input-search"
-                                type="text"
-                                placeholder="Buscar aulas..."
-                                value={searchTerm}
-                                onChange={(event) =>
-                                    setSearchTerm(event.target.value)
-                                }
-                            />
-
-                            <Button
-                                title="Filtrar Aulas"
-                                identifier="btn-primary btn-radius-10"
-                                onClick={() => {}}
-                            />
-                        </div>
-                    </div>
-                </section>
-
-                <section className="learn-catalog">
-                    <div className="learn-catalog-heading">
-                        <div>
-                            <h2 className="text-h2-bold">
-                                Explore as Aulas
-                            </h2>
-
-                            <p className="text-p-regular">
-                                Encontre conteúdos para aprender no seu ritmo.
-                            </p>
+            <main className="learn-catalog-main">
+                <div className="learn-catalog-container">
+                    {/* Header Institucional */}
+                    <header className="learn-catalog-header">
+                        <div className="learn-badge">
+                            <RiGraduationCapLine size={16} />
+                            <span>Academia Cívica Huari</span>
                         </div>
 
-                        <span className="learn-results-count">
-                            {filteredLessons.length}{' '}
-                            {filteredLessons.length === 1 ? 'aula' : 'aulas'}
-                        </span>
-                    </div>
+                        <div className="learn-header-title-row">
+                            <div className="learn-title-block">
+                                <h1>Trilhas de Formação Cidadã</h1>
+                                <p>
+                                    Cursos gratuitos, didáticos e apartidários desenvolvidos
+                                    para você fiscalizar e entender a política brasileira.
+                                </p>
+                            </div>
+                        </div>
 
-                    <div className="learn-categories">
-                        {lessonCategories.map((category) => (
-                            <Button
-                                key={category}
-                                title={category}
-                                identifier={
-                                    activeCategory === category
-                                        ? 'btn-active'
-                                        : 'btn-secondary'
-                                }
-                                active={activeCategory === category}
-                                onClick={() => setActiveCategory(category)}
-                            />
-                        ))}
-                    </div>
+                        {/* Barra de Filtros e Busca */}
+                        <div className="learn-filters-bar">
+                            <div className="learn-search-box">
+                                <RiSearchLine className="learn-search-icon" size={18} />
+                                <input
+                                    type="text"
+                                    className="learn-search-input"
+                                    placeholder="Buscar trilhas ou temas cívicos..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
 
-                    <div className="learn-lessons-grid">
-                        {filteredLessons.map((lesson) => (
-                            <article
-                                className="learn-card"
-                                key={lesson.id}
-                            >
-                                <div className="learn-card-image-wrapper">
-                                    <img
-                                        className="learn-card-image"
-                                        src={lesson.image}
-                                        alt=""
-                                    />
+                            <div className="learn-category-pills" role="tablist">
+                                {CATEGORIES.map((cat) => (
+                                    <button
+                                        key={cat}
+                                        type="button"
+                                        className={`category-pill-btn ${selectedCategory === cat ? 'is-active' : ''}`}
+                                        onClick={() => setSelectedCategory(cat)}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </header>
 
-                                    <div className="learn-card-badges">
-                                        <span className="learn-card-duration">
-                                            <RiTimeLine aria-hidden="true" />
-                                            {lesson.duration}
-                                        </span>
-
-                                        <span className="learn-card-level">
-                                            {lesson.level}
-                                        </span>
-
-                                        <button
-                                            type="button"
-                                            className="learn-card-bookmark"
-                                            aria-label={`Salvar aula: ${lesson.title}`}
-                                            onClick={() =>
-                                                console.log(
-                                                    `Aula salva: ${lesson.title}`
-                                                )
-                                            }
-                                        >
-                                            <RiBookmarkLine aria-hidden="true" />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="learn-card-content">
-                                    <h3 className="text-h3-bold">
-                                        {lesson.title}
-                                    </h3>
-
-                                    <ul className="learn-card-topics">
-                                        {(lesson.topics ?? [
-                                            lesson.description,
-                                        ])
-                                            .filter(Boolean)
-                                            .map((topic, index) => (
-                                                <li key={index}>
-                                                    <span className="learn-topic-check">
-                                                        <RiCheckLine aria-hidden="true" />
-                                                    </span>
-
-                                                    <span>{topic}</span>
-                                                </li>
-                                            ))}
-                                    </ul>
-
-                                    <Button
-                                        title="Entrar na Aula"
-                                        icon={<RiArrowRightLine />}
-                                        identifier="btn-primary btn-radius-10"
-                                        onClick={() => onViewLesson?.(lesson)}
-                                    />
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-
-                    {filteredLessons.length === 0 && (
-                        <p className="learn-empty-state text-p-regular">
-                            Nenhuma aula encontrada. Tente outra busca ou categoria.
-                        </p>
-                    )}
-                </section>
+                    {/* Grade de Cursos / CourseCards */}
+                    <section className="learn-courses-grid-section" aria-label="Catálogo de cursos">
+                        {filteredCourses.length === 0 ? (
+                            <div className="learn-empty-state">
+                                <h3>Nenhuma trilha encontrada</h3>
+                                <p>Tente buscar por outro termo ou selecione a categoria 'Todos'.</p>
+                                <button
+                                    type="button"
+                                    className="btn-reset-learn"
+                                    onClick={() => {
+                                        setSelectedCategory('Todos');
+                                        setSearchQuery('');
+                                    }}
+                                >
+                                    Ver todos os cursos
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="learn-courses-grid">
+                                {filteredCourses.map((course) => (
+                                    <CourseCard key={course.id} course={course} />
+                                ))}
+                            </div>
+                        )}
+                    </section>
+                </div>
 
                 <Footer />
             </main>
