@@ -12,6 +12,7 @@ import ParliamentarianAnalysis from './pages/parliamentarian-analysis';
 import ChatHuari from './pages/chat-huari';
 import UserProfile from './pages/user-profile';
 import Learn from './pages/learn';
+import LessonOverview from './pages/lesson-overview';
 import LessonDetails from './pages/lesson-details';
 
 // Guardião de rotas protegidas
@@ -91,6 +92,15 @@ export default function AppRoutes() {
                 element={
                     <ProtectedRoute>
                         <Learn />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/learn/:courseId/:lessonId/overview"
+                element={
+                    <ProtectedRoute>
+                        <LessonOverview />
                     </ProtectedRoute>
                 }
             />

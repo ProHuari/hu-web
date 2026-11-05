@@ -29,7 +29,7 @@ export default function CourseCard({ course }) {
     } = course;
 
     // Rota direta para a primeira aula da trilha
-    const courseUrl = `/learn/${id}/aula-1`;
+    const courseUrl = `/learn/${id}/aula-1/overview`;
 
     return (
         <article className="huari-course-card">
