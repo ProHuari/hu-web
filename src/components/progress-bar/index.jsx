@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
 
 /**
- * ProgressBar - Átomo para exibir a barra de progresso horizontal em porcentagem.
- *
- * @param {number} progress - Progresso de 0 a 100
- * @param {boolean} showLabel - Se exibe o rótulo textual de porcentagem
- * @param {string} height - Altura customizada da barra
- * @param {string} className - Classes extras
+ * ProgressBar - Atomic horizontal progress bar indicator with percentage.
  */
 export default function ProgressBar({
     progress = 0,
@@ -27,6 +22,7 @@ export default function ProgressBar({
                 aria-valuenow={clampedProgress}
                 aria-valuemin={0}
                 aria-valuemax={100}
+                aria-label={`${clampedProgress}% completed`}
             >
                 <div
                     className="huari-progress-fill"
@@ -35,7 +31,7 @@ export default function ProgressBar({
             </div>
             {showLabel && (
                 <span className="huari-progress-label">
-                    {clampedProgress}% concluído
+                    {clampedProgress}% completed
                 </span>
             )}
         </div>
