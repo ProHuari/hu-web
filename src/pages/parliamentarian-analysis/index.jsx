@@ -1,379 +1,240 @@
 import React, { useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
-    RiUser3Fill,
     RiWallet3Line,
     RiBarChartBoxLine,
-    RiMessage3Line,
+    RiSparklingLine,
     RiArrowLeftLine,
-    RiMapPinLine,
     RiAddLine,
     RiCheckLine,
 } from "react-icons/ri";
-
-import SideBar from "../../components/sidebar";
-import Footer from "../../components/footer";
-
+import { getLawmakerById, MOCK_LAWMAKERS } from "../../data/lawmakers";
+import { useApp } from "../../context/AppContext";
+import Avatar from "../../components/avatar";
+import Badge from "../../components/badge";
 import "./style.css";
 
-const expensesByYear = {
-    "Cota 2026": [
-        {
-            title: "Divulgação da Atividade",
-            amount: "R$ 142.000 (37%)",
-            percentage: 37,
-            tone: "tone-dark",
-        },
-        {
-            title: "Passagens e Hospedagem",
-            amount: "R$ 98.400 (25%)",
-            percentage: 25,
-            tone: "tone-medium",
-        },
-        {
-            title: "Locação de Veículos e Combustível",
-            amount: "R$ 76.500 (20%)",
-            percentage: 20,
-            tone: "tone-light",
-        },
-    ],
-    "Cota 2025": [
-        {
-            title: "Divulgação da Atividade",
-            amount: "R$ 135.200 (35%)",
-            percentage: 35,
-            tone: "tone-dark",
-        },
-        {
-            title: "Passagens e Hospedagem",
-            amount: "R$ 94.100 (24%)",
-            percentage: 24,
-            tone: "tone-medium",
-        },
-        {
-            title: "Locação de Veículos e Combustível",
-            amount: "R$ 71.000 (18%)",
-            percentage: 18,
-            tone: "tone-light",
-        },
-    ],
-};
+export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const { bookmarkedLawmakerIds = [], toggleBookmark } = useApp() || {};
 
-const votes = [
-    {
-        title: "Reforma Tributária sobre o Consumo",
-        description:
-            "Aprovou a unificação de impostos e desoneração da cesta básica nacional",
-        position: "Votou a favor",
-        status: "vote-positive",
-    },
-    {
-        title: "Reajuste de Verba de Gabinete",
-        description:
-            "Rejeitou aumento automático nos auxílios e verbas de custeio dos gabinetes",
-        position: "Votou contra",
-        status: "vote-negative",
-    },
-];
+    const [selectedQuotaYear, setSelectedQuotaYear] = useState("Quota 2026");
 
-export default function ParliamentarianAnalysis({
-    parliamentarian,
-    onNavigateToParliamentarians,
-    onNavigateToHome,
-    onNavigateToLearn,
-    onNavigateToLogin,
-    onNavigateToChat,
-}) {
-    const [isFollowing, setIsFollowing] = useState(false);
-    const [selectedQuotaYear, setSelectedQuotaYear] = useState("Cota 2026");
+    // Lookup lawmaker by param or prop, falling back to first lawmaker
+    const lawmaker = propLawmaker || (id ? getLawmakerById(id) : MOCK_LAWMAKERS[0]) || MOCK_LAWMAKERS[0];
+    const isBookmarked = bookmarkedLawmakerIds.includes(lawmaker.id);
 
-    const name = parliamentarian?.name || "Parlamentar";
-    const position = parliamentarian?.position || "Deputado Federal";
-    const party = parliamentarian?.party || "PL";
-    const state = parliamentarian?.state || "SP";
+    const expenses =
+        selectedQuotaYear === "Quota 2025"
+            ? lawmaker.quotaExpenses?.["2025"] || []
+            : lawmaker.quotaExpenses?.["2026"] || [];
 
-    const currentExpenses =
-        expensesByYear[selectedQuotaYear] || expensesByYear["Cota 2026"];
-
-    const handleSidebarNavigate = (label) => {
-        if (label === "Home") {
-            if (onNavigateToHome) {
-                onNavigateToHome();
-            } else {
-                onNavigateToParliamentarians?.();
-            }
-        } else if (label === "Lawmakers") {
-            onNavigateToParliamentarians?.();
-        } else if (label === "Learn") {
-            onNavigateToLearn?.();
-        } else if (label === "Chat Huari") {
-            if (onNavigateToChat) {
-                onNavigateToChat();
-            }
-        }
+    const handleAskAi = () => {
+        navigate("/chat", {
+            state: {
+                initialPrompt: `Can you analyze ${lawmaker.name}'s voting and CEAP spending records in Congress?`,
+            },
+        });
     };
 
     return (
-        <div className="analysis-layout">
-            {/* Sidebar Fixa à Esquerda */}
-            <div className="analysis-sidebar-wrapper">
-                <SideBar
-                    activeItem="Lawmakers"
-                    onNavigate={handleSidebarNavigate}
-                    onLogout={onNavigateToLogin}
-                    onSettings={() => console.log("Configurações")}
+        <div className="analysis-page-container">
+            {/* Top Navigation */}
+            <Link to="/lawmakers" className="analysis-back-link">
+                <RiArrowLeftLine size={18} aria-hidden="true" />
+                <span>Back to Lawmakers Directory</span>
+            </Link>
+
+            {/* Profile Header Card */}
+            <section
+                className="analysis-profile-card"
+                aria-label="Lawmaker Profile Header"
+            >
+                <Avatar
+                    name={lawmaker.name}
+                    src={lawmaker.avatar}
+                    size="xl"
                 />
-            </div>
 
-            {/* Área Principal à Direita */}
-            <main className="analysis-content">
-                <div className="analysis-container">
-                    {/* Topo de Navegação */}
-                    <button
-                        type="button"
-                        className="analysis-back-link"
-                        onClick={onNavigateToParliamentarians}
-                    >
-                        <RiArrowLeftLine size={18} aria-hidden="true" />
-                        <span>Voltar para Parlamentares</span>
-                    </button>
+                <div className="analysis-profile-info">
+                    <div className="analysis-name-row">
+                        <h1 className="analysis-profile-name">{lawmaker.name}</h1>
 
-                    {/* Card de Cabeçalho do Perfil */}
-                    <section
-                        className="analysis-profile-card"
-                        aria-label="Perfil do Parlamentar"
-                    >
-                        <div className="analysis-avatar-large" aria-hidden="true">
-                            <RiUser3Fill size={48} />
+                        <div className="analysis-badges">
+                            <Badge variant="party">{lawmaker.party}</Badge>
+                            <Badge variant="state">{lawmaker.state}</Badge>
                         </div>
+                    </div>
 
-                        <div className="analysis-profile-info">
-                            <div className="analysis-name-row">
-                                <h1 className="analysis-profile-name">{name}</h1>
+                    <p className="analysis-profile-role">{lawmaker.role}</p>
 
-                                <div className="analysis-badges">
-                                    <span className="analysis-badge-party">
-                                        {party}
-                                    </span>
-                                    <span className="analysis-badge-state">
-                                        <RiMapPinLine size={13} />
-                                        {state}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <p className="analysis-profile-role">{position}</p>
-
-                            <div className="analysis-status-row">
-                                <span
-                                    className="status-dot-green"
-                                    aria-hidden="true"
-                                />
-                                <span className="status-label">Em exercício</span>
-                            </div>
-                        </div>
-
-                        <button
-                            type="button"
-                            className={`btn-follow-toggle ${isFollowing ? "is-following" : ""
-                                }`}
-                            onClick={() => setIsFollowing((prev) => !prev)}
-                            aria-pressed={isFollowing}
-                        >
-                            {isFollowing ? (
-                                <>
-                                    <RiCheckLine size={18} />
-                                    <span>Seguindo</span>
-                                </>
-                            ) : (
-                                <>
-                                    <RiAddLine size={18} />
-                                    <span>Seguir</span>
-                                </>
-                            )}
-                        </button>
-                    </section>
-
-                    {/* Grid de Métricas (3 colunas) */}
-                    <section
-                        className="analysis-metrics-grid"
-                        aria-label="Métricas Principais do Parlamentar"
-                    >
-                        <article className="analysis-metric-card">
-                            <span className="metric-card-header">
-                                PRESENÇA EM PLENÁRIO
-                            </span>
-                            <strong className="metric-card-value highlight-orange">
-                                89%
-                            </strong>
-                            <p className="metric-card-subtext">
-                                58 de 65 sessões
-                            </p>
-                        </article>
-
-                        <article className="analysis-metric-card">
-                            <span className="metric-card-header">
-                                GASTOS NO ANO
-                            </span>
-                            <strong className="metric-card-value">
-                                R$ 384 mil
-                            </strong>
-                            <p className="metric-card-subtext">
-                                Dentro da média estadual
-                            </p>
-                        </article>
-
-                        <article className="analysis-metric-card">
-                            <span className="metric-card-header">
-                                PROJETOS DE LEI
-                            </span>
-                            <strong className="metric-card-value">24</strong>
-                            <p className="metric-card-subtext">
-                                Propostas apresentadas
-                            </p>
-                        </article>
-                    </section>
-
-                    {/* Seção Principais Gastos de Gabinete */}
-                    <section
-                        className="analysis-section-card"
-                        aria-label="Principais Gastos de Gabinete"
-                    >
-                        <header className="analysis-section-header">
-                            <div className="analysis-section-title-group">
-                                <div className="section-icon-box">
-                                    <RiWallet3Line size={22} aria-hidden="true" />
-                                </div>
-                                <h2>Principais Gastos de Gabinete</h2>
-                            </div>
-
-                            <select
-                                className="analysis-quota-select"
-                                value={selectedQuotaYear}
-                                onChange={(e) =>
-                                    setSelectedQuotaYear(e.target.value)
-                                }
-                                aria-label="Selecionar ano da cota parlamentar"
-                            >
-                                <option value="Cota 2026">Cota 2026</option>
-                                <option value="Cota 2025">Cota 2025</option>
-                            </select>
-                        </header>
-
-                        <div className="analysis-expenses-list">
-                            {currentExpenses.map((expense) => (
-                                <div
-                                    className="analysis-expense-item"
-                                    key={expense.title}
-                                >
-                                    <div className="analysis-expense-top">
-                                        <span className="expense-item-title">
-                                            {expense.title}
-                                        </span>
-                                        <strong className="expense-item-amount">
-                                            {expense.amount}
-                                        </strong>
-                                    </div>
-
-                                    <div
-                                        className="analysis-progress-bar-bg"
-                                        role="progressbar"
-                                        aria-label={expense.title}
-                                        aria-valuenow={expense.percentage}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                    >
-                                        <div
-                                            className={`analysis-progress-bar-fill ${expense.tone}`}
-                                            style={{
-                                                width: `${expense.percentage}%`,
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-
-                    {/* Seção Últimas Votações de Destaque */}
-                    <section
-                        className="analysis-section-card"
-                        aria-label="Últimas Votações de Destaque"
-                    >
-                        <header className="analysis-section-header">
-                            <div className="analysis-section-title-group">
-                                <div className="section-icon-box">
-                                    <RiBarChartBoxLine
-                                        size={22}
-                                        aria-hidden="true"
-                                    />
-                                </div>
-                                <h2>Últimas Votações de Destaque</h2>
-                            </div>
-
-                            <span className="analysis-civic-tag">
-                                Resumo Cívico
-                            </span>
-                        </header>
-
-                        <div className="analysis-votes-list">
-                            {votes.map((vote) => (
-                                <article
-                                    className="analysis-vote-item"
-                                    key={vote.title}
-                                >
-                                    <div className="analysis-vote-top">
-                                        <h3 className="vote-item-title">
-                                            {vote.title}
-                                        </h3>
-                                        <span
-                                            className={`vote-item-badge ${vote.status}`}
-                                        >
-                                            {vote.position}
-                                        </span>
-                                    </div>
-                                    <p className="vote-item-desc">
-                                        {vote.description}
-                                    </p>
-                                </article>
-                            ))}
-                        </div>
-                    </section>
-
-                    {/* Banner de IA Cívica */}
-                    <section
-                        className="analysis-ai-civic-banner"
-                        aria-label="Assistente de IA Cívica"
-                    >
-                        <div className="ai-banner-icon-wrapper">
-                            <RiMessage3Line size={32} aria-hidden="true" />
-                        </div>
-
-                        <div className="ai-banner-content">
-                            <h2>Ficou com alguma dúvida sobre o Parlamentar?</h2>
-                            <p>
-                                Nossa IA Cívica analisa o histórico legislativo,
-                                despesas e votações para responder suas dúvidas em
-                                linguagem simples e imparcial.
-                            </p>
-                        </div>
-
-                        <button
-                            type="button"
-                            className="btn-ask-ai"
-                            onClick={() => {
-                                if (onNavigateToChat) {
-                                    onNavigateToChat();
-                                }
-                            }}
-                        >
-                            Tirar dúvidas com a IA
-                        </button>
-                    </section>
+                    <div className="analysis-status-row">
+                        <span className="status-dot-green" aria-hidden="true" />
+                        <span className="status-label">In Office (57th Legislature)</span>
+                    </div>
                 </div>
 
-                {/* Footer Institucional na Base */}
-                <Footer />
-            </main>
+                <button
+                    type="button"
+                    className={`btn-follow-toggle ${isBookmarked ? "is-following" : ""}`}
+                    onClick={() => toggleBookmark(lawmaker.id)}
+                    aria-pressed={isBookmarked}
+                    aria-label={isBookmarked ? `Unfollow ${lawmaker.name}` : `Follow ${lawmaker.name}`}
+                >
+                    {isBookmarked ? (
+                        <>
+                            <RiCheckLine size={18} aria-hidden="true" />
+                            <span>Following</span>
+                        </>
+                    ) : (
+                        <>
+                            <RiAddLine size={18} aria-hidden="true" />
+                            <span>Follow</span>
+                        </>
+                    )}
+                </button>
+            </section>
+
+            {/* Metrics Grid */}
+            <section
+                className="analysis-metrics-grid"
+                aria-label="Key Mandate Metrics"
+            >
+                <article className="analysis-metric-card">
+                    <span className="metric-card-header">FLOOR ATTENDANCE</span>
+                    <strong className="metric-card-value highlight-orange">
+                        {lawmaker.attendance}
+                    </strong>
+                    <p className="metric-card-subtext">Roll-call deliberative sessions</p>
+                </article>
+
+                <article className="analysis-metric-card">
+                    <span className="metric-card-header">ANNUAL CEAP SPENDING</span>
+                    <strong className="metric-card-value">
+                        {lawmaker.expenses}
+                    </strong>
+                    <p className="metric-card-subtext">Within state quota average</p>
+                </article>
+
+                <article className="analysis-metric-card">
+                    <span className="metric-card-header">BILLS PROPOSED</span>
+                    <strong className="metric-card-value">{lawmaker.projects}</strong>
+                    <p className="metric-card-subtext">Authored propositions in review</p>
+                </article>
+            </section>
+
+            {/* CEAP Quota Spending Section */}
+            <section
+                className="analysis-section-card"
+                aria-label="Parliamentary Quota Expenses (CEAP)"
+            >
+                <header className="analysis-section-header">
+                    <div className="analysis-section-title-group">
+                        <div className="section-icon-box">
+                            <RiWallet3Line size={22} aria-hidden="true" />
+                        </div>
+                        <h2>Top Quota Expenses (CEAP)</h2>
+                    </div>
+
+                    <select
+                        className="analysis-quota-select"
+                        value={selectedQuotaYear}
+                        onChange={(e) => setSelectedQuotaYear(e.target.value)}
+                        aria-label="Select parliamentary quota fiscal year"
+                    >
+                        <option value="Quota 2026">Quota 2026</option>
+                        <option value="Quota 2025">Quota 2025</option>
+                    </select>
+                </header>
+
+                <div className="analysis-expenses-list">
+                    {expenses.map((expense) => (
+                        <div className="analysis-expense-item" key={expense.category}>
+                            <div className="analysis-expense-top">
+                                <span className="expense-item-title">{expense.category}</span>
+                                <strong className="expense-item-amount">{expense.amount}</strong>
+                            </div>
+
+                            <div
+                                className="analysis-progress-bar-bg"
+                                role="progressbar"
+                                aria-label={expense.category}
+                                aria-valuenow={expense.percentage}
+                                aria-valuemin={0}
+                                aria-valuemax={100}
+                            >
+                                <div
+                                    className={`analysis-progress-bar-fill tone-${expense.tone || "medium"}`}
+                                    style={{ width: `${expense.percentage}%` }}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Key Floor Votes */}
+            <section
+                className="analysis-section-card"
+                aria-label="Key Floor Votes & Positions"
+            >
+                <header className="analysis-section-header">
+                    <div className="analysis-section-title-group">
+                        <div className="section-icon-box">
+                            <RiBarChartBoxLine size={22} aria-hidden="true" />
+                        </div>
+                        <h2>Key Roll-Call Floor Votes</h2>
+                    </div>
+
+                    <span className="analysis-civic-tag">Civic Audit Record</span>
+                </header>
+
+                <div className="analysis-votes-list">
+                    {lawmaker.votes?.map((vote) => (
+                        <article className="analysis-vote-item" key={vote.title}>
+                            <div className="analysis-vote-top">
+                                <h3 className="vote-item-title">{vote.title}</h3>
+                                <span
+                                    className={`vote-item-badge ${
+                                        vote.status === "vote-positive"
+                                            ? "vote-positive"
+                                            : "vote-negative"
+                                    }`}
+                                >
+                                    {vote.position}
+                                </span>
+                            </div>
+                            <p className="vote-item-desc">{vote.description}</p>
+                        </article>
+                    ))}
+                </div>
+            </section>
+
+            {/* Civic AI Assistant Banner */}
+            <section
+                className="analysis-ai-civic-banner"
+                aria-label="Civic AI Query Assistant"
+            >
+                <div className="ai-banner-icon-wrapper">
+                    <RiSparklingLine size={32} aria-hidden="true" />
+                </div>
+
+                <div className="ai-banner-content">
+                    <h2>Have questions about this lawmaker&apos;s record?</h2>
+                    <p>
+                        Our Civic AI examines legislative voting histories, CEAP vouchers, and sponsored bills to answer questions in impartial, accessible language.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    className="btn-ask-ai"
+                    onClick={handleAskAi}
+                >
+                    Ask Civic AI
+                </button>
+            </section>
         </div>
     );
 }
