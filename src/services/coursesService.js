@@ -6,7 +6,7 @@
 import { apiClient } from './api';
 import { MOCK_COURSES, COURSE_CATEGORIES } from '../data/courses';
 
-const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'true';
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
 export const coursesService = {
     async getCourses(filters = {}) {
@@ -24,12 +24,14 @@ export const coursesService = {
             });
         }
 
-        return apiClient('/courses', {
+        const res = await apiClient('/courses', {
             params: {
-                category: filters.category,
-                search: filters.search,
+                category: filters.category !== 'All' ? filters.category : undefined,
+                search: filters.search || undefined,
             },
         });
+
+        return Array.isArray(res) ? res : (res?.content ?? res?.items ?? []);
     },
 
     async getCourseById(courseId) {
@@ -39,7 +41,14 @@ export const coursesService = {
             return course || null;
         }
 
-        return apiClient(`/courses/${courseId}`);
+        try {
+            return await apiClient(`/courses/${courseId}`);
+        } catch (err) {
+            if (err.status === 404) {
+                return null;
+            }
+            throw err;
+        }
     },
 
     async getCategories() {
@@ -47,5 +56,15 @@ export const coursesService = {
             return COURSE_CATEGORIES;
         }
         return apiClient('/courses/categories');
+    },
+
+    async toggleLesson(courseId, lessonId) {
+        if (USE_MOCKS) {
+            return { success: true, courseId, lessonId };
+        }
+
+        return apiClient(`/courses/${courseId}/lessons/${lessonId}/toggle`, {
+            method: 'POST',
+        });
     },
 };
