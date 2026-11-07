@@ -7,16 +7,14 @@
     background-color: var(--color-neutral-0);
 }
 
-/* Lado esquerdo: informações institucionais */
-
+/* Left panel: institutional branding */
 .recover-password-left {
     flex: 1;
     min-width: 0;
     display: flex;
 }
 
-/* Lado direito: formulário */
-
+/* Right panel: form */
 .recover-password-right {
     flex: 1;
     min-width: 0;
@@ -37,8 +35,7 @@
     gap: 20px;
 }
 
-/* Cabeçalho */
-
+/* Header */
 .recover-password-header {
     display: flex;
     flex-direction: column;
@@ -57,8 +54,7 @@
     color: var(--color-neutral-900);
 }
 
-/* Formulário */
-
+/* Form */
 .recover-password-form {
     width: 100%;
     display: flex;
@@ -78,8 +74,7 @@
     min-height: 42px;
 }
 
-/* Divisor OU */
-
+/* Divider */
 .recover-password-divider {
     display: flex;
     align-items: center;
@@ -99,8 +94,7 @@
     color: var(--color-neutral-600);
 }
 
-/* Link para retornar ao Login */
-
+/* Back to Login link */
 .recover-password-back {
     margin: 0;
     text-align: center;
@@ -120,8 +114,7 @@
     text-decoration: underline;
 }
 
-/* Links institucionais */
-
+/* Footer links */
 .recover-password-footer {
     display: flex;
     justify-content: center;
@@ -146,8 +139,7 @@
     color: var(--color-scale-primary-700);
 }
 
-/* Telas médias */
-
+/* Medium screens */
 @media (max-width: 1200px) {
     .recover-password-right {
         padding: 40px 32px;
@@ -174,8 +166,7 @@
     }
 }
 
-/* Tablets e celulares */
-
+/* Tablets and mobile */
 @media (max-width: 991px) {
     .recover-password-container {
         flex-direction: column;
@@ -202,8 +193,7 @@
     }
 }
 
-/* Celulares */
-
+/* Small mobile */
 @media (max-width: 540px) {
     .recover-password-left {
         min-height: 300px;
