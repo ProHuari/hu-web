@@ -1,0 +1,128 @@
+/* =========================================
+   Unified Main Application Layout
+========================================= */
+
+.main-layout-root {
+    display: flex;
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    background-color: var(--color-bg-page, #F8F9FB);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: var(--color-text-primary, #111827);
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Mobile Topbar (< 768px) */
+.main-mobile-topbar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background-color: var(--color-surface, #FFFFFF);
+    border-bottom: 1px solid var(--color-border, #E5E7EB);
+    padding: 0 16px;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 80;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.mobile-hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: var(--radius-sm, 8px);
+    background: transparent;
+    color: var(--color-text-secondary, #4B5563);
+    cursor: pointer;
+}
+
+.mobile-brand-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.mobile-logo-img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.mobile-brand-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--color-secondary, #2B2D42);
+}
+
+.mobile-user-avatar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--color-scale-primary-100, #FFEDE8);
+    color: var(--color-scale-primary-600, #D4460E);
+    text-decoration: none;
+    overflow: hidden;
+}
+
+.mobile-user-avatar-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Main Content Column */
+.main-layout-content-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.main-layout-page-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-layout-content-col.is-chat-layout {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+.main-layout-content-col.is-chat-layout .main-layout-page-content {
+    height: 100%;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .main-mobile-topbar {
+        display: flex;
+    }
+
+    .main-layout-root {
+        padding-top: 56px;
+    }
+
+    .main-layout-content-col.is-chat-layout {
+        height: calc(100vh - 56px);
+        height: calc(100dvh - 56px);
+    }
+}
+
