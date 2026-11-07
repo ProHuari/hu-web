@@ -18,7 +18,6 @@ export default function ParliamentariansGrid({
         }
 
         let isMounted = true;
-        setIsLoading(true);
 
         lawmakersService.getLawmakers({}, { page: 1, limit: 4 })
             .then((res) => {
