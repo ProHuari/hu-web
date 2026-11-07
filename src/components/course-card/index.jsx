@@ -4,36 +4,32 @@ import { NavLink } from 'react-router-dom';
 import {
     RiBookOpenLine,
     RiTimeLine,
-    RiBarChartLine,
     RiArrowRightLine,
 } from 'react-icons/ri';
 import ProgressBar from '../progress-bar';
 import './style.css';
 
 /**
- * CourseCard - Molécula para exibição de trilha/curso na Academia Cívica.
- *
- * @param {Object} course - Dados do curso { id, title, description, category, level, duration, progress, lessonsCount, image }
+ * CourseCard - Civic Academy course preview card component.
  */
 export default function CourseCard({ course }) {
     const {
         id,
         title,
         description,
-        category = 'Geral',
-        level = 'Iniciante',
+        category = 'General',
+        level = 'Beginner',
         duration = '2h 30m',
         progress = 0,
         lessonsCount = 6,
         image,
     } = course;
 
-    // Rota direta para a primeira aula da trilha
-    const courseUrl = `/learn/${id}/aula-1/overview`;
+    // Route directly to the course overview
+    const courseUrl = `/learn/${id}/overview`;
 
     return (
         <article className="huari-course-card">
-            {/* Capa / Imagem da Trilha */}
             <div
                 className="huari-course-card-thumb"
                 style={image ? { backgroundImage: `url(${image})` } : {}}
@@ -43,31 +39,28 @@ export default function CourseCard({ course }) {
                 <span className="course-level-badge">{level}</span>
             </div>
 
-            {/* Conteúdo Informativo */}
             <div className="huari-course-card-body">
                 <div className="course-meta-tags">
                     <span className="course-meta-tag">
-                        <RiTimeLine size={14} />
+                        <RiTimeLine size={14} aria-hidden="true" />
                         {duration}
                     </span>
                     <span className="course-meta-tag">
-                        <RiBookOpenLine size={14} />
-                        {lessonsCount} aulas
+                        <RiBookOpenLine size={14} aria-hidden="true" />
+                        {lessonsCount} lessons
                     </span>
                 </div>
 
                 <h3 className="course-card-title">{title}</h3>
                 <p className="course-card-desc">{description}</p>
 
-                {/* Átomo: ProgressBar */}
                 <div className="course-progress-wrapper">
                     <ProgressBar progress={progress} />
                 </div>
 
-                {/* Botão de Ação com NavLink */}
                 <NavLink to={courseUrl} className="course-start-btn">
-                    <span>{progress > 0 ? 'Continuar Curso' : 'Iniciar Trilha'}</span>
-                    <RiArrowRightLine size={16} />
+                    <span>{progress > 0 ? 'Continue Course' : 'Start Track'}</span>
+                    <RiArrowRightLine size={16} aria-hidden="true" />
                 </NavLink>
             </div>
         </article>
