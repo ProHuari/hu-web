@@ -4,31 +4,22 @@ import { RiSearchLine, RiCloseLine } from 'react-icons/ri';
 import './style.css';
 
 /**
- * SearchInput - Componente atômico para campo de busca com debounce integrado.
- * Evita emissões excessivas de eventos para requisições assíncronas / filtros.
- *
- * @param {string} value - Valor controlado inicial ou externo
- * @param {function} onChange - Callback acionado após o término do debounce (termo digitado)
- * @param {string} placeholder - Texto de placeholder do input
- * @param {number} delay - Tempo em milissegundos para o debounce (default: 350ms)
- * @param {string} className - Classes CSS adicionais
+ * SearchInput - Atomic search field with integrated debounce.
  */
 export default function SearchInput({
     value = '',
     onChange,
-    placeholder = 'Buscar por nome do parlamentar...',
+    placeholder = 'Search by name, state, or topic...',
     delay = 350,
     className = '',
     ...props
 }) {
     const [searchTerm, setSearchTerm] = useState(value);
 
-    // Sincroniza se o valor externo mudar
     useEffect(() => {
         setSearchTerm(value);
     }, [value]);
 
-    // Aplica o debounce disparando o callback apenas após a inatividade
     useEffect(() => {
         const handler = setTimeout(() => {
             if (onChange && searchTerm !== value) {
@@ -61,7 +52,7 @@ export default function SearchInput({
                     type="button"
                     className="huari-search-clear-btn"
                     onClick={handleClear}
-                    aria-label="Limpar campo de busca"
+                    aria-label="Clear search input"
                 >
                     <RiCloseLine size={16} />
                 </button>
@@ -77,4 +68,3 @@ SearchInput.propTypes = {
     delay: PropTypes.number,
     className: PropTypes.string,
 };
-
