@@ -73,6 +73,36 @@ export function AppProvider({ children }) {
         }
     });
 
+    // 3. Bookmarked Lawmakers State with localStorage persistence and atomic API sync
+    const [bookmarkedLawmakerIds, setBookmarkedLawmakerIds] = useState(() => {
+        try {
+            const saved = localStorage.getItem('huari_bookmarks');
+            return saved ? JSON.parse(saved) : INITIAL_BOOKMARKS;
+        } catch {
+            return INITIAL_BOOKMARKS;
+        }
+    });
+
+    // 4. Notification Settings State with backend sync
+    const [notifications, setNotifications] = useState(() => {
+        try {
+            const saved = localStorage.getItem('huari_notifications');
+            return saved ? JSON.parse(saved) : INITIAL_NOTIFICATIONS;
+        } catch {
+            return INITIAL_NOTIFICATIONS;
+        }
+    });
+
+    // 5. Course Lessons Completed & Progress Tracking with Compound Keys (${courseId}:${lessonId})
+    const [completedLessonIds, setCompletedLessonIds] = useState(() => {
+        try {
+            const saved = localStorage.getItem('huari_completed_lessons');
+            return saved ? JSON.parse(saved) : INITIAL_COMPLETED_LESSONS;
+        } catch {
+            return INITIAL_COMPLETED_LESSONS;
+        }
+    });
+
     // Initial session sync with Spring Boot backend (GET /users/me)
     useEffect(() => {
         if (token && !USE_MOCKS) {
@@ -152,16 +182,6 @@ export function AppProvider({ children }) {
 
     const isAuthenticated = Boolean(token && user);
 
-    // 3. Bookmarked Lawmakers State with localStorage persistence and atomic API sync
-    const [bookmarkedLawmakerIds, setBookmarkedLawmakerIds] = useState(() => {
-        try {
-            const saved = localStorage.getItem('huari_bookmarks');
-            return saved ? JSON.parse(saved) : INITIAL_BOOKMARKS;
-        } catch {
-            return INITIAL_BOOKMARKS;
-        }
-    });
-
     useEffect(() => {
         try {
             localStorage.setItem('huari_bookmarks', JSON.stringify(bookmarkedLawmakerIds));
@@ -192,16 +212,6 @@ export function AppProvider({ children }) {
         return bookmarkedLawmakerIds.includes(Number(id));
     };
 
-    // 4. Notification Settings State with backend sync
-    const [notifications, setNotifications] = useState(() => {
-        try {
-            const saved = localStorage.getItem('huari_notifications');
-            return saved ? JSON.parse(saved) : INITIAL_NOTIFICATIONS;
-        } catch {
-            return INITIAL_NOTIFICATIONS;
-        }
-    });
-
     const toggleNotification = (key) => {
         setNotifications((prev) => {
             const updated = { ...prev, [key]: !prev[key] };
@@ -218,16 +228,6 @@ export function AppProvider({ children }) {
             return updated;
         });
     };
-
-    // 5. Course Lessons Completed & Progress Tracking with Compound Keys (${courseId}:${lessonId})
-    const [completedLessonIds, setCompletedLessonIds] = useState(() => {
-        try {
-            const saved = localStorage.getItem('huari_completed_lessons');
-            return saved ? JSON.parse(saved) : INITIAL_COMPLETED_LESSONS;
-        } catch {
-            return INITIAL_COMPLETED_LESSONS;
-        }
-    });
 
     const toggleLessonCompleted = (courseId, lessonId) => {
         if (!courseId) return;
