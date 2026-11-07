@@ -1,7 +1,11 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-// Importação das páginas da aplicação
+// Route Layouts
+import AuthLayout from './layouts/AuthLayout';
+import MainLayout from './layouts/MainLayout';
+
+// Pages
 import Login from './pages/login';
 import CreateAnAccount from './pages/create-an-account';
 import RecoverPassword from './pages/recover-password';
@@ -15,108 +19,49 @@ import Learn from './pages/learn';
 import LessonOverview from './pages/lesson-overview';
 import LessonDetails from './pages/lesson-details';
 
-// Guardião de rotas protegidas
+// Route Guard
 import ProtectedRoute from './components/protected-route';
 
 /**
- * AppRoutes - Definição centralizada de todas as rotas absolutas da Huari:
- *  - /                 -> Login / Autenticação
- *  - /register         -> Cadastro de Conta
- *  - /recover-password -> Recuperação de Senha
- *  - /reset-password   -> Criação de Nova Senha
- *  - /dashboard        -> Dashboard Executivo (Home)
- *  - /lawmakers        -> Listagem de Parlamentares com Filtros
- *  - /lawmakers/:id    -> Detalhes e Análise do Parlamentar
- *  - /chat             -> Chat Huari com IA Cívica
- *  - /profile          -> Perfil e Configurações do Usuário
- *  - /learn            -> Catálogo de Cursos / Academia Cívica
- *  - /learn/:courseId/:lessonId -> Aula e Player de Vídeo
+ * AppRoutes - Centralized routing hierarchy for Huari Civic Platform.
+ * Auth routes are nested within AuthLayout; platform routes within MainLayout.
  */
 export default function AppRoutes() {
     return (
         <Routes>
-            {/* Rotas Públicas de Autenticação */}
-            <Route path="/" element={<Login />} />
-            <Route path="/register" element={<CreateAnAccount />} />
-            <Route path="/recover-password" element={<RecoverPassword />} />
-            <Route path="/reset-password" element={<CreateNewPassword />} />
+            {/* Public Authentication Routes (Wrapped in AuthLayout) */}
+            <Route element={<AuthLayout />}>
+                <Route index element={<Login />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<CreateAnAccount />} />
+                <Route path="/create-an-account" element={<CreateAnAccount />} />
+                <Route path="/recover-password" element={<RecoverPassword />} />
+                <Route path="/reset-password" element={<CreateNewPassword />} />
+                <Route path="/create-new-password" element={<CreateNewPassword />} />
+            </Route>
 
-            {/* Rotas Protegidas / Principais da Plataforma */}
+            {/* Authenticated Platform Routes (Protected & Wrapped in MainLayout) */}
             <Route
-                path="/dashboard"
                 element={
                     <ProtectedRoute>
-                        <Dashboard />
+                        <MainLayout />
                     </ProtectedRoute>
                 }
-            />
+            >
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/lawmakers" element={<LawmakersPage />} />
+                <Route path="/lawmakers/:id" element={<ParliamentarianAnalysis />} />
+                <Route path="/chat" element={<ChatHuari />} />
+                <Route path="/profile" element={<UserProfile />} />
+                <Route path="/learn" element={<Learn />} />
+                <Route path="/learn/:courseId" element={<LessonOverview />} />
+                <Route path="/learn/:courseId/overview" element={<LessonOverview />} />
+                <Route path="/learn/:courseId/:lessonId" element={<LessonDetails />} />
+                <Route path="/learn/:courseId/:lessonId/overview" element={<LessonOverview />} />
+            </Route>
 
-            <Route
-                path="/lawmakers"
-                element={
-                    <ProtectedRoute>
-                        <LawmakersPage />
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/lawmakers/:id"
-                element={
-                    <ProtectedRoute>
-                        <ParliamentarianAnalysis />
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/chat"
-                element={
-                    <ProtectedRoute>
-                        <ChatHuari />
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/profile"
-                element={
-                    <ProtectedRoute>
-                        <UserProfile />
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/learn"
-                element={
-                    <ProtectedRoute>
-                        <Learn />
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/learn/:courseId/:lessonId/overview"
-                element={
-                    <ProtectedRoute>
-                        <LessonOverview />
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/learn/:courseId/:lessonId"
-                element={
-                    <ProtectedRoute>
-                        <LessonDetails />
-                    </ProtectedRoute>
-                }
-            />
-
-            {/* Fallback para rotas inexistentes: redireciona para o Dashboard ou Login */}
+            {/* Fallback for undefined routes */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
     );
 }
-
