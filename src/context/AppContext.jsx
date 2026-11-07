@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const INITIAL_USER = {
@@ -39,7 +39,7 @@ const INITIAL_NOTIFICATIONS = {
     foiaUpdates: true,
 };
 
-const AppContext = createContext(null);
+export const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
     // 1. Session Token State
@@ -237,10 +237,4 @@ AppProvider.propTypes = {
     children: PropTypes.node.isRequired,
 };
 
-export function useApp() {
-    const context = useContext(AppContext);
-    if (!context) {
-        throw new Error('useApp must be used within an AppProvider');
-    }
-    return context;
-}
+export { useApp } from './useApp';
