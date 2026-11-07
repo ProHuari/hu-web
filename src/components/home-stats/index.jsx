@@ -1,4 +1,3 @@
-import React from 'react';
 import Card from '../card';
 import { CONGRESSIONAL_STATS } from '../../data/lawmakers';
 import {
@@ -13,6 +12,7 @@ const STAT_ICONS = {
     'monitored-lawmakers': RiTeamFill,
     'total-expenses': RiMoneyDollarCircleLine,
     'average-attendance': RiArrowRightUpLine,
+    'bills-proposed': RiFileList3Line,
     'priority-bills': RiFileList3Line,
 };
 
