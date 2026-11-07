@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import PasswordInput from "../../components/password-input";
 import Button from "../../components/button";
+import { authService } from "../../services/authService";
 import {
     RiArrowRightLine,
     RiShieldCheckLine,
@@ -13,6 +14,8 @@ import "./style.css";
 
 export default function CreateNewPassword({ onNavigateToLogin }) {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const resetToken = searchParams.get("token") || "mock-token";
 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,24 +23,24 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
     const [isSuccess, setIsSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (password !== confirmPassword) {
-            setError("Passwords do not match.");
-            return;
-        }
 
         if (password.length < 8) {
             setError("Password must contain at least 8 characters.");
             return;
         }
 
+        if (password !== confirmPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
+
         setError("");
         setIsLoading(true);
 
-        setTimeout(() => {
-            setIsLoading(false);
+        try {
+            await authService.resetPassword({ token: resetToken, newPassword: password });
             setIsSuccess(true);
             setTimeout(() => {
                 if (onNavigateToLogin) {
@@ -46,7 +49,11 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
                     navigate("/login");
                 }
             }, 1500);
-        }, 600);
+        } catch (err) {
+            setError(err.message || "Failed to update password. Token may be expired.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
