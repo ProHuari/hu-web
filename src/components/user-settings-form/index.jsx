@@ -40,12 +40,11 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
 
     // Bookmarked lawmakers list from backend
     const [savedLawmakers, setSavedLawmakers] = useState([]);
-    const [isLoadingBookmarks, setIsLoadingBookmarks] = useState(false);
+    const [bookmarksLoaded, setBookmarksLoaded] = useState(false);
 
     useEffect(() => {
         if (activeTab === "bookmarks") {
             let isMounted = true;
-            setIsLoadingBookmarks(true);
 
             userService.getBookmarkedLawmakers()
                 .then((lawmakersList) => {
@@ -58,7 +57,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                 })
                 .finally(() => {
                     if (isMounted) {
-                        setIsLoadingBookmarks(false);
+                        setBookmarksLoaded(true);
                     }
                 });
 
@@ -67,6 +66,8 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
             };
         }
     }, [activeTab, bookmarkedLawmakerIds]);
+
+    const isLoadingBookmarks = activeTab === "bookmarks" && !bookmarksLoaded;
 
     // Form data state
     const [formData, setFormData] = useState({
