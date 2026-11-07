@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { AppContext } from './contextInstance';
+import { useApp } from './useApp';
 
 const INITIAL_USER = {
     id: 'usr-1',
@@ -235,3 +236,5 @@ export function AppProvider({ children }) {
 AppProvider.propTypes = {
     children: PropTypes.node.isRequired,
 };
+
+export { useApp, AppContext };
