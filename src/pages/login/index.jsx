@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate, Link } from "react-router-dom";
 import Button from "../../components/button";
 import InputText from "../../components/input-text";
 import PasswordInput from "../../components/password-input";
 import { GoogleIcon, GithubIcon, AppleIcon } from "../../components/icons";
+import { useApp } from "../../context/AppContext";
+import { authService } from "../../services/authService";
 import {
     RiUserAddFill,
     RiDoorOpenLine,
@@ -23,6 +25,7 @@ export default function Login({
     onNavigateToHome,
 }) {
     const navigate = useNavigate();
+    const { login, loginAsGuest } = useApp() || {};
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -32,7 +35,7 @@ export default function Login({
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
@@ -41,8 +44,8 @@ export default function Login({
             return;
         }
 
-        if (password.length < 6) {
-            setError("Password must contain at least 6 characters.");
+        if (password.length < 8) {
+            setError("Password must contain at least 8 characters.");
             return;
         }
 
@@ -52,14 +55,25 @@ export default function Login({
         }
 
         setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
+        try {
+            if (activeTab === "login") {
+                const result = await authService.login({ email, password, rememberMe });
+                login?.(result.user, result.token, rememberMe);
+            } else {
+                const result = await authService.register({ name, email, password });
+                login?.(result.user, result.token, rememberMe);
+            }
+
             if (onNavigateToHome) {
                 onNavigateToHome();
             } else {
                 navigate("/dashboard");
             }
-        }, 450);
+        } catch (err) {
+            setError(err.message || "Authentication failed. Please verify your credentials.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleSelectTab = (tab) => {
@@ -71,6 +85,7 @@ export default function Login({
     };
 
     const handleGuestAccess = () => {
+        loginAsGuest?.();
         if (onNavigateToHome) {
             onNavigateToHome();
         } else {
@@ -78,8 +93,9 @@ export default function Login({
         }
     };
 
-    const handleSocialLogin = (provider) => {
+    const handleSocialLogin = () => {
         setError("");
+        loginAsGuest?.();
         if (onNavigateToHome) {
             onNavigateToHome();
         } else {
@@ -179,7 +195,7 @@ export default function Login({
                                 </Link>
                             ) : null
                         }
-                        placeholder="Enter your password (min. 6 characters)"
+                        placeholder="Enter your password (min. 8 characters)"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -239,7 +255,7 @@ export default function Login({
                 <button
                     type="button"
                     className="login-social-btn"
-                    onClick={() => handleSocialLogin("Google")}
+                    onClick={handleSocialLogin}
                     aria-label="Sign in with Google"
                 >
                     <GoogleIcon size={20} />
@@ -249,7 +265,7 @@ export default function Login({
                 <button
                     type="button"
                     className="login-social-btn"
-                    onClick={() => handleSocialLogin("GitHub")}
+                    onClick={handleSocialLogin}
                     aria-label="Sign in with GitHub"
                 >
                     <GithubIcon size={20} />
@@ -259,7 +275,7 @@ export default function Login({
                 <button
                     type="button"
                     className="login-social-btn"
-                    onClick={() => handleSocialLogin("Apple")}
+                    onClick={handleSocialLogin}
                     aria-label="Sign in with Apple"
                 >
                     <AppleIcon size={20} />
