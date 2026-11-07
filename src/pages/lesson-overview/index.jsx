@@ -26,14 +26,13 @@ export default function LessonOverview() {
 
     useEffect(() => {
         let isMounted = true;
-        setLoading(true);
-        setNotFound(false);
 
         coursesService.getCourseById(courseId)
             .then((data) => {
                 if (isMounted) {
                     if (data) {
                         setCourse(data);
+                        setNotFound(false);
                     } else {
                         setCourse(null);
                         setNotFound(true);
