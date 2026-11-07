@@ -3,7 +3,7 @@
  * Fully localized in English for the Huari Civic Platform
  */
 
-export const MOCK_COURSES = [
+const RAW_COURSES = [
     {
         id: "intro-to-politics",
         title: "Introduction to the Brazilian Political System",
@@ -354,3 +354,15 @@ export function getCourseById(id) {
     return MOCK_COURSES.find((c) => c.id === id) || MOCK_COURSES[0];
 }
 
+
+
+export const MOCK_COURSES = RAW_COURSES.map((course) => {
+    const computedCount = course.modules?.reduce(
+        (acc, mod) => acc + (mod.lessons?.length || 0),
+        0
+    ) || 0;
+    return {
+        ...course,
+        lessonsCount: computedCount > 0 ? computedCount : course.lessonsCount,
+    };
+});
