@@ -1,6 +1,8 @@
-import './style.css';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { RiShieldKeyholeLine } from 'react-icons/ri';
 import logoHuari from '../../assets/images/logoHuari.svg';
+import './style.css';
 
 export default function WebsiteInformation({ backgroundImage }) {
     return (
@@ -9,8 +11,8 @@ export default function WebsiteInformation({ backgroundImage }) {
             style={{
                 backgroundImage: `
                     linear-gradient(
-                        rgba(0, 0, 0, 0.5),
-                        rgba(0, 0, 0, 0.5)
+                        rgba(0, 0, 0, 0.55),
+                        rgba(0, 0, 0, 0.55)
                     ),
                     url(${backgroundImage})
                 `,
@@ -18,12 +20,12 @@ export default function WebsiteInformation({ backgroundImage }) {
         >
             <header className="hero-header">
                 <div className="brand">
-                    <img src={logoHuari} alt="Huari" />
+                    <img src={logoHuari} alt="Huari Logo" />
 
                     <div className="brand-info">
                         <h2 className="text-h2-bold">Huari</h2>
                         <p className="text-p-regular">
-                            Inteligência cívica
+                            Civic Intelligence
                         </p>
                     </div>
                 </div>
@@ -35,7 +37,7 @@ export default function WebsiteInformation({ backgroundImage }) {
                             aria-hidden="true"
                         />
                         <p className="text-p-small-regular">
-                            Dados oficiais
+                            Official Open Data
                         </p>
                     </div>
 
@@ -45,7 +47,7 @@ export default function WebsiteInformation({ backgroundImage }) {
                             aria-hidden="true"
                         />
                         <p className="text-p-small-regular">
-                            Dados oficiais
+                            Real-Time Auditing
                         </p>
                     </div>
                 </div>
@@ -59,46 +61,49 @@ export default function WebsiteInformation({ backgroundImage }) {
                     />
 
                     <p className="text-p-small-bold">
-                        Democracia em código aberto
+                        Open-Source Democracy
                     </p>
                 </div>
 
                 <h1 className="text-h1-bold">
-                    Transparência política, fiscalização e cidadania ativa.
+                    Political transparency, oversight, and active citizenship.
                 </h1>
 
                 <p className="text-p-regular">
-                    Acompanhe gastos públicos em tempo real, audite contratos
-                    parlamentares e compreenda decisões governamentais com
-                    dados abertos e acessíveis.
+                    Track public spending in real time, audit parliamentary contracts,
+                    and understand government decisions with open, accessible data.
                 </p>
             </main>
 
             <footer
                 className="hero-footer"
-                aria-label="Indicadores da plataforma"
+                aria-label="Platform Key Metrics"
             >
                 <div className="stat-item">
-                    <h2 className="text-h2-bold">R$ 4,2 bi</h2>
+                    <h2 className="text-h2-bold">R$ 4.2B</h2>
                     <p className="text-p-small-regular">
-                        Gastos monitorados
+                        Monitored spending
                     </p>
                 </div>
 
                 <div className="stat-item stat-item--featured">
-                    <h2 className="text-h2-bold">510</h2>
+                    <h2 className="text-h2-bold">594</h2>
                     <p className="text-p-small-regular">
-                        Parlamentares monitorados
+                        Monitored lawmakers
                     </p>
                 </div>
 
                 <div className="stat-item">
-                    <h2 className="text-h2-bold">SP</h2>
+                    <h2 className="text-h2-bold">27</h2>
                     <p className="text-p-small-regular">
-                        Município monitorado
+                        States covered
                     </p>
                 </div>
             </footer>
         </section>
     );
 }
+
+WebsiteInformation.propTypes = {
+    backgroundImage: PropTypes.string,
+};
