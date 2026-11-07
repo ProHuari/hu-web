@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { RiErrorWarningLine } from 'react-icons/ri';
 import Button from '../button';
@@ -9,9 +8,12 @@ export default function EmptyState({
     title = 'No items found',
     description = 'Try refining your search terms or clearing active filters.',
     actionText,
+    actionLabel,
     onAction,
     className = '',
 }) {
+    const label = actionText || actionLabel;
+
     return (
         <div className={`empty-state-card ${className}`}>
             <div className="empty-state-icon-wrapper">
@@ -19,10 +21,10 @@ export default function EmptyState({
             </div>
             <h3 className="empty-state-title">{title}</h3>
             {description && <p className="empty-state-desc">{description}</p>}
-            {actionText && onAction && (
+            {label && onAction && (
                 <div className="empty-state-action">
                     <Button
-                        title={actionText}
+                        title={label}
                         identifier="btn-primary btn-radius-10"
                         onClick={onAction}
                         type="button"
@@ -38,7 +40,7 @@ EmptyState.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string,
     actionText: PropTypes.string,
+    actionLabel: PropTypes.string,
     onAction: PropTypes.func,
     className: PropTypes.string,
 };
-
