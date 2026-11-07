@@ -1,5 +1,6 @@
-import { createContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { AppContext } from './contextInstance';
 
 const INITIAL_USER = {
     id: 'usr-1',
@@ -38,8 +39,6 @@ const INITIAL_NOTIFICATIONS = {
     weeklyDigest: false,
     foiaUpdates: true,
 };
-
-export const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
     // 1. Session Token State
@@ -238,3 +237,4 @@ AppProvider.propTypes = {
 };
 
 export { useApp } from './useApp';
+export { AppContext } from './contextInstance';
