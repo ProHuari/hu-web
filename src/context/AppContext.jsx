@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { AppContext } from './contextInstance';
 import { useApp } from './useApp';
+import { userService } from '../services/userService';
+import { coursesService } from '../services/coursesService';
+
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
 const INITIAL_USER = {
     id: 'usr-1',
@@ -41,6 +45,8 @@ const INITIAL_NOTIFICATIONS = {
     foiaUpdates: true,
 };
 
+const INITIAL_COMPLETED_LESSONS = ['intro-to-politics:lesson-1', 'intro-to-politics:lesson-2'];
+
 export function AppProvider({ children }) {
     // 1. Session Token State
     const [token, setToken] = useState(() => {
@@ -66,6 +72,28 @@ export function AppProvider({ children }) {
             return null;
         }
     });
+
+    // Initial session sync with Spring Boot backend (GET /users/me)
+    useEffect(() => {
+        if (token && !USE_MOCKS) {
+            userService.getMe().then((profile) => {
+                if (profile) {
+                    setUser((prev) => ({ ...prev, ...profile }));
+                    if (Array.isArray(profile.bookmarks)) {
+                        setBookmarkedLawmakerIds(profile.bookmarks.map(Number));
+                    }
+                    if (profile.notifications) {
+                        setNotifications((prev) => ({ ...prev, ...profile.notifications }));
+                    }
+                    if (Array.isArray(profile.completedLessons)) {
+                        setCompletedLessonIds(profile.completedLessons);
+                    }
+                }
+            }).catch((err) => {
+                console.error('Failed to sync initial session with GET /users/me', err);
+            });
+        }
+    }, [token]);
 
     const updateUser = (updatedFields) => {
         setUser((prev) => {
@@ -124,7 +152,7 @@ export function AppProvider({ children }) {
 
     const isAuthenticated = Boolean(token && user);
 
-    // 3. Bookmarked Lawmakers State with localStorage persistence
+    // 3. Bookmarked Lawmakers State with localStorage persistence and atomic API sync
     const [bookmarkedLawmakerIds, setBookmarkedLawmakerIds] = useState(() => {
         try {
             const saved = localStorage.getItem('huari_bookmarks');
@@ -144,19 +172,27 @@ export function AppProvider({ children }) {
 
     const toggleBookmark = (id) => {
         const numId = Number(id);
+        const isCurrentlyBookmarked = bookmarkedLawmakerIds.includes(numId);
+
         setBookmarkedLawmakerIds((prev) => {
             if (prev.includes(numId)) {
                 return prev.filter((item) => item !== numId);
             }
             return [...prev, numId];
         });
+
+        if (!USE_MOCKS) {
+            userService.toggleBookmark(numId, isCurrentlyBookmarked).catch((err) => {
+                console.error('Failed to sync bookmark with backend', err);
+            });
+        }
     };
 
     const isBookmarked = (id) => {
         return bookmarkedLawmakerIds.includes(Number(id));
     };
 
-    // 4. Notification Settings State
+    // 4. Notification Settings State with backend sync
     const [notifications, setNotifications] = useState(() => {
         try {
             const saved = localStorage.getItem('huari_notifications');
@@ -174,26 +210,37 @@ export function AppProvider({ children }) {
             } catch (e) {
                 console.error('Failed to save notifications', e);
             }
+            if (!USE_MOCKS) {
+                userService.updateNotifications(updated).catch((err) => {
+                    console.error('Failed to sync notifications with backend', err);
+                });
+            }
             return updated;
         });
     };
 
-    // 5. Course Lessons Completed & Progress Tracking
+    // 5. Course Lessons Completed & Progress Tracking with Compound Keys (${courseId}:${lessonId})
     const [completedLessonIds, setCompletedLessonIds] = useState(() => {
         try {
             const saved = localStorage.getItem('huari_completed_lessons');
-            return saved ? JSON.parse(saved) : ['lesson-1', 'lesson-2'];
+            return saved ? JSON.parse(saved) : INITIAL_COMPLETED_LESSONS;
         } catch {
-            return ['lesson-1', 'lesson-2'];
+            return INITIAL_COMPLETED_LESSONS;
         }
     });
 
-    const toggleLessonCompleted = (lessonId) => {
-        if (!lessonId) return;
+    const toggleLessonCompleted = (courseId, lessonId) => {
+        if (!courseId) return;
+        const compoundKey = lessonId ? `${courseId}:${lessonId}` : courseId;
+        const targetCourseId = lessonId ? courseId : null;
+        const targetLessonId = lessonId || courseId;
+
         setCompletedLessonIds((prev) => {
-            const next = prev.includes(lessonId)
-                ? prev.filter((id) => id !== lessonId)
-                : [...prev, lessonId];
+            const isCompleted = prev.includes(compoundKey) || (lessonId && prev.includes(lessonId));
+            const next = isCompleted
+                ? prev.filter((id) => id !== compoundKey && id !== lessonId)
+                : [...prev, compoundKey];
+
             try {
                 localStorage.setItem('huari_completed_lessons', JSON.stringify(next));
             } catch (e) {
@@ -201,10 +248,20 @@ export function AppProvider({ children }) {
             }
             return next;
         });
+
+        if (!USE_MOCKS && targetCourseId && targetLessonId) {
+            coursesService.toggleLesson(targetCourseId, targetLessonId).catch((err) => {
+                console.error('Failed to sync lesson completion with backend', err);
+            });
+        }
     };
 
-    const isLessonCompleted = (lessonId) => {
-        return completedLessonIds.includes(lessonId);
+    const isLessonCompleted = (courseId, lessonId) => {
+        if (!lessonId) {
+            return completedLessonIds.includes(courseId) || completedLessonIds.some((k) => k.endsWith(`:${courseId}`));
+        }
+        const compoundKey = `${courseId}:${lessonId}`;
+        return completedLessonIds.includes(compoundKey) || completedLessonIds.includes(lessonId);
     };
 
     return (
