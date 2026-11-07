@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { RiSearchLine, RiCloseLine } from 'react-icons/ri';
 import './style.css';
@@ -16,9 +16,12 @@ export default function SearchInput({
 }) {
     const [searchTerm, setSearchTerm] = useState(value);
 
-    useEffect(() => {
+    // Synchronize searchTerm when value changes externally
+    const [prevValue, setPrevValue] = useState(value);
+    if (value !== prevValue) {
+        setPrevValue(value);
         setSearchTerm(value);
-    }, [value]);
+    }
 
     useEffect(() => {
         const handler = setTimeout(() => {
