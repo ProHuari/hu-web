@@ -115,7 +115,7 @@
    Breakpoints Responsivos
 ========================================= */
 
-/* Laptops e telas médias (992px a 1200px) */
+/* Laptops and medium screens (992px to 1200px) */
 @media (max-width: 1200px) {
     .container-right {
         padding: 48px 24px;
@@ -145,7 +145,7 @@
     }
 }
 
-/* Telas mobile (<= 540px) */
+/* Mobile screens (<= 540px) */
 @media (max-width: 540px) {
     .container-right {
         padding: 32px 16px;
