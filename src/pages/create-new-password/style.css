@@ -7,15 +7,11 @@
     background-color: var(--color-neutral-0);
 }
 
-/* Painel esquerdo */
-
 .new-password-left {
     flex: 1;
     min-width: 0;
     display: flex;
 }
-
-/* Painel direito */
 
 .new-password-right {
     flex: 1;
@@ -31,27 +27,25 @@
 
 .new-password-content {
     width: 100%;
-    max-width: 570px;
+    max-width: 520px;
     display: flex;
     flex-direction: column;
-    gap: 42px;
+    gap: 24px;
 }
-
-/* Título */
 
 .new-password-header {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 8px;
 }
 
+.new-password-header h1,
 .new-password-header h2 {
     margin: 0;
     color: var(--color-neutral-1000);
 }
-
-/* Formulário */
 
 .new-password-form {
     width: 100%;
@@ -64,42 +58,26 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 48px;
-}
-
-.new-password-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border: none;
-    background: transparent;
-    color: var(--color-neutral-700);
-    cursor: pointer;
-}
-
-.new-password-toggle:hover {
-    color: var(--color-neutral-1000);
+    gap: 16px;
 }
 
 .new-password-submit {
     width: 100%;
-    min-height: 42px;
+    min-height: 48px;
 }
 
 .new-password-error {
-    margin: -16px 0 0;
-    color: var(--color-scale-primary-700);
+    margin: 0;
+    color: var(--color-danger, #dc2626);
     font-size: 0.875rem;
+    font-weight: 600;
 }
-
-/* Divisor */
 
 .new-password-divider {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 46px;
+    gap: 24px;
     width: 100%;
 }
 
@@ -114,10 +92,8 @@
     color: var(--color-neutral-600);
 }
 
-/* Retorno ao Login */
-
 .new-password-back {
-    margin: -4px 0 0;
+    margin: 0;
     text-align: center;
     color: var(--color-neutral-900);
 }
@@ -128,21 +104,21 @@
     background: transparent;
     color: var(--color-scale-primary-700);
     font: inherit;
+    font-weight: 700;
     cursor: pointer;
-}
-
-.new-password-link:hover {
     text-decoration: underline;
 }
 
-/* Rodapé */
+.new-password-link:hover {
+    color: var(--color-scale-primary-800);
+}
 
 .new-password-footer {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 28px;
+    gap: 20px;
     margin-top: 4px;
 }
 
@@ -150,6 +126,7 @@
     color: var(--color-neutral-1000);
     text-decoration: none;
     white-space: nowrap;
+    font-size: 0.85rem;
 }
 
 .new-password-footer a::before {
@@ -160,32 +137,6 @@
 .new-password-footer a:hover {
     color: var(--color-scale-primary-700);
 }
-
-/* Telas médias */
-
-@media (max-width: 1200px) {
-    .new-password-right {
-        padding: 40px 32px;
-    }
-
-    .new-password-content {
-        gap: 32px;
-    }
-
-    .new-password-fields {
-        gap: 32px;
-    }
-
-    .new-password-divider {
-        gap: 24px;
-    }
-
-    .new-password-footer {
-        gap: 16px;
-    }
-}
-
-/* Tablets e celulares */
 
 @media (max-width: 991px) {
     .new-password-container {
@@ -205,42 +156,20 @@
     }
 
     .new-password-content {
-        max-width: 570px;
-    }
-
-    .new-password-fields {
-        gap: 24px;
+        max-width: 520px;
     }
 }
 
-/* Celulares */
-
 @media (max-width: 540px) {
     .new-password-left {
-        min-height: 300px;
+        min-height: 280px;
     }
 
     .new-password-right {
-        padding: 36px 20px;
+        padding: 32px 16px;
     }
 
     .new-password-content {
-        gap: 28px;
-    }
-
-    .new-password-form {
-        gap: 24px;
-    }
-
-    .new-password-fields {
-        gap: 22px;
-    }
-
-    .new-password-divider {
-        gap: 18px;
-    }
-
-    .new-password-footer {
-        gap: 14px 18px;
+        gap: 20px;
     }
 }
