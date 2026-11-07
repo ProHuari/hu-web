@@ -10,13 +10,7 @@ import {
 import './style.css';
 
 /**
- * LessonAccordion - Molécula para listar módulos e aulas expansíveis.
- * Destaca a aula atual e indica as aulas concluídas com visto verde.
- *
- * @param {Array} modules - Lista de módulos contendo suas respectivas aulas
- * @param {string} currentCourseId - ID do curso atual
- * @param {string} currentLessonId - ID da aula selecionada/ativa
- * @param {function} onSelectLesson - Callback opcional ao trocar de aula
+ * LessonAccordion - Course syllabus sidebar with expandable modules and lessons.
  */
 export default function LessonAccordion({
     modules = [],
@@ -24,7 +18,6 @@ export default function LessonAccordion({
     currentLessonId,
     onSelectLesson,
 }) {
-    // Controla quais módulos estão abertos (por padrão o primeiro fica aberto)
     const [openModules, setOpenModules] = useState({ 0: true });
 
     const toggleModule = (index) => {
@@ -32,10 +25,10 @@ export default function LessonAccordion({
     };
 
     return (
-        <aside className="huari-lesson-accordion" aria-label="Conteúdo programático da trilha">
+        <aside className="huari-lesson-accordion" aria-label="Course curriculum">
             <div className="accordion-header-title">
-                <h3>Conteúdo da Trilha</h3>
-                <span className="accordion-modules-count">{modules.length} Módulos</span>
+                <h3>Course Curriculum</h3>
+                <span className="accordion-modules-count">{modules.length} Modules</span>
             </div>
 
             <div className="accordion-modules-list">
@@ -51,7 +44,7 @@ export default function LessonAccordion({
                                 aria-expanded={isOpen}
                             >
                                 <div className="module-title-wrapper">
-                                    <span className="module-index-badge">Módulo {modIdx + 1}</span>
+                                    <span className="module-index-badge">Module {modIdx + 1}</span>
                                     <strong className="module-title">{moduleItem.title}</strong>
                                 </div>
                                 <RiArrowDownSLine
@@ -78,7 +71,7 @@ export default function LessonAccordion({
                                                             <RiCheckboxCircleFill
                                                                 className="lesson-check-done"
                                                                 size={18}
-                                                                title="Aula Concluída"
+                                                                title="Completed Lesson"
                                                             />
                                                         ) : (
                                                             <RiPlayCircleLine
