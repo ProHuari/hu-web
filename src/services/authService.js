@@ -6,7 +6,7 @@
 
 import { apiClient } from './api';
 
-const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'true';
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
 export const authService = {
     async login({ email, password, rememberMe = true }) {
