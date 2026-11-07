@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RiGovernmentLine } from 'react-icons/ri';
 import PageHeader from '../../components/page-header';
@@ -6,7 +6,7 @@ import EmptyState from '../../components/empty-state';
 import LawmakerFilters from '../../components/lawmaker-filters';
 import ParliamentarianCard from '../../components/parliamentarian-card';
 import Pagination from '../../components/pagination';
-import { MOCK_LAWMAKERS } from '../../data/lawmakers';
+import { lawmakersService } from '../../services/lawmakersService';
 import './style.css';
 
 const ITEMS_PER_PAGE = 6;
@@ -21,7 +21,7 @@ export default function LawmakersPage() {
         sort: 'name_asc',
     });
     const [currentPage, setCurrentPage] = useState(1);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [totalElements, setTotalElements] = useState(0);
 
@@ -36,38 +36,33 @@ export default function LawmakersPage() {
     }, []);
 
     useEffect(() => {
-        setLoading(true);
+        let isCancelled = false;
 
-        const timer = setTimeout(() => {
-            let result = MOCK_LAWMAKERS.filter((item) => {
-                const matchesSearch = filters.search
-                    ? item.name.toLowerCase().includes(filters.search.toLowerCase())
-                    : true;
-                const matchesState = filters.state ? item.state === filters.state : true;
-                const matchesParty = filters.party ? item.party === filters.party : true;
-                return matchesSearch && matchesState && matchesParty;
-            });
+        async function fetchLawmakers() {
+            setLoading(true);
+            try {
+                const result = await lawmakersService.getLawmakers(filters, {
+                    page: currentPage,
+                    limit: ITEMS_PER_PAGE,
+                });
+                if (!isCancelled) {
+                    setData(result.items || []);
+                    setTotalElements(result.totalElements || 0);
+                }
+            } catch (err) {
+                console.error('Failed to load lawmakers', err);
+            } finally {
+                if (!isCancelled) {
+                    setLoading(false);
+                }
+            }
+        }
 
-            result.sort((a, b) => {
-                if (filters.sort === 'name_asc') return a.name.localeCompare(b.name);
-                if (filters.sort === 'name_desc') return b.name.localeCompare(a.name);
-                if (filters.sort === 'attendance_desc') return b.attendanceNum - a.attendanceNum;
-                if (filters.sort === 'bills_desc') return b.projectsNum - a.projectsNum;
-                if (filters.sort === 'expenses_asc') return a.expensesNum - b.expensesNum;
-                if (filters.sort === 'expenses_desc') return b.expensesNum - a.expensesNum;
-                return 0;
-            });
+        fetchLawmakers();
 
-            setTotalElements(result.length);
-
-            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-            const paginatedItems = result.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-            setData(paginatedItems);
-            setLoading(false);
-        }, 200);
-
-        return () => clearTimeout(timer);
+        return () => {
+            isCancelled = true;
+        };
     }, [filters, currentPage]);
 
     const totalPages = Math.ceil(totalElements / ITEMS_PER_PAGE);
@@ -75,10 +70,10 @@ export default function LawmakersPage() {
     return (
         <div className="lawmakers-page-container">
             <PageHeader
-                badge="Civic Oversight Platform"
+                badgeText="Civic Oversight Platform"
                 title="National Congress Directory"
                 description="Monitor floor attendance, legislative propositions, and parliamentary quota (CEAP) expenses for federal deputies and senators."
-                actions={
+                rightSlot={
                     <div className="congress-stat-chip">
                         <RiGovernmentLine size={20} aria-hidden="true" />
                         <span>594 Monitored Mandates</span>
@@ -103,7 +98,7 @@ export default function LawmakersPage() {
                     <EmptyState
                         title="No lawmakers found"
                         description="Try adjusting your search criteria or clearing active filters."
-                        actionLabel="Clear Filters"
+                        actionText="Clear Filters"
                         onAction={handleResetFilters}
                     />
                 ) : (
