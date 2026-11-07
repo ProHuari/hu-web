@@ -43,7 +43,7 @@
     font-weight: 700;
 }
 
-/* Painel de Formulário */
+/* Form Panels */
 .settings-form-panel,
 .settings-security-panel,
 .settings-saved-panel,
@@ -143,7 +143,7 @@
     box-shadow: 0 4px 14px rgba(241, 90, 36, 0.3);
 }
 
-/* Painel de Favoritos */
+/* Bookmarks Panel */
 .saved-panel-header h3 {
     font-size: 1.15rem;
     font-weight: 700;
@@ -226,7 +226,7 @@
     background-color: #FEE2E2;
 }
 
-/* Painel de Notificações */
+/* Notifications Panel */
 .notification-row {
     display: flex;
     align-items: center;
