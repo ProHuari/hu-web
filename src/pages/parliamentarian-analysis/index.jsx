@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
     RiWallet3Line,
@@ -25,10 +26,18 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
     const lawmaker = propLawmaker || (id ? getLawmakerById(id) : MOCK_LAWMAKERS[0]) || MOCK_LAWMAKERS[0];
     const isBookmarked = bookmarkedLawmakerIds.includes(lawmaker.id);
 
-    const expenses =
-        selectedQuotaYear === "Quota 2025"
-            ? lawmaker.quotaExpenses?.["2025"] || []
-            : lawmaker.quotaExpenses?.["2026"] || [];
+    // Support both expensesByYear and quotaExpenses schemas
+    const rawExpenses =
+        lawmaker.expensesByYear?.[selectedQuotaYear] ||
+        lawmaker.quotaExpenses?.[selectedQuotaYear.replace('Quota ', '')] ||
+        [];
+
+    const expenses = rawExpenses.map((expense) => ({
+        category: expense.title || expense.category || 'General Mandate Expense',
+        amount: expense.amount || 'R$ 0',
+        percentage: expense.percentage || 0,
+        tone: (expense.tone || 'medium').replace(/^tone-/, ''),
+    }));
 
     const handleAskAi = () => {
         navigate("/chat", {
@@ -67,7 +76,7 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
                         </div>
                     </div>
 
-                    <p className="analysis-profile-role">{lawmaker.role}</p>
+                    <p className="analysis-profile-role">{lawmaker.position || lawmaker.role}</p>
 
                     <div className="analysis-status-row">
                         <span className="status-dot-green" aria-hidden="true" />
@@ -106,15 +115,15 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
                     <strong className="metric-card-value highlight-orange">
                         {lawmaker.attendance}
                     </strong>
-                    <p className="metric-card-subtext">Roll-call deliberative sessions</p>
+                    <p className="metric-card-subtext">{lawmaker.sessionsCount || "Roll-call deliberative sessions"}</p>
                 </article>
 
                 <article className="analysis-metric-card">
                     <span className="metric-card-header">ANNUAL CEAP SPENDING</span>
                     <strong className="metric-card-value">
-                        {lawmaker.expenses}
+                        {lawmaker.expensesYearly || lawmaker.expenses}
                     </strong>
-                    <p className="metric-card-subtext">Within state quota average</p>
+                    <p className="metric-card-subtext">{lawmaker.expensesContext || "Within state quota average"}</p>
                 </article>
 
                 <article className="analysis-metric-card">
@@ -238,3 +247,7 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
         </div>
     );
 }
+
+ParliamentarianAnalysis.propTypes = {
+    lawmaker: PropTypes.object,
+};
