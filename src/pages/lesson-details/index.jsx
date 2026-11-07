@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useParams, NavLink, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
     RiArrowLeftLine,
     RiCheckboxCircleFill,
@@ -9,7 +8,8 @@ import {
 import VideoPlayer from '../../components/video-player';
 import LessonAccordion from '../../components/lesson-accordion';
 import ProgressBar from '../../components/progress-bar';
-import { getCourseById, MOCK_COURSES } from '../../data/courses';
+import { getCourseById } from '../../data/courses';
+import { useApp } from '../../context/AppContext';
 import './style.css';
 
 /**
@@ -17,18 +17,20 @@ import './style.css';
  */
 export default function LessonPage() {
     const { courseId, lessonId } = useParams();
+    const { isLessonCompleted, toggleLessonCompleted } = useApp() || {};
 
-    const course = getCourseById(courseId) || MOCK_COURSES[0];
+    const course = getCourseById(courseId);
 
     // Find active lesson
     let activeLesson = null;
     let totalLessons = 0;
-    let completedLessons = 0;
+    let completedLessonsCount = 0;
 
     course.modules?.forEach((moduleItem) => {
         moduleItem.lessons?.forEach((l) => {
             totalLessons += 1;
-            if (l.completed) completedLessons += 1;
+            const completed = isLessonCompleted ? isLessonCompleted(l.id) : Boolean(l.completed);
+            if (completed) completedLessonsCount += 1;
             if (l.id === lessonId) activeLesson = l;
         });
     });
@@ -37,14 +39,18 @@ export default function LessonPage() {
         activeLesson = course.modules[0].lessons[0];
     }
 
-    const [isCompleted, setIsCompleted] = useState(Boolean(activeLesson?.completed));
+    const isCurrentCompleted = isLessonCompleted
+        ? isLessonCompleted(activeLesson?.id)
+        : Boolean(activeLesson?.completed);
 
     const toggleCompletion = () => {
-        setIsCompleted((prev) => !prev);
+        if (activeLesson?.id && toggleLessonCompleted) {
+            toggleLessonCompleted(activeLesson.id);
+        }
     };
 
     const overallProgress = totalLessons > 0
-        ? Math.round(((completedLessons + (isCompleted && !activeLesson?.completed ? 1 : 0)) / totalLessons) * 100)
+        ? Math.round((completedLessonsCount / totalLessons) * 100)
         : 0;
 
     return (
@@ -69,6 +75,7 @@ export default function LessonPage() {
             <div className="lesson-content-split">
                 <section className="lesson-primary-col" aria-label="Lesson Video and Notes">
                     <VideoPlayer
+                        key={activeLesson?.id}
                         title={activeLesson?.title || 'Lesson Video'}
                         videoUrl={activeLesson?.videoUrl}
                         autoPlay={false}
@@ -84,12 +91,12 @@ export default function LessonPage() {
 
                             <button
                                 type="button"
-                                className={`btn-complete-lesson ${isCompleted ? 'is-completed' : ''}`}
+                                className={`btn-complete-lesson ${isCurrentCompleted ? 'is-completed' : ''}`}
                                 onClick={toggleCompletion}
-                                aria-pressed={isCompleted}
+                                aria-pressed={isCurrentCompleted}
                             >
                                 <RiCheckboxCircleFill size={18} aria-hidden="true" />
-                                <span>{isCompleted ? 'Completed' : 'Mark as Completed'}</span>
+                                <span>{isCurrentCompleted ? 'Completed' : 'Mark as Completed'}</span>
                             </button>
                         </div>
 
