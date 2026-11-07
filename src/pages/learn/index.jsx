@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { RiSearchLine } from 'react-icons/ri';
 import PageHeader from '../../components/page-header';
 import EmptyState from '../../components/empty-state';
@@ -28,7 +28,7 @@ export default function LearnCatalog() {
     return (
         <div className="learn-page-container">
             <PageHeader
-                badge="Huari Civic Academy"
+                badgeText="Huari Civic Academy"
                 title="Citizen Education &amp; Oversight Tracks"
                 description="Free, non-partisan, and structured learning tracks designed to empower citizens to understand, audit, and navigate government institutions."
             />
@@ -69,7 +69,7 @@ export default function LearnCatalog() {
                     <EmptyState
                         title="No learning tracks found"
                         description="Try searching with a different term or select 'All' to browse every course."
-                        actionLabel="View All Tracks"
+                        actionText="View All Tracks"
                         onAction={() => {
                             setSelectedCategory('All');
                             setSearchQuery('');
