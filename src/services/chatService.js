@@ -5,7 +5,7 @@
 
 import { apiClient } from './api';
 
-const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'true';
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
 const KNOWLEDGE_RESPONSES = {
     expenses: `The **Parliamentary Quota (CEAP - Cota para o Exercício da Atividade Parlamentar)** is a monthly expense allowance allocated to members of Congress to reimburse mandate-related activities.
@@ -44,7 +44,7 @@ This ensures diverse political representation proportionate to overall citizen i
 };
 
 export const chatService = {
-    async sendMessage(query) {
+    async sendMessage(query, history = []) {
         if (USE_MOCKS) {
             await new Promise((resolve) => setTimeout(resolve, 600));
             const lowerQuery = query.toLowerCase();
@@ -69,7 +69,8 @@ export const chatService = {
 
         return apiClient('/chat', {
             method: 'POST',
-            body: { message: query },
+            body: { message: query, history },
         });
     },
 };
+
