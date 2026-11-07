@@ -235,6 +235,3 @@ export function AppProvider({ children }) {
 AppProvider.propTypes = {
     children: PropTypes.node.isRequired,
 };
-
-export { useApp } from './useApp';
-export { AppContext } from './contextInstance';
