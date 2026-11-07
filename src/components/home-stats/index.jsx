@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import Card from '../card';
+import { lawmakersService } from '../../services/lawmakersService';
 import { CONGRESSIONAL_STATS } from '../../data/lawmakers';
 import {
     RiTeamFill,
@@ -17,12 +19,35 @@ const STAT_ICONS = {
 };
 
 export default function HomeStats() {
+    const [stats, setStats] = useState(CONGRESSIONAL_STATS);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        let isMounted = true;
+        lawmakersService.getCongressionalStats()
+            .then((data) => {
+                if (isMounted && Array.isArray(data) && data.length > 0) {
+                    setStats(data);
+                }
+            })
+            .catch((err) => {
+                console.error('Failed to fetch congressional stats from service', err);
+            })
+            .finally(() => {
+                if (isMounted) setIsLoading(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
     return (
         <section
-            className="home-stats"
+            className={`home-stats ${isLoading ? 'home-stats-loading' : ''}`}
             aria-label="Platform Civic Indicators"
         >
-            {CONGRESSIONAL_STATS.map((stat) => {
+            {stats.map((stat) => {
                 const IconComponent = STAT_ICONS[stat.id] || RiFileList3Line;
                 return (
                     <Card
