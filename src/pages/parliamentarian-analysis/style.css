@@ -1,5 +1,5 @@
 /* =========================================
-   Página: ParliamentarianAnalysis
+   Page: ParliamentarianAnalysis
 ========================================= */
 .analysis-page-container {
     width: 100%;
@@ -12,7 +12,7 @@
     box-sizing: border-box;
 }
 
-/* Link Voltar */
+/* Back Link */
 .analysis-back-link {
     display: inline-flex;
     align-items: center;
@@ -139,7 +139,7 @@
     box-shadow: 0 4px 12px rgba(43, 45, 66, 0.25);
 }
 
-/* Grid de Métricas (3 Colunas) */
+/* Mandate Metrics Grid (3 Columns) */
 .analysis-metrics-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -188,7 +188,7 @@
     margin: 0;
 }
 
-/* Seções em Card Branco (Gastos & Votações) */
+/* White Card Sections (Expenses & Votes) */
 .analysis-section-card {
     background-color: var(--color-surface, #ffffff);
     border: 1px solid var(--color-border, #e5e7eb);
