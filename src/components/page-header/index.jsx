@@ -1,21 +1,25 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
 
 export default function PageHeader({
     badgeIcon: BadgeIcon,
     badgeText,
+    badge,
     title,
     description,
     rightSlot,
+    actions,
     className = '',
 }) {
+    const displayBadgeText = badgeText || badge;
+    const displayRightSlot = rightSlot || actions;
+
     return (
         <header className={`page-header-container ${className}`}>
-            {badgeText && (
+            {displayBadgeText && (
                 <div className="page-header-badge">
                     {BadgeIcon && <BadgeIcon size={16} />}
-                    <span>{badgeText}</span>
+                    <span>{displayBadgeText}</span>
                 </div>
             )}
 
@@ -27,9 +31,9 @@ export default function PageHeader({
                     )}
                 </div>
 
-                {rightSlot && (
+                {displayRightSlot && (
                     <div className="page-header-right-slot">
-                        {rightSlot}
+                        {displayRightSlot}
                     </div>
                 )}
             </div>
@@ -40,9 +44,10 @@ export default function PageHeader({
 PageHeader.propTypes = {
     badgeIcon: PropTypes.elementType,
     badgeText: PropTypes.string,
+    badge: PropTypes.string,
     title: PropTypes.string.isRequired,
     description: PropTypes.string,
     rightSlot: PropTypes.node,
+    actions: PropTypes.node,
     className: PropTypes.string,
 };
-
