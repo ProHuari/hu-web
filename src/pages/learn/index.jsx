@@ -25,7 +25,6 @@ export default function LearnCatalog() {
 
     useEffect(() => {
         let isMounted = true;
-        setLoading(true);
 
         Promise.all([
             coursesService.getCourses(),
