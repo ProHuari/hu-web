@@ -16,11 +16,11 @@ export default function UserProfileHeader({ user: propUser, onEditAvatar }) {
 
     const initials = user?.name
         ? user.name
-              .split(" ")
-              .map((n) => n[0])
-              .slice(0, 2)
-              .join("")
-              .toUpperCase()
+            .split(" ")
+            .map((n) => n[0])
+            .slice(0, 2)
+            .join("")
+            .toUpperCase()
         : "CA";
 
     return (

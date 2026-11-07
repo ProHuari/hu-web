@@ -37,9 +37,8 @@ export default function InputText({
 
         <input
           type={type}
-          className={`input-field text-p-regular ${
-            iconLeft ? "has-icon-left" : ""
-          } ${iconRight ? "has-icon-right" : ""}`}
+          className={`input-field text-p-regular ${iconLeft ? "has-icon-left" : ""
+            } ${iconRight ? "has-icon-right" : ""}`}
           {...props}
         />
 

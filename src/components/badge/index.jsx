@@ -36,3 +36,4 @@ Badge.propTypes = {
     icon: PropTypes.elementType,
     className: PropTypes.string,
 };
+

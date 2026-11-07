@@ -45,3 +45,4 @@ Avatar.propTypes = {
     isOnline: PropTypes.bool,
     className: PropTypes.string,
 };
+
