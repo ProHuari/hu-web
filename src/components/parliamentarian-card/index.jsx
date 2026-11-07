@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -12,34 +11,47 @@ import { useApp } from '../../context/AppContext';
 import './style.css';
 
 export default function ParliamentarianCard({
+    lawmaker,
     id,
     name,
-    position = 'Federal Deputy',
-    party = 'PL',
-    state = 'SP',
-    attendance = '0%',
-    projects = '0',
-    expenses = 'R$ 0',
-    avatar = null,
+    position,
+    role,
+    party,
+    state,
+    attendance,
+    projects,
+    expenses,
+    avatar,
     onView,
 }) {
     const navigate = useNavigate();
-    const { isBookmarked, toggleBookmark } = useApp();
+    const { isBookmarked, toggleBookmark } = useApp() || {};
 
-    const bookmarked = id ? isBookmarked(id) : false;
+    // Support either whole lawmaker object prop or destructured individual props
+    const cardId = lawmaker?.id ?? id;
+    const cardName = lawmaker?.name ?? name ?? 'Lawmaker';
+    const cardPosition = lawmaker?.position ?? lawmaker?.role ?? position ?? role ?? 'Federal Deputy';
+    const cardParty = lawmaker?.party ?? party ?? 'PL';
+    const cardState = lawmaker?.state ?? state ?? 'DF';
+    const cardAttendance = lawmaker?.attendance ?? attendance ?? '0%';
+    const cardProjects = lawmaker?.projects ?? projects ?? '0';
+    const cardExpenses = lawmaker?.expenses ?? expenses ?? 'R$ 0';
+    const cardAvatar = lawmaker?.avatar ?? avatar ?? null;
+
+    const bookmarked = cardId ? isBookmarked?.(cardId) : false;
 
     const handleToggleBookmark = (e) => {
         e.stopPropagation();
-        if (id) {
-            toggleBookmark(id);
+        if (cardId && toggleBookmark) {
+            toggleBookmark(cardId);
         }
     };
 
     const handleView = () => {
         if (onView) {
             onView();
-        } else if (id) {
-            navigate(`/lawmakers/${id}`);
+        } else if (cardId) {
+            navigate(`/lawmakers/${cardId}`);
         }
     };
 
@@ -47,8 +59,8 @@ export default function ParliamentarianCard({
         <article className="parliamentarian-card">
             <div className="parliamentarian-card-top">
                 <Avatar
-                    src={avatar}
-                    name={name}
+                    src={cardAvatar}
+                    name={cardName}
                     size="lg"
                     className="parliamentarian-avatar"
                 />
@@ -58,8 +70,8 @@ export default function ParliamentarianCard({
                     className={`parliamentarian-bookmark ${bookmarked ? 'is-favorite' : ''}`}
                     aria-label={
                         bookmarked
-                            ? `Remove ${name} from saved lawmakers`
-                            : `Save ${name} to bookmarks`
+                            ? `Remove ${cardName} from saved lawmakers`
+                            : `Save ${cardName} to bookmarks`
                     }
                     aria-pressed={bookmarked}
                     onClick={handleToggleBookmark}
@@ -73,34 +85,34 @@ export default function ParliamentarianCard({
             </div>
 
             <div className="parliamentarian-info">
-                <h2 className="parliamentarian-name">{name}</h2>
-                <p className="parliamentarian-position">{position}</p>
+                <h2 className="parliamentarian-name">{cardName}</h2>
+                <p className="parliamentarian-position">{cardPosition}</p>
             </div>
 
             <div className="parliamentarian-tags">
                 <Badge variant="primary" size="md">
-                    {party}
+                    {cardParty}
                 </Badge>
 
                 <Badge variant="secondary" size="md" icon={RiMapPinLine}>
-                    {state}
+                    {cardState}
                 </Badge>
             </div>
 
             <div className="parliamentarian-stats">
                 <div className="parliamentarian-stat">
                     <span className="stat-label">Attendance</span>
-                    <strong className="stat-value">{attendance}</strong>
+                    <strong className="stat-value">{cardAttendance}</strong>
                 </div>
 
                 <div className="parliamentarian-stat">
                     <span className="stat-label">Bills</span>
-                    <strong className="stat-value">{projects}</strong>
+                    <strong className="stat-value">{cardProjects}</strong>
                 </div>
 
                 <div className="parliamentarian-stat">
                     <span className="stat-label">Spending</span>
-                    <strong className="stat-value">{expenses}</strong>
+                    <strong className="stat-value">{cardExpenses}</strong>
                 </div>
             </div>
 
@@ -116,9 +128,22 @@ export default function ParliamentarianCard({
 }
 
 ParliamentarianCard.propTypes = {
+    lawmaker: PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        name: PropTypes.string,
+        position: PropTypes.string,
+        role: PropTypes.string,
+        party: PropTypes.string,
+        state: PropTypes.string,
+        attendance: PropTypes.string,
+        projects: PropTypes.string,
+        expenses: PropTypes.string,
+        avatar: PropTypes.string,
+    }),
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     position: PropTypes.string,
+    role: PropTypes.string,
     party: PropTypes.string,
     state: PropTypes.string,
     attendance: PropTypes.string,
