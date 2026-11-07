@@ -62,3 +62,4 @@ export function formatCompactNumber(value) {
         maximumFractionDigits: 1,
     }).format(num);
 }
+
