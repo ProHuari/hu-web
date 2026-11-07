@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams, NavLink, Link } from 'react-router-dom';
 import {
     RiArrowLeftLine,
@@ -12,13 +11,13 @@ import {
     RiCheckboxCircleLine,
     RiUserLine,
 } from 'react-icons/ri';
-import { getCourseById, MOCK_COURSES } from '../../data/courses';
+import { getCourseById } from '../../data/courses';
 import './style.css';
 
 export default function LessonOverview() {
     const { courseId } = useParams();
 
-    const course = getCourseById(courseId) || MOCK_COURSES[0];
+    const course = getCourseById(courseId);
 
     const lessons = course.modules.flatMap((module) =>
         module.lessons.map((lesson) => ({
