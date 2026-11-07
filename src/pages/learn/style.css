@@ -1,75 +1,15 @@
 /* =========================================
    Página: LearnCatalog (/learn)
 ========================================= */
-.learn-catalog-layout {
-    display: flex;
-    align-items: stretch;
-    min-height: 100vh;
+.learn-page-container {
     width: 100%;
-    background-color: #F8F9FB;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    color: #1F2937;
-    box-sizing: border-box;
-}
-
-.learn-sidebar-wrapper {
-    flex-shrink: 0;
-}
-
-.learn-catalog-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-width: 0;
-    box-sizing: border-box;
-}
-
-.learn-catalog-container {
-    width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 36px 40px 48px;
+    padding: 1.5rem 2rem 3rem;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 1.75rem;
     box-sizing: border-box;
-}
-
-.learn-catalog-header {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.learn-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 999px;
-    background-color: #FFF3ED;
-    border: 1px solid #FFEAE0;
-    color: #D4460E;
-    font-size: 0.76rem;
-    font-weight: 700;
-    width: fit-content;
-}
-
-.learn-title-block h1 {
-    font-size: 1.85rem;
-    font-weight: 800;
-    color: #111827;
-    margin: 0 0 6px 0;
-    letter-spacing: -0.02em;
-}
-
-.learn-title-block p {
-    font-size: 0.94rem;
-    color: #6B7280;
-    margin: 0;
-    max-width: 640px;
-    line-height: 1.5;
 }
 
 /* Barra de Filtros e Busca */
@@ -77,8 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    margin-top: 8px;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
@@ -91,20 +30,21 @@
 
 .learn-search-icon {
     position: absolute;
-    left: 14px;
+    left: 0.875rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #9CA3AF;
+    color: var(--color-text-muted, #9ca3af);
+    pointer-events: none;
 }
 
 .learn-search-input {
     width: 100%;
-    height: 44px;
-    padding: 10px 14px 10px 42px;
-    border-radius: 12px;
-    border: 1.5px solid #E5E7EB;
-    background-color: #FFFFFF;
-    color: #111827;
+    height: 2.75rem;
+    padding: 0.625rem 0.875rem 0.625rem 2.5rem;
+    border-radius: var(--radius-md, 12px);
+    border: 1.5px solid var(--color-border, #e5e7eb);
+    background-color: var(--color-surface, #ffffff);
+    color: var(--color-text-primary, #111827);
     font-family: inherit;
     font-size: 0.9rem;
     outline: none;
@@ -113,23 +53,23 @@
 }
 
 .learn-search-input:focus {
-    border-color: #F15A24;
+    border-color: var(--color-scale-primary-500, #f15a24);
     box-shadow: 0 0 0 3px rgba(241, 90, 36, 0.12);
 }
 
 .learn-category-pills {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     flex-wrap: wrap;
 }
 
 .category-pill-btn {
-    padding: 9px 18px;
-    border-radius: 999px;
-    border: 1.5px solid #E5E7EB;
-    background-color: #FFFFFF;
-    color: #4B5563;
+    padding: 0.55rem 1.15rem;
+    border-radius: var(--radius-pill, 999px);
+    border: 1.5px solid var(--color-border, #e5e7eb);
+    background-color: var(--color-surface, #ffffff);
+    color: var(--color-text-secondary, #4b5563);
     font-family: inherit;
     font-size: 0.86rem;
     font-weight: 600;
@@ -138,54 +78,28 @@
 }
 
 .category-pill-btn:hover {
-    border-color: #D1D5DB;
-    background-color: #F9FAFB;
-    color: #111827;
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+    color: var(--color-text-primary, #111827);
 }
 
 .category-pill-btn.is-active {
-    background-color: #F15A24;
-    border-color: #F15A24;
-    color: #FFFFFF;
+    background-color: var(--color-scale-primary-500, #f15a24);
+    border-color: var(--color-scale-primary-500, #f15a24);
+    color: #ffffff;
     font-weight: 700;
     box-shadow: 0 2px 8px rgba(241, 90, 36, 0.25);
 }
 
 /* Grade de Cards */
+.learn-courses-grid-section {
+    width: 100%;
+}
+
 .learn-courses-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
-}
-
-.learn-empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 64px 20px;
-    background-color: #FFFFFF;
-    border-radius: 16px;
-    border: 1px dashed #D1D5DB;
-    gap: 8px;
-}
-
-.btn-reset-learn {
-    margin-top: 10px;
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: none;
-    background-color: #F15A24;
-    color: #FFFFFF;
-    font-size: 0.88rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.btn-reset-learn:hover {
-    background-color: #D4460E;
+    gap: 1.5rem;
 }
 
 @media (max-width: 1024px) {
@@ -194,9 +108,9 @@
     }
 }
 
-@media (max-width: 640px) {
-    .learn-catalog-container {
-        padding: 24px 16px 36px;
+@media (max-width: 768px) {
+    .learn-page-container {
+        padding: 1rem 1rem 2rem;
     }
 
     .learn-courses-grid {
