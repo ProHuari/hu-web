@@ -1,29 +1,60 @@
-
 /* =========================
-   Header principal da Home
+   Header principal da Home / Hero
 ========================= */
 
 .home-header {
     width: 100%;
-    min-height: 263px;
-    padding: 36px 40px;
-    background-color: var(--color-scale-primary-700);
-    color: var(--color-neutral-0);
+    min-height: 280px;
+    padding: 3rem 2.5rem;
+    background: linear-gradient(135deg, var(--color-scale-primary-800, #1e3a8a) 0%, var(--color-scale-primary-700, #1d4ed8) 100%);
+    color: var(--color-neutral-0, #ffffff);
     box-sizing: border-box;
+    border-radius: var(--radius-md, 12px);
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
 }
 
 .home-header-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
+    gap: 1.25rem;
     width: 100%;
     max-width: 900px;
+    position: relative;
+    z-index: 1;
+}
+
+.home-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill, 999px);
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-neutral-0, #ffffff);
+    letter-spacing: 0.02em;
+}
+
+.home-header-badge-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--color-success, #22c55e);
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
 }
 
 .home-header-content h1 {
-    max-width: 650px;
-    color: var(--color-neutral-0);
+    margin: 0;
+    max-width: 720px;
+    color: var(--color-neutral-0, #ffffff);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
 }
 
 .home-header-title-break {
@@ -31,47 +62,48 @@
 }
 
 .home-header-description {
-    max-width: 560px;
-    color: var(--color-neutral-0);
+    margin: 0;
+    max-width: 620px;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
 .home-header-actions {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 1rem;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 0.5rem;
 }
 
 .home-header-button {
     display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    min-height: 52px;
-    padding: 12px 18px;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 3rem;
+    padding: 0.75rem 1.25rem;
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: var(--radius-sm, 8px);
     font-family: inherit;
     font-size: 0.9375rem;
     font-weight: 600;
     line-height: 1.2;
     cursor: pointer;
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .home-header-button svg {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
     flex-shrink: 0;
 }
 
 .home-header-button:hover {
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .home-header-button:focus-visible {
@@ -80,35 +112,33 @@
 }
 
 .home-header-button-light {
-    background-color: var(--color-neutral-0);
-    color: var(--color-scale-primary-700);
+    background-color: var(--color-neutral-0, #ffffff);
+    color: var(--color-scale-primary-800, #1e3a8a);
 }
 
 .home-header-button-light:hover {
-    background-color: var(--color-neutral-300);
+    background-color: var(--color-neutral-100, #f3f4f6);
 }
 
 .home-header-button-accent {
-    background-color: var(--color-scale-primary-500);
-    color: var(--color-neutral-0);
+    background-color: var(--color-scale-primary-500, #3b82f6);
+    color: var(--color-neutral-0, #ffffff);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .home-header-button-accent:hover {
-    background-color: var(--color-scale-primary-600);
+    background-color: var(--color-scale-primary-400, #60a5fa);
 }
-
-/* =========================
-   Responsividade
-========================= */
 
 @media (max-width: 768px) {
     .home-header {
         min-height: auto;
-        padding: 32px 24px;
+        padding: 2rem 1.25rem;
+        border-radius: 0;
     }
 
     .home-header-content {
-        gap: 20px;
+        gap: 1rem;
     }
 
     .home-header-title-break {
@@ -116,16 +146,11 @@
     }
 
     .home-header-actions {
-        gap: 12px;
-        margin-top: 8px;
+        gap: 0.75rem;
     }
 }
 
 @media (max-width: 480px) {
-    .home-header {
-        padding: 28px 16px;
-    }
-
     .home-header-actions {
         flex-direction: column;
         align-items: stretch;
@@ -133,5 +158,6 @@
 
     .home-header-button {
         width: 100%;
+        justify-content: space-between;
     }
 }
