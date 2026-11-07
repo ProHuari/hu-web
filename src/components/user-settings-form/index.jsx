@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import {
@@ -12,9 +12,11 @@ import {
     RiToggleLine,
     RiToggleFill,
     RiExternalLinkLine,
+    RiErrorWarningLine,
 } from "react-icons/ri";
 import { useApp } from "../../context/AppContext";
 import { getLawmakerById, UF_OPTIONS } from "../../data/lawmakers";
+import { userService } from "../../services/userService";
 import PasswordInput from "../password-input";
 import Badge from "../badge";
 import Avatar from "../avatar";
@@ -26,20 +28,24 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
         updateUser,
         bookmarkedLawmakerIds = [],
         toggleBookmark,
+        notifications = {},
+        toggleNotification,
     } = useApp() || {};
 
     const [activeTab, setActiveTab] = useState("profile");
     const [savedSuccess, setSavedSuccess] = useState(false);
     const [passwordSaved, setPasswordSaved] = useState(false);
+    const [passwordError, setPasswordError] = useState("");
+    const [isSavingPassword, setIsSavingPassword] = useState(false);
 
     // Form data state
     const [formData, setFormData] = useState({
-        name: user.name || initialData.name || "Carlos Oliveira",
-        email: user.email || initialData.email || "carlos.oliveira@huari.org",
-        phone: user.phone || initialData.phone || "+55 (11) 98765-4321",
-        state: user.state || initialData.state || "SP",
+        name: user?.name || initialData.name || "Carlos Oliveira",
+        email: user?.email || initialData.email || "carlos.oliveira@huari.org",
+        phone: user?.phone || initialData.phone || "+55 (11) 98765-4321",
+        state: user?.state || initialData.state || "SP",
         bio:
-            user.bio ||
+            user?.bio ||
             initialData.bio ||
             "Citizen auditor passionate about public policy analysis, congressional fiscal oversight, and active civic participation.",
     });
@@ -51,41 +57,58 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
         confirmPassword: "",
     });
 
-    // Notifications state
-    const [notifications, setNotifications] = useState({
-        emailAlerts: true,
-        votingAlerts: true,
-        weeklyDigest: false,
-        laiUpdates: true,
-    });
-
     const handleInputChange = (field, value) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
     const handlePasswordChange = (field, value) => {
         setPasswords((prev) => ({ ...prev, [field]: value }));
+        setPasswordError("");
     };
 
-    const handleToggleNotification = (key) => {
-        setNotifications((prev) => ({ ...prev, [key]: !prev[key] }));
-    };
-
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-        if (updateUser) {
-            updateUser(formData);
+        try {
+            await userService.updateProfile(formData);
+            if (updateUser) {
+                updateUser(formData);
+            }
+            onSave?.(formData);
+            setSavedSuccess(true);
+            setTimeout(() => setSavedSuccess(false), 2500);
+        } catch (err) {
+            console.error("Failed to update profile", err);
         }
-        onSave?.(formData);
-        setSavedSuccess(true);
-        setTimeout(() => setSavedSuccess(false), 2500);
     };
 
-    const handlePasswordSubmit = (e) => {
+    const handlePasswordSubmit = async (e) => {
         e.preventDefault();
-        setPasswordSaved(true);
-        setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" });
-        setTimeout(() => setPasswordSaved(false), 3000);
+        setPasswordError("");
+
+        if (passwords.newPassword.length < 8) {
+            setPasswordError("New password must be at least 8 characters long.");
+            return;
+        }
+
+        if (passwords.newPassword !== passwords.confirmPassword) {
+            setPasswordError("New passwords do not match.");
+            return;
+        }
+
+        setIsSavingPassword(true);
+        try {
+            await userService.updatePassword({
+                currentPassword: passwords.currentPassword,
+                newPassword: passwords.newPassword,
+            });
+            setPasswordSaved(true);
+            setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" });
+            setTimeout(() => setPasswordSaved(false), 3000);
+        } catch (err) {
+            setPasswordError(err.message || "Failed to update password.");
+        } finally {
+            setIsSavingPassword(false);
+        }
     };
 
     // Resolve bookmarked lawmakers
@@ -249,7 +272,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                                             <Badge variant="party">{lawmaker.party}</Badge>
                                             <Badge variant="state">{lawmaker.state}</Badge>
                                         </div>
-                                        <span className="saved-lawmaker-role">{lawmaker.role}</span>
+                                        <span className="saved-lawmaker-role">{lawmaker.position || lawmaker.role}</span>
                                     </div>
 
                                     <div className="saved-lawmaker-actions">
@@ -303,10 +326,10 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                         <button
                             type="button"
                             className="toggle-btn"
-                            onClick={() => handleToggleNotification("votingAlerts")}
+                            onClick={() => toggleNotification?.("votingAlerts")}
                             aria-label="Toggle voting alerts"
                         >
-                            {notifications.votingAlerts ? (
+                            {notifications?.votingAlerts ? (
                                 <RiToggleFill size={36} className="toggle-active" />
                             ) : (
                                 <RiToggleLine size={36} className="toggle-inactive" />
@@ -322,10 +345,10 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                         <button
                             type="button"
                             className="toggle-btn"
-                            onClick={() => handleToggleNotification("emailAlerts")}
+                            onClick={() => toggleNotification?.("emailAlerts")}
                             aria-label="Toggle email alerts"
                         >
-                            {notifications.emailAlerts ? (
+                            {notifications?.emailAlerts ? (
                                 <RiToggleFill size={36} className="toggle-active" />
                             ) : (
                                 <RiToggleLine size={36} className="toggle-inactive" />
@@ -341,10 +364,10 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                         <button
                             type="button"
                             className="toggle-btn"
-                            onClick={() => handleToggleNotification("weeklyDigest")}
+                            onClick={() => toggleNotification?.("weeklyDigest")}
                             aria-label="Toggle weekly digest"
                         >
-                            {notifications.weeklyDigest ? (
+                            {notifications?.weeklyDigest ? (
                                 <RiToggleFill size={36} className="toggle-active" />
                             ) : (
                                 <RiToggleLine size={36} className="toggle-inactive" />
@@ -357,6 +380,13 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
             {/* Tab: Security */}
             {activeTab === "security" && (
                 <form className="settings-security-panel" onSubmit={handlePasswordSubmit}>
+                    {passwordError && (
+                        <div className="login-alert-error" role="alert" style={{ marginBottom: "16px" }}>
+                            <RiErrorWarningLine size={18} />
+                            <span>{passwordError}</span>
+                        </div>
+                    )}
+
                     <PasswordInput
                         label="Current Password"
                         value={passwords.currentPassword}
@@ -388,9 +418,9 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                                 Password updated successfully!
                             </span>
                         )}
-                        <button type="submit" className="btn-save-settings">
+                        <button type="submit" className="btn-save-settings" disabled={isSavingPassword}>
                             <RiLockLine size={18} aria-hidden="true" />
-                            <span>Update Password</span>
+                            <span>{isSavingPassword ? "Updating..." : "Update Password"}</span>
                         </button>
                     </div>
                 </form>
