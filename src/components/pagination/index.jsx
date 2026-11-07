@@ -4,14 +4,7 @@ import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 import './style.css';
 
 /**
- * Pagination - Componente atômico para navegação de páginas paginadas.
- * Gera números de página com elipses inteligentes (...) e controles de anterior/próximo.
- *
- * @param {number} currentPage - Página ativa atual (base 1)
- * @param {number} totalPages - Total de páginas disponíveis
- * @param {function} onPageChange - Callback acionado com o novo número de página
- * @param {number} siblingCount - Quantidade de páginas adjacentes a mostrar (default: 1)
- * @param {string} className - Classes CSS adicionais
+ * Pagination - Atomic component for paginated navigation.
  */
 export default function Pagination({
     currentPage = 1,
@@ -22,9 +15,8 @@ export default function Pagination({
 }) {
     if (totalPages <= 1) return null;
 
-    // Algoritmo para gerar o intervalo de páginas com reticências
     const generatePaginationRange = () => {
-        const totalPageNumbers = siblingCount * 2 + 5; // 1 + siblings + currentPage + siblings + lastPage + 2 dots
+        const totalPageNumbers = siblingCount * 2 + 5;
 
         if (totalPageNumbers >= totalPages) {
             return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -82,17 +74,17 @@ export default function Pagination({
     return (
         <nav
             className={`huari-pagination-container ${className}`}
-            aria-label="Navegação de páginas"
+            aria-label="Pagination Navigation"
         >
             <button
                 type="button"
                 className="huari-pagination-nav-btn"
                 onClick={handlePrev}
                 disabled={currentPage === 1}
-                aria-label="Página anterior"
+                aria-label="Previous page"
             >
                 <RiArrowLeftSLine size={18} />
-                <span>Anterior</span>
+                <span>Previous</span>
             </button>
 
             <div className="huari-pagination-numbers">
@@ -117,7 +109,7 @@ export default function Pagination({
                             className={`huari-pagination-page-btn ${isCurrent ? 'is-active' : ''}`}
                             onClick={() => onPageChange(page)}
                             aria-current={isCurrent ? 'page' : undefined}
-                            aria-label={`Ir para a página ${page}`}
+                            aria-label={`Go to page ${page}`}
                         >
                             {page}
                         </button>
@@ -130,9 +122,9 @@ export default function Pagination({
                 className="huari-pagination-nav-btn"
                 onClick={handleNext}
                 disabled={currentPage === totalPages}
-                aria-label="Próxima página"
+                aria-label="Next page"
             >
-                <span>Próximo</span>
+                <span>Next</span>
                 <RiArrowRightSLine size={18} />
             </button>
         </nav>
@@ -146,4 +138,3 @@ Pagination.propTypes = {
     siblingCount: PropTypes.number,
     className: PropTypes.string,
 };
-
