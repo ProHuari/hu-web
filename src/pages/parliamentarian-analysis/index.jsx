@@ -21,36 +21,28 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
     const navigate = useNavigate();
     const { bookmarkedLawmakerIds = [], toggleBookmark } = useApp() || {};
 
-    const [lawmaker, setLawmaker] = useState(propLawmaker || null);
+    const [fetchedLawmaker, setFetchedLawmaker] = useState(null);
     const [loading, setLoading] = useState(!propLawmaker);
     const [notFound, setNotFound] = useState(false);
     const [selectedQuotaYear, setSelectedQuotaYear] = useState("Quota 2026");
 
-    useEffect(() => {
-        if (propLawmaker) {
-            setLawmaker(propLawmaker);
-            setLoading(false);
-            setNotFound(false);
-            return;
-        }
+    const lawmaker = propLawmaker || fetchedLawmaker;
 
-        if (!id) {
-            setNotFound(true);
-            setLoading(false);
+    useEffect(() => {
+        if (propLawmaker || !id) {
             return;
         }
 
         let isMounted = true;
-        setLoading(true);
-        setNotFound(false);
 
         lawmakersService.getLawmakerById(id)
             .then((data) => {
                 if (isMounted) {
                     if (data) {
-                        setLawmaker(data);
+                        setFetchedLawmaker(data);
+                        setNotFound(false);
                     } else {
-                        setLawmaker(null);
+                        setFetchedLawmaker(null);
                         setNotFound(true);
                     }
                 }
@@ -71,6 +63,8 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
             isMounted = false;
         };
     }, [id, propLawmaker]);
+
+    const isRecordNotFound = notFound || (!propLawmaker && !id);
 
     if (loading) {
         return (
@@ -99,7 +93,7 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
         );
     }
 
-    if (notFound || !lawmaker) {
+    if (isRecordNotFound || !lawmaker) {
         return (
             <div className="analysis-page-container">
                 <Link to="/lawmakers" className="analysis-back-link">
