@@ -1,15 +1,12 @@
-
-import './style.css';
-
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import logoHuari from '../../assets/images/logoHuari.svg';
-
 import {
     GithubIcon,
     LinkedinIcon,
     XIcon,
     InstagramIcon,
 } from '../icons';
-
 import {
     RiArrowRightSLine,
     RiLink,
@@ -18,122 +15,122 @@ import {
     RiCodeBoxLine,
     RiMailLine,
 } from 'react-icons/ri';
+import './style.css';
 
-const navigationLinks = [
-    { label: 'Painel Inicial', href: '#home' },
-    { label: 'Academia Cívica e Cursos', href: '#cursos' },
-    { label: 'Gastos e Cotas Parlamentares', href: '#parlamentares' },
-    { label: 'Assistência Cívica Virtual', href: '#chat' },
+const NAVIGATION_LINKS = [
+    { label: 'Strategic Dashboard', path: '/dashboard' },
+    { label: 'Civic Academy & Courses', path: '/learn' },
+    { label: 'Lawmakers & Spending', path: '/lawmakers' },
+    { label: 'Virtual Civic AI Assistant', path: '/chat' },
 ];
 
-const officialSources = [
+const OFFICIAL_SOURCES = [
     {
-        label: 'Dados Abertos - Câmara dos Deputados',
+        label: 'Open Data — Chamber of Deputies',
         href: 'https://dadosabertos.camara.leg.br/',
     },
     {
-        label: 'Portal da Transparência - Senado Federal',
+        label: 'Transparency Portal — Federal Senate',
         href: 'https://www12.senado.leg.br/transparencia',
     },
     {
-        label: 'Tribunal de Contas da União (TCU)',
+        label: 'Federal Court of Accounts (TCU)',
         href: 'https://www.tcu.gov.br/',
     },
     {
-        label: 'Controladoria-Geral da União (CGU)',
+        label: 'Office of the Comptroller General (CGU)',
         href: 'https://www.gov.br/cgu/pt-br',
     },
 ];
 
-const transparencyLinks = [
+const TRANSPARENCY_LINKS = [
     {
-        label: 'Termos e Metodologia',
-        href: '#termos',
+        label: 'Terms & Methodology',
+        href: '#terms',
         Icon: RiHammerLine,
     },
     {
-        label: 'Privacidade e Proteção de Dados',
-        href: '#privacidade',
+        label: 'Privacy & Data Protection',
+        href: '#privacy',
         Icon: RiShieldCheckLine,
     },
     {
-        label: 'API Pública e Código Aberto',
+        label: 'Public API & Open Source',
         href: '#api',
         Icon: RiCodeBoxLine,
     },
     {
-        label: 'Ouvidoria e Denúncias',
-        href: '#ouvidoria',
+        label: 'Ombudsman & Whistleblowing',
+        href: '#ombudsman',
         Icon: RiMailLine,
     },
 ];
 
 export default function Footer() {
     return (
-        <footer className="footer">
+        <footer className="footer" aria-label="Site Footer">
             <div className="footer-content">
                 <section className="footer-brand">
-                    <div className="footer-logo">
-                        <img src={logoHuari} alt="Logo Huari" />
-                        <h2 className="text-h3-bold">Huari</h2>
-                    </div>
+                    <NavLink to="/dashboard" className="footer-logo">
+                        <img src={logoHuari} alt="Huari Logo" />
+                        <h2 className="footer-logo-title">Huari</h2>
+                    </NavLink>
 
-                    <p className="footer-description text-p-regular">
-                        Plataforma cívica independente dedicada a
-                        transformar dados abertos da administração
-                        pública em inteligência acessível para toda
-                        a sociedade civil.
+                    <p className="footer-description">
+                        Independent civic platform dedicated to transforming public
+                        administration open data into accessible intelligence for civil society.
                     </p>
 
                     <nav
                         className="footer-social"
-                        aria-label="Redes sociais"
+                        aria-label="Social media links"
                     >
-                        <a href="https://github.com/" aria-label="GitHub">
-                            <GithubIcon size={24} />
+                        <a href="https://github.com/" target="_blank" rel="noreferrer" aria-label="GitHub">
+                            <GithubIcon size={22} />
                         </a>
-                        <a href="https://www.instagram.com/" aria-label="Instagram">
-                            <InstagramIcon size={24} />
+                        <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram">
+                            <InstagramIcon size={22} />
                         </a>
-                        <a href="https://www.linkedin.com/" aria-label="LinkedIn">
-                            <LinkedinIcon size={24} />
+                        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                            <LinkedinIcon size={22} />
                         </a>
-                        <a href="mailto:contato@huari.com.br" aria-label="E-mail">
-                            <RiMailLine />
+                        <a href="mailto:contact@huari.org" aria-label="Email">
+                            <RiMailLine size={22} />
                         </a>
-                        <a href="https://x.com/" aria-label="X">
-                            <XIcon size={24} />
+                        <a href="https://x.com/" target="_blank" rel="noreferrer" aria-label="X">
+                            <XIcon size={22} />
                         </a>
                     </nav>
                 </section>
 
                 <section className="footer-column">
-                    <h3 className="text-p-bold">Navegação</h3>
+                    <h3 className="footer-column-heading">Navigation</h3>
 
-                    <ul>
-                        {navigationLinks.map(({ label, href }) => (
+                    <ul className="footer-nav-list">
+                        {NAVIGATION_LINKS.map(({ label, path }) => (
                             <li key={label}>
-                                <a href={href}>
-                                    <RiArrowRightSLine className="footer-navigation-icon" />
+                                <NavLink to={path} className="footer-nav-link">
+                                    <RiArrowRightSLine className="footer-navigation-icon" size={18} />
                                     <span>{label}</span>
-                                </a>
+                                </NavLink>
                             </li>
                         ))}
                     </ul>
                 </section>
 
                 <section className="footer-column">
-                    <h3 className="text-p-bold">Fontes Oficiais</h3>
+                    <h3 className="footer-column-heading">Official Sources</h3>
 
-                    <ul>
-                        {officialSources.map(({ label, href }) => (
+                    <ul className="footer-nav-list">
+                        {OFFICIAL_SOURCES.map(({ label, href }) => (
                             <li key={label}>
                                 <a
                                     href={href}
                                     target="_blank"
                                     rel="noreferrer"
+                                    className="footer-nav-link"
                                 >
-                                    <RiLink className="footer-link-icon" />
+                                    <RiLink className="footer-link-icon" size={17} />
                                     <span>{label}</span>
                                 </a>
                             </li>
@@ -142,13 +139,13 @@ export default function Footer() {
                 </section>
 
                 <section className="footer-column">
-                    <h3 className="text-p-bold">Transparência e Ética</h3>
+                    <h3 className="footer-column-heading">Transparency &amp; Ethics</h3>
 
-                    <ul>
-                        {transparencyLinks.map(({ label, href, Icon }) => (
+                    <ul className="footer-nav-list">
+                        {TRANSPARENCY_LINKS.map(({ label, href, Icon }) => (
                             <li key={label}>
-                                <a href={href}>
-                                    <Icon className="footer-transparency-icon" />
+                                <a href={href} className="footer-nav-link">
+                                    <Icon className="footer-transparency-icon" size={17} />
                                     <span>{label}</span>
                                 </a>
                             </li>
@@ -158,7 +155,7 @@ export default function Footer() {
             </div>
 
             <div className="footer-bottom">
-                <p>© 2026 AI Platform. All rights reserved.</p>
+                <p>© 2026 Huari — Civic Intelligence &amp; Political Transparency. All rights reserved.</p>
             </div>
         </footer>
     );
