@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate, Link } from "react-router-dom";
 import InputText from "../../components/input-text";
 import Button from "../../components/button";
+import { authService } from "../../services/authService";
 import {
     RiMailLine,
     RiArrowRightLine,
@@ -22,7 +23,7 @@ export default function RecoverPassword({
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
@@ -32,15 +33,21 @@ export default function RecoverPassword({
         }
 
         setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
+        try {
+            await authService.requestPasswordReset(email);
             setIsSubmitted(true);
-            if (onNavigateToCreateNewPassword) {
-                setTimeout(onNavigateToCreateNewPassword, 1200);
-            } else {
-                setTimeout(() => navigate("/create-new-password"), 1500);
-            }
-        }, 600);
+            setTimeout(() => {
+                if (onNavigateToCreateNewPassword) {
+                    onNavigateToCreateNewPassword();
+                } else {
+                    navigate("/create-new-password?token=mock-reset-token-demo");
+                }
+            }, 1500);
+        } catch (err) {
+            setError(err.message || "Failed to dispatch reset instructions.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
