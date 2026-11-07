@@ -4,16 +4,7 @@ import { RiArrowDownSLine, RiCheckLine } from 'react-icons/ri';
 import './style.css';
 
 /**
- * SelectFilter - Componente atômico para dropdowns de filtros (UF, Partido, Ordenação).
- * Possui suporte a teclado, clique externo para fechar e acessibilidade ARIA.
- *
- * @param {string} label - Rótulo indicativo do filtro
- * @param {Array<{value: string, label: string}>} options - Opções do dropdown
- * @param {string} value - Valor selecionado atualmente
- * @param {function} onChange - Callback ao alterar o valor (retorna o valor)
- * @param {React.ReactNode} icon - Ícone opcional no topo do seletor
- * @param {string} placeholder - Texto padrão quando nenhum valor estiver selecionado
- * @param {string} className - Classes CSS extras
+ * SelectFilter - Atomic custom dropdown filter for State (UF), Party, and Sorting.
  */
 export default function SelectFilter({
     label,
@@ -21,13 +12,13 @@ export default function SelectFilter({
     value = '',
     onChange,
     icon: Icon,
-    placeholder = 'Selecione...',
+    placeholder = 'Select...',
     className = '',
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
 
-    // Fecha o menu ao clicar fora do componente
+    // Close menu when clicking outside
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -38,7 +29,7 @@ export default function SelectFilter({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // Fecha com a tecla Escape
+    // Close menu on Escape
     const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
             setIsOpen(false);
@@ -121,4 +112,3 @@ SelectFilter.propTypes = {
     placeholder: PropTypes.string,
     className: PropTypes.string,
 };
-
