@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
     RiSendPlane2Fill,
     RiSparkling2Line,
@@ -16,6 +16,7 @@ import {
     RiInformationLine,
 } from "react-icons/ri";
 import logoHuari from "../../assets/images/logoHuari.svg";
+import { chatService } from "../../services/chatService";
 import "./style.css";
 
 const PRESET_QUESTIONS = [
@@ -50,48 +51,26 @@ const INITIAL_MESSAGES = [
     },
 ];
 
-const KNOWLEDGE_RESPONSES = {
-    expenses: `The **Parliamentary Quota (CEAP - Cota para o Exercício da Atividade Parlamentar)** is a monthly expense allowance allocated to members of Congress to reimburse mandate-related activities.
-
-Key permitted expense categories:
-1. **Mandate Communication & Outreach:** Educational newsletters, video production, social media management, and activity reports.
-2. **Commercial Airfare & Lodging:** Travel between the lawmaker's electoral home state and Brasília.
-3. **Vehicle Rental & Fuel:** Ground transportation logistics within their state.
-4. **Consulting & Technical Advisory:** Specialized research and policy analysis reports.
-
-> **Transparency Note:** All invoices, merchant CNPJ identifiers, and receipts are publicly available in real time through official Chamber and Senate Open Data APIs!`,
-
-    pec: `A **Constitutional Amendment Proposal (PEC - Proposta de Emenda à Constituição)** modifies the text of the 1988 Federal Constitution and requires a rigorous legislative pathway:
-
-1. **Sponsorship:** Must be co-sponsored by at least 1/3 of Federal Deputies (171), 1/3 of Senators (27), or the President of the Republic.
-2. **Constitution & Justice Committee (CCJ):** Assesses constitutional admissibility and legal harmony.
-3. **Special Committee:** Reviews policy merits and proposed substitutions.
-4. **Two-Round Supermajority Floor Vote:** Must be approved in both the Chamber and Senate by **3/5 supermajority** (308 Deputies and 49 Senators) in two separate voting rounds.
-
-Executive sanction or veto does not apply: once passed by both houses, it is promulgated directly by Congress!`,
-
-    quotient: `In Brazilian elections for Federal Deputy, State Deputy, and Municipal Councilor, elections operate under the **open-list proportional representation system**:
-
-* **Electoral Quotient (QE):** Calculated by dividing total valid votes cast by the number of legislative seats to be filled.
-* **Party Quotient (QP):** Calculated by dividing total votes received by a party list by the QE. This determines direct seats won.
-* **Remaining Seat Allocation (Sobras):** Leftover seats are distributed using the highest-average (D'Hondt) method among parties meeting minimum electoral thresholds.
-
-This ensures diverse political representation proportionate to overall citizen ideological preference!`,
-
-    auditing: `Every citizen can audit congressional representatives using open civic tools:
-
-1. **Official Congressional Portals:** The *Dados Abertos* and *Transparência* portals publish line-item expense receipts and roll-call voting records.
-2. **Huari Civic Platform:** We correlate roll-call votes, floor attendance, and CEAP expense claims into intuitive, accessible dashboards.
-3. **Federal Transparency Portal (CGU):** Directly inspect federal procurement contracts, grants, and transfers.
-4. **Freedom of Information Act (LAI - Law 12.527/11):** Empowers any citizen to request government documents and explanations with a mandatory statutory response deadline of 20 days.`,
-};
+/**
+ * Sanitize raw string against XSS injection before parsing markdown tokens.
+ */
+function escapeHtml(str) {
+    if (!str) return "";
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
 function renderFormattedMessage(text) {
     return text.split("\n\n").map((paragraph, idx) => {
         if (paragraph.startsWith("> ")) {
+            const rawQuote = paragraph.replace(/^>\s*/, "");
             return (
                 <blockquote key={idx} className="bubble-quote">
-                    {paragraph.replace("> ", "")}
+                    {escapeHtml(rawQuote)}
                 </blockquote>
             );
         }
@@ -104,28 +83,34 @@ function renderFormattedMessage(text) {
                 <ul key={idx} className="bubble-list">
                     {lines.map((item, itemIdx) => {
                         const cleanItem = item.replace(/^(\*|\d+\.)\s/, "");
+                        const safeItem = escapeHtml(cleanItem);
+                        const formattedHtml = safeItem.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
                         return (
-                            <li key={itemIdx} dangerouslySetInnerHTML={{
-                                __html: cleanItem.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-                            }} />
+                            <li
+                                key={itemIdx}
+                                dangerouslySetInnerHTML={{ __html: formattedHtml }}
+                            />
                         );
                     })}
                 </ul>
             );
         }
 
-        const formattedHtml = paragraph.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        const safeParagraph = escapeHtml(paragraph);
+        const formattedHtml = safeParagraph.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
         return <p key={idx} dangerouslySetInnerHTML={{ __html: formattedHtml }} />;
     });
 }
 
 export default function ChatHuari() {
     const location = useLocation();
+    const navigate = useNavigate();
     const [messages, setMessages] = useState(INITIAL_MESSAGES);
     const [inputPrompt, setInputPrompt] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const [copiedId, setCopiedId] = useState(null);
     const messagesEndRef = useRef(null);
+    const hasHandledInitialPrompt = useRef(false);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -135,14 +120,7 @@ export default function ChatHuari() {
         scrollToBottom();
     }, [messages, isTyping]);
 
-    // Check for initial prompt passed from other pages (e.g. ParliamentarianAnalysis)
-    useEffect(() => {
-        if (location.state?.initialPrompt) {
-            handleSendMessage(location.state.initialPrompt);
-        }
-    }, [location.state]);
-
-    const handleSendMessage = (textToSend) => {
+    const handleSendMessage = useCallback(async (textToSend) => {
         const query = (textToSend || inputPrompt).trim();
         if (!query) return;
 
@@ -157,33 +135,37 @@ export default function ChatHuari() {
         setInputPrompt("");
         setIsTyping(true);
 
-        setTimeout(() => {
-            let responseText = "";
-            const lowerQuery = query.toLowerCase();
-
-            if (lowerQuery.includes("expense") || lowerQuery.includes("quota") || lowerQuery.includes("ceap") || lowerQuery.includes("spending") || lowerQuery.includes("cost") || lowerQuery.includes("gasto")) {
-                responseText = KNOWLEDGE_RESPONSES.expenses;
-            } else if (lowerQuery.includes("pec") || lowerQuery.includes("amendment") || lowerQuery.includes("bill") || lowerQuery.includes("constitution") || lowerQuery.includes("law")) {
-                responseText = KNOWLEDGE_RESPONSES.pec;
-            } else if (lowerQuery.includes("quotient") || lowerQuery.includes("election") || lowerQuery.includes("vote") || lowerQuery.includes("proportional")) {
-                responseText = KNOWLEDGE_RESPONSES.quotient;
-            } else if (lowerQuery.includes("audit") || lowerQuery.includes("citizen") || lowerQuery.includes("oversight") || lowerQuery.includes("track") || lowerQuery.includes("lai")) {
-                responseText = KNOWLEDGE_RESPONSES.auditing;
-            } else {
-                responseText = `Thank you for your question regarding: "${query}".\n\nAs the civic intelligence assistant for **Huari**, I am designed to synthesize public records from the Chamber of Deputies, Federal Senate, and the Federal Court of Accounts (TCU).\n\nYou can explore lawmakers directly in the **Lawmakers** section, inspect courses under **Learn**, or ask about:\n* Detailed expense voucher categories for specific lawmakers\n* How legislative bills (PL, PLP, PEC, and MPV) become law\n* How to inspect parliamentary attendance and voting discipline`;
-            }
-
+        try {
+            const result = await chatService.sendMessage(query);
             const aiMessage = {
                 id: `ai-${Date.now()}`,
                 sender: "huari",
                 timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-                text: responseText,
+                text: result.response,
             };
-
             setMessages((prev) => [...prev, aiMessage]);
+        } catch (err) {
+            const errorMessage = {
+                id: `err-${Date.now()}`,
+                sender: "huari",
+                timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+                text: `I encountered an issue processing your request: ${err.message || 'Please check your connection and try again.'}`,
+            };
+            setMessages((prev) => [...prev, errorMessage]);
+        } finally {
             setIsTyping(false);
-        }, 750);
-    };
+        }
+    }, [inputPrompt]);
+
+    // Check for initial prompt passed from other pages (e.g. ParliamentarianAnalysis)
+    useEffect(() => {
+        if (location.state?.initialPrompt && !hasHandledInitialPrompt.current) {
+            hasHandledInitialPrompt.current = true;
+            const prompt = location.state.initialPrompt;
+            navigate(location.pathname, { replace: true, state: {} });
+            handleSendMessage(prompt);
+        }
+    }, [location.state, location.pathname, navigate, handleSendMessage]);
 
     const handleClearChat = () => {
         setMessages(INITIAL_MESSAGES);
