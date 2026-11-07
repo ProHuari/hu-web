@@ -1,0 +1,64 @@
+/* =========================================
+   Unified Authentication Layout
+   Clean, modern, responsive split layout
+========================================= */
+
+.auth-layout-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--color-surface, #FFFFFF);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.auth-layout-left {
+    flex: 1.1;
+    min-width: 0;
+    display: flex;
+    position: relative;
+}
+
+.auth-layout-right {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 32px;
+    box-sizing: border-box;
+    background: radial-gradient(
+        circle at top right,
+        rgba(241, 90, 36, 0.05) 0%,
+        transparent 60%
+    ), var(--color-surface, #FFFFFF);
+}
+
+@media (max-width: 991px) {
+    .auth-layout-container {
+        flex-direction: column;
+        min-height: 100dvh;
+    }
+
+    .auth-layout-left {
+        flex: none;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .auth-layout-right {
+        flex: none;
+        width: 100%;
+        padding: 40px 24px 56px;
+    }
+}
+
+@media (max-width: 540px) {
+    .auth-layout-right {
+        padding: 28px 16px 40px;
+    }
+}
+
