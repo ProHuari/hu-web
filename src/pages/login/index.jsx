@@ -18,6 +18,8 @@ import {
 } from "react-icons/ri";
 import "./style.css";
 
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
+
 export default function Login({
     initialTab = "login",
     onNavigateToRegister,
@@ -224,8 +226,8 @@ export default function Login({
                             isLoading
                                 ? "Authenticating..."
                                 : activeTab === "login"
-                                ? "Sign In to Huari"
-                                : "Create Huari Account"
+                                    ? "Sign In to Huari"
+                                    : "Create Huari Account"
                         }
                         icon={<RiCheckboxCircleLine size={19} />}
                         identifier="btn-primary btn-radius-40 btn-submit"
@@ -256,6 +258,8 @@ export default function Login({
                     type="button"
                     className="login-social-btn"
                     onClick={handleSocialLogin}
+                    disabled={!USE_MOCKS}
+                    title={!USE_MOCKS ? "Social login available soon" : "Sign in with Google"}
                     aria-label="Sign in with Google"
                 >
                     <GoogleIcon size={20} />
@@ -266,6 +270,8 @@ export default function Login({
                     type="button"
                     className="login-social-btn"
                     onClick={handleSocialLogin}
+                    disabled={!USE_MOCKS}
+                    title={!USE_MOCKS ? "Social login available soon" : "Sign in with GitHub"}
                     aria-label="Sign in with GitHub"
                 >
                     <GithubIcon size={20} />
@@ -276,6 +282,8 @@ export default function Login({
                     type="button"
                     className="login-social-btn"
                     onClick={handleSocialLogin}
+                    disabled={!USE_MOCKS}
+                    title={!USE_MOCKS ? "Social login available soon" : "Sign in with Apple"}
                     aria-label="Sign in with Apple"
                 >
                     <AppleIcon size={20} />

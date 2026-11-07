@@ -326,11 +326,18 @@
     transition: all 0.2s ease;
 }
 
-.login-social-btn:hover {
+.login-social-btn:hover:not(:disabled) {
     background-color: #F9FAFB;
     border-color: #D1D5DB;
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.login-social-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background-color: #F9FAFB;
+    border-color: #E5E7EB;
 }
 
 /* =========================================

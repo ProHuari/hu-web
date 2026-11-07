@@ -131,12 +131,19 @@ export default function ChatHuari() {
             text: query,
         };
 
+        const history = messages
+            .filter((m) => m.id !== "init-1")
+            .map((m) => ({
+                role: m.sender === "user" ? "user" : "assistant",
+                content: m.text,
+            }));
+
         setMessages((prev) => [...prev, userMessage]);
         setInputPrompt("");
         setIsTyping(true);
 
         try {
-            const result = await chatService.sendMessage(query);
+            const result = await chatService.sendMessage(query, history);
             const aiMessage = {
                 id: `ai-${Date.now()}`,
                 sender: "huari",
@@ -155,7 +162,7 @@ export default function ChatHuari() {
         } finally {
             setIsTyping(false);
         }
-    }, [inputPrompt]);
+    }, [inputPrompt, messages]);
 
     // Check for initial prompt passed from other pages (e.g. ParliamentarianAnalysis)
     useEffect(() => {

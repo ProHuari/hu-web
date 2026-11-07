@@ -18,6 +18,8 @@ import {
 } from "react-icons/ri";
 import "./style.css";
 
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
+
 export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome }) {
     const navigate = useNavigate();
     const { register: registerContext, loginAsGuest } = useApp() || {};
@@ -185,6 +187,8 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                     type="button"
                     className="login-social-btn"
                     onClick={handleSocialLogin}
+                    disabled={!USE_MOCKS}
+                    title={!USE_MOCKS ? "Social login available soon" : "Sign up with Google"}
                     aria-label="Sign up with Google"
                 >
                     <GoogleIcon size={20} />
@@ -195,6 +199,8 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                     type="button"
                     className="login-social-btn"
                     onClick={handleSocialLogin}
+                    disabled={!USE_MOCKS}
+                    title={!USE_MOCKS ? "Social login available soon" : "Sign up with GitHub"}
                     aria-label="Sign up with GitHub"
                 >
                     <GithubIcon size={20} />
@@ -205,6 +211,8 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                     type="button"
                     className="login-social-btn"
                     onClick={handleSocialLogin}
+                    disabled={!USE_MOCKS}
+                    title={!USE_MOCKS ? "Social login available soon" : "Sign up with Apple"}
                     aria-label="Sign up with Apple"
                 >
                     <AppleIcon size={20} />
