@@ -1,9 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { RiSearchLine } from 'react-icons/ri';
 import PageHeader from '../../components/page-header';
 import EmptyState from '../../components/empty-state';
 import CourseCard from '../../components/course-card';
-import { MOCK_COURSES, COURSE_CATEGORIES } from '../../data/courses';
+import { coursesService } from '../../services/coursesService';
 import './style.css';
 
 /**
@@ -11,19 +11,60 @@ import './style.css';
  * Course catalog with category tabs and real-time search.
  */
 export default function LearnCatalog() {
+    const [courses, setCourses] = useState([]);
+    const [categories, setCategories] = useState([
+        'All',
+        'Beginners',
+        'Legislative',
+        'Budget & Auditing',
+        'Civic Action',
+    ]);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let isMounted = true;
+        setLoading(true);
+
+        Promise.all([
+            coursesService.getCourses(),
+            coursesService.getCategories(),
+        ])
+            .then(([fetchedCourses, fetchedCategories]) => {
+                if (isMounted) {
+                    if (Array.isArray(fetchedCourses)) {
+                        setCourses(fetchedCourses);
+                    }
+                    if (Array.isArray(fetchedCategories) && fetchedCategories.length > 0) {
+                        setCategories(fetchedCategories);
+                    }
+                }
+            })
+            .catch((err) => {
+                console.error('Failed to load courses from service', err);
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const filteredCourses = useMemo(() => {
-        return MOCK_COURSES.filter((course) => {
+        return courses.filter((course) => {
             const matchesCategory =
                 selectedCategory === 'All' || course.category === selectedCategory;
             const matchesSearch =
-                course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                course.description.toLowerCase().includes(searchQuery.toLowerCase());
+                (course.title && course.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                (course.description && course.description.toLowerCase().includes(searchQuery.toLowerCase()));
             return matchesCategory && matchesSearch;
         });
-    }, [selectedCategory, searchQuery]);
+    }, [courses, selectedCategory, searchQuery]);
 
     return (
         <div className="learn-page-container">
@@ -48,7 +89,7 @@ export default function LearnCatalog() {
                 </div>
 
                 <div className="learn-category-pills" role="tablist" aria-label="Course Categories">
-                    {COURSE_CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                         <button
                             key={cat}
                             type="button"
@@ -65,7 +106,12 @@ export default function LearnCatalog() {
 
             {/* Courses Grid */}
             <section className="learn-courses-grid-section" aria-label="Course Tracks Catalog">
-                {filteredCourses.length === 0 ? (
+                {loading ? (
+                    <div className="courses-loading-state" style={{ padding: '4rem 1rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                        <div className="loading-spinner" />
+                        <p style={{ color: 'var(--color-text-muted)' }}>Loading civic academy tracks...</p>
+                    </div>
+                ) : filteredCourses.length === 0 ? (
                     <EmptyState
                         title="No learning tracks found"
                         description="Try searching with a different term or select 'All' to browse every course."

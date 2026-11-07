@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import {
@@ -7,6 +7,7 @@ import {
     RiPlayCircleLine,
     RiTimeLine,
 } from 'react-icons/ri';
+import { useApp } from '../../context/AppContext';
 import './style.css';
 
 /**
@@ -18,6 +19,7 @@ export default function LessonAccordion({
     currentLessonId,
     onSelectLesson,
 }) {
+    const { isLessonCompleted } = useApp() || {};
     const [openModules, setOpenModules] = useState({ 0: true });
 
     const toggleModule = (index) => {
@@ -58,6 +60,9 @@ export default function LessonAccordion({
                                     {moduleItem.lessons.map((lesson) => {
                                         const isCurrent = lesson.id === currentLessonId;
                                         const lessonUrl = `/learn/${currentCourseId}/${lesson.id}`;
+                                        const completed = isLessonCompleted
+                                            ? isLessonCompleted(currentCourseId, lesson.id)
+                                            : Boolean(lesson.completed);
 
                                         return (
                                             <li key={lesson.id}>
@@ -67,7 +72,7 @@ export default function LessonAccordion({
                                                     className={`lesson-item-btn ${isCurrent ? 'is-current' : ''}`}
                                                 >
                                                     <div className="lesson-item-left">
-                                                        {lesson.completed ? (
+                                                        {completed ? (
                                                             <RiCheckboxCircleFill
                                                                 className="lesson-check-done"
                                                                 size={18}

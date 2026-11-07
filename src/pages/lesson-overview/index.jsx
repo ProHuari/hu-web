@@ -1,4 +1,5 @@
-import { useParams, NavLink, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, NavLink, Link, useNavigate } from 'react-router-dom';
 import {
     RiArrowLeftLine,
     RiArrowRightLine,
@@ -11,16 +12,95 @@ import {
     RiCheckboxCircleLine,
     RiUserLine,
 } from 'react-icons/ri';
-import { getCourseById } from '../../data/courses';
+import { coursesService } from '../../services/coursesService';
+import EmptyState from '../../components/empty-state';
 import './style.css';
 
 export default function LessonOverview() {
     const { courseId } = useParams();
+    const navigate = useNavigate();
 
-    const course = getCourseById(courseId);
+    const [course, setCourse] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [notFound, setNotFound] = useState(false);
 
-    const lessons = course.modules.flatMap((module) =>
-        module.lessons.map((lesson) => ({
+    useEffect(() => {
+        let isMounted = true;
+        setLoading(true);
+        setNotFound(false);
+
+        coursesService.getCourseById(courseId)
+            .then((data) => {
+                if (isMounted) {
+                    if (data) {
+                        setCourse(data);
+                    } else {
+                        setCourse(null);
+                        setNotFound(true);
+                    }
+                }
+            })
+            .catch((err) => {
+                console.error('Failed to load course details', err);
+                if (isMounted) {
+                    setNotFound(true);
+                }
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [courseId]);
+
+    if (loading) {
+        return (
+            <div className="lesson-overview-page-container">
+                <Link to="/learn" className="overview-back-link">
+                    <RiArrowLeftLine size={18} aria-hidden="true" />
+                    <span>Back to Course Catalog</span>
+                </Link>
+                <div
+                    className="overview-loading-state"
+                    style={{
+                        padding: '4rem 1rem',
+                        textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '1rem',
+                    }}
+                >
+                    <div className="loading-spinner" />
+                    <p style={{ color: 'var(--color-text-muted)' }}>Loading course overview...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (notFound || !course) {
+        return (
+            <div className="lesson-overview-page-container">
+                <Link to="/learn" className="overview-back-link">
+                    <RiArrowLeftLine size={18} aria-hidden="true" />
+                    <span>Back to Course Catalog</span>
+                </Link>
+                <EmptyState
+                    title="Course Track Not Found"
+                    description="We could not find the requested civic track. It may have been relocated or updated."
+                    actionText="Browse Courses"
+                    onAction={() => navigate('/learn')}
+                />
+            </div>
+        );
+    }
+
+    const lessons = (course.modules || []).flatMap((module) =>
+        (module.lessons || []).map((lesson) => ({
             ...lesson,
             moduleTitle: module.title,
         }))
@@ -169,12 +249,12 @@ export default function LessonOverview() {
                                 </div>
 
                                 <span className="overview-module-count">
-                                    {module.lessons.length} lessons
+                                    {(module.lessons || []).length} lessons
                                 </span>
                             </div>
 
                             <div className="overview-module-lessons">
-                                {module.lessons.map((lesson) => (
+                                {(module.lessons || []).map((lesson) => (
                                     <NavLink
                                         to={`/learn/${course.id}/${lesson.id}`}
                                         className="overview-lesson-item"

@@ -1,4 +1,5 @@
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
     RiArrowLeftLine,
     RiCheckboxCircleFill,
@@ -8,7 +9,8 @@ import {
 import VideoPlayer from '../../components/video-player';
 import LessonAccordion from '../../components/lesson-accordion';
 import ProgressBar from '../../components/progress-bar';
-import { getCourseById } from '../../data/courses';
+import EmptyState from '../../components/empty-state';
+import { coursesService } from '../../services/coursesService';
 import { useApp } from '../../context/AppContext';
 import './style.css';
 
@@ -17,9 +19,91 @@ import './style.css';
  */
 export default function LessonPage() {
     const { courseId, lessonId } = useParams();
+    const navigate = useNavigate();
     const { isLessonCompleted, toggleLessonCompleted } = useApp() || {};
 
-    const course = getCourseById(courseId);
+    const [course, setCourse] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [notFound, setNotFound] = useState(false);
+
+    useEffect(() => {
+        let isMounted = true;
+        setLoading(true);
+        setNotFound(false);
+
+        coursesService.getCourseById(courseId)
+            .then((data) => {
+                if (isMounted) {
+                    if (data) {
+                        setCourse(data);
+                    } else {
+                        setCourse(null);
+                        setNotFound(true);
+                    }
+                }
+            })
+            .catch((err) => {
+                console.error('Failed to load lesson course', err);
+                if (isMounted) {
+                    setNotFound(true);
+                }
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [courseId]);
+
+    if (loading) {
+        return (
+            <div className="lesson-page-container">
+                <div className="lesson-nav-top-bar">
+                    <Link to="/learn" className="lesson-back-btn">
+                        <RiArrowLeftLine size={18} aria-hidden="true" />
+                        <span>Back to Course Catalog</span>
+                    </Link>
+                </div>
+                <div
+                    className="lesson-loading-state"
+                    style={{
+                        padding: '4rem 1rem',
+                        textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '1rem',
+                    }}
+                >
+                    <div className="loading-spinner" />
+                    <p style={{ color: 'var(--color-text-muted)' }}>Loading lesson curriculum...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (notFound || !course) {
+        return (
+            <div className="lesson-page-container">
+                <div className="lesson-nav-top-bar">
+                    <Link to="/learn" className="lesson-back-btn">
+                        <RiArrowLeftLine size={18} aria-hidden="true" />
+                        <span>Back to Course Catalog</span>
+                    </Link>
+                </div>
+                <EmptyState
+                    title="Lesson Not Found"
+                    description="We could not locate this lesson or course module. Please verify the URL or return to the course catalog."
+                    actionText="Browse Courses"
+                    onAction={() => navigate('/learn')}
+                />
+            </div>
+        );
+    }
 
     // Find active lesson
     let activeLesson = null;
@@ -29,7 +113,7 @@ export default function LessonPage() {
     course.modules?.forEach((moduleItem) => {
         moduleItem.lessons?.forEach((l) => {
             totalLessons += 1;
-            const completed = isLessonCompleted ? isLessonCompleted(l.id) : Boolean(l.completed);
+            const completed = isLessonCompleted ? isLessonCompleted(course.id, l.id) : Boolean(l.completed);
             if (completed) completedLessonsCount += 1;
             if (l.id === lessonId) activeLesson = l;
         });
@@ -40,12 +124,12 @@ export default function LessonPage() {
     }
 
     const isCurrentCompleted = isLessonCompleted
-        ? isLessonCompleted(activeLesson?.id)
+        ? isLessonCompleted(course.id, activeLesson?.id)
         : Boolean(activeLesson?.completed);
 
     const toggleCompletion = () => {
         if (activeLesson?.id && toggleLessonCompleted) {
-            toggleLessonCompleted(activeLesson.id);
+            toggleLessonCompleted(course.id, activeLesson.id);
         }
     };
 
