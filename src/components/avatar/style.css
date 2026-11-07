@@ -1,0 +1,77 @@
+.huari-avatar-container {
+    position: relative;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.avatar-sm {
+    width: 34px;
+    height: 34px;
+    font-size: 0.8rem;
+}
+
+.avatar-md {
+    width: 42px;
+    height: 42px;
+    font-size: 0.95rem;
+}
+
+.avatar-lg {
+    width: 60px;
+    height: 60px;
+    font-size: 1.35rem;
+}
+
+.avatar-xl {
+    width: 88px;
+    height: 88px;
+    font-size: 1.8rem;
+}
+
+.huari-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.huari-avatar-initials {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-secondary, #2B2D42) 0%, #151624 100%);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    user-select: none;
+}
+
+.huari-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--color-scale-primary-100, #FFEDE8);
+    color: var(--color-scale-primary-600, #D4460E);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.huari-avatar-online-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--color-success, #16A34A);
+    border: 2px solid #FFFFFF;
+}
