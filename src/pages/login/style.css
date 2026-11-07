@@ -1,5 +1,5 @@
 /* =========================================
-   Layout Principal da Tela de Login
+   Main Login Layout
 ========================================= */
 .login-container {
     display: flex;
@@ -43,7 +43,7 @@
 }
 
 /* =========================================
-   Seletor de Abas (Entrar / Criar Conta)
+   Tab Navigation (Sign In / Register)
 ========================================= */
 .login-tabs-navigation {
     display: flex;
@@ -70,7 +70,7 @@
 }
 
 /* =========================================
-   Cabeçalho de Boas-Vindas
+   Welcome Header
 ========================================= */
 .login-header-block {
     display: flex;
@@ -110,7 +110,7 @@
 }
 
 /* =========================================
-   Alerta de Validação / Erro
+   Validation / Error Alert
 ========================================= */
 .login-alert-error {
     display: flex;
@@ -139,7 +139,7 @@
 }
 
 /* =========================================
-   Formulário e Campos
+   Form and Input Fields
 ========================================= */
 .login-form {
     width: 100%;
@@ -210,7 +210,7 @@
 }
 
 /* =========================================
-   Linha de Opções (Lembrar-me)
+   Remember Me Options Row
 ========================================= */
 .login-options-row {
     display: flex;
@@ -238,7 +238,7 @@
 }
 
 /* =========================================
-   Botões de Ação Principal e Visitante
+   Action and Guest Access Buttons
 ========================================= */
 .login-actions-stack {
     display: flex;
@@ -281,7 +281,7 @@
 }
 
 /* =========================================
-   Divisor e Botões de Login Social
+   Social Divider and Buttons
 ========================================= */
 .login-divider {
     display: flex;
@@ -334,7 +334,7 @@
 }
 
 /* =========================================
-   Rodapé de Alternância
+   Switch Option Footer
 ========================================= */
 .login-bottom-prompt {
     text-align: center;
@@ -365,7 +365,7 @@
 }
 
 /* =========================================
-   Breakpoints Responsivos
+   Responsive Breakpoints
 ========================================= */
 @media (max-width: 991px) {
     .login-container {
