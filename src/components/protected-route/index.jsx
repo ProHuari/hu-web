@@ -1,25 +1,25 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Navigate, useLocation } from 'react-router-dom';
+import { useApp } from '../../context/AppContext';
 
 /**
  * ProtectedRoute - Route guard for authenticated areas.
- * Checks for authentication token/session. If unauthenticated,
+ * Checks for active session via AppContext. If unauthenticated,
  * redirects to login while preserving target route.
  */
 export default function ProtectedRoute({ children }) {
     const location = useLocation();
+    const { isAuthenticated } = useApp() || {};
 
-    const isAuthenticated = Boolean(
+    const hasStoredToken = Boolean(
         localStorage.getItem('huari_token') ||
-        sessionStorage.getItem('huari_token') ||
-        localStorage.getItem('huari_user') ||
-        sessionStorage.getItem('huari_user') ||
-        true // Permissive in preview/demo mode
+        sessionStorage.getItem('huari_token')
     );
 
-    if (!isAuthenticated) {
-        return <Navigate to="/" state={{ from: location }} replace />;
+    const isAuthorized = Boolean(isAuthenticated || hasStoredToken);
+
+    if (!isAuthorized) {
+        return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
     return children;
