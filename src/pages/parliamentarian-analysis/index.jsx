@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
@@ -9,10 +9,11 @@ import {
     RiAddLine,
     RiCheckLine,
 } from "react-icons/ri";
-import { getLawmakerById, MOCK_LAWMAKERS } from "../../data/lawmakers";
+import { lawmakersService } from "../../services/lawmakersService";
 import { useApp } from "../../context/AppContext";
 import Avatar from "../../components/avatar";
 import Badge from "../../components/badge";
+import EmptyState from "../../components/empty-state";
 import "./style.css";
 
 export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
@@ -20,23 +21,114 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
     const navigate = useNavigate();
     const { bookmarkedLawmakerIds = [], toggleBookmark } = useApp() || {};
 
+    const [lawmaker, setLawmaker] = useState(propLawmaker || null);
+    const [loading, setLoading] = useState(!propLawmaker);
+    const [notFound, setNotFound] = useState(false);
     const [selectedQuotaYear, setSelectedQuotaYear] = useState("Quota 2026");
 
-    // Lookup lawmaker by param or prop, falling back to first lawmaker
-    const lawmaker = propLawmaker || (id ? getLawmakerById(id) : MOCK_LAWMAKERS[0]) || MOCK_LAWMAKERS[0];
-    const isBookmarked = bookmarkedLawmakerIds.includes(lawmaker.id);
+    useEffect(() => {
+        if (propLawmaker) {
+            setLawmaker(propLawmaker);
+            setLoading(false);
+            setNotFound(false);
+            return;
+        }
+
+        if (!id) {
+            setNotFound(true);
+            setLoading(false);
+            return;
+        }
+
+        let isMounted = true;
+        setLoading(true);
+        setNotFound(false);
+
+        lawmakersService.getLawmakerById(id)
+            .then((data) => {
+                if (isMounted) {
+                    if (data) {
+                        setLawmaker(data);
+                    } else {
+                        setLawmaker(null);
+                        setNotFound(true);
+                    }
+                }
+            })
+            .catch((err) => {
+                console.error("Failed to load lawmaker details", err);
+                if (isMounted) {
+                    setNotFound(true);
+                }
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [id, propLawmaker]);
+
+    if (loading) {
+        return (
+            <div className="analysis-page-container">
+                <Link to="/lawmakers" className="analysis-back-link">
+                    <RiArrowLeftLine size={18} aria-hidden="true" />
+                    <span>Back to Lawmakers Directory</span>
+                </Link>
+                <div
+                    className="analysis-loading-state"
+                    style={{
+                        padding: "4rem 1rem",
+                        textAlign: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "1rem",
+                    }}
+                >
+                    <div className="loading-spinner" />
+                    <p style={{ color: "var(--color-text-muted)" }}>
+                        Loading congressional mandate records...
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    if (notFound || !lawmaker) {
+        return (
+            <div className="analysis-page-container">
+                <Link to="/lawmakers" className="analysis-back-link">
+                    <RiArrowLeftLine size={18} aria-hidden="true" />
+                    <span>Back to Lawmakers Directory</span>
+                </Link>
+                <EmptyState
+                    title="Lawmaker Not Found"
+                    description="We could not find a congressional mandate corresponding to this ID. The record may have expired or is unavailable."
+                    actionText="Back to Lawmakers Directory"
+                    onAction={() => navigate("/lawmakers")}
+                />
+            </div>
+        );
+    }
+
+    const isBookmarked = bookmarkedLawmakerIds.includes(Number(lawmaker.id));
 
     // Support both expensesByYear and quotaExpenses schemas
     const rawExpenses =
         lawmaker.expensesByYear?.[selectedQuotaYear] ||
-        lawmaker.quotaExpenses?.[selectedQuotaYear.replace('Quota ', '')] ||
+        lawmaker.quotaExpenses?.[selectedQuotaYear.replace("Quota ", "")] ||
         [];
 
     const expenses = rawExpenses.map((expense) => ({
-        category: expense.title || expense.category || 'General Mandate Expense',
-        amount: expense.amount || 'R$ 0',
+        category: expense.title || expense.category || "General Mandate Expense",
+        amount: expense.amount || "R$ 0",
         percentage: expense.percentage || 0,
-        tone: (expense.tone || 'medium').replace(/^tone-/, ''),
+        tone: (expense.tone || "medium").replace(/^tone-/, ""),
     }));
 
     const handleAskAi = () => {
@@ -205,11 +297,10 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
                             <div className="analysis-vote-top">
                                 <h3 className="vote-item-title">{vote.title}</h3>
                                 <span
-                                    className={`vote-item-badge ${
-                                        vote.status === "vote-positive"
+                                    className={`vote-item-badge ${vote.status === "vote-positive"
                                             ? "vote-positive"
                                             : "vote-negative"
-                                    }`}
+                                        }`}
                                 >
                                     {vote.position}
                                 </span>
