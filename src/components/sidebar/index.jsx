@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import logoHuari from '../../assets/images/logoHuari.svg';
@@ -26,14 +26,13 @@ const MENU_ITEMS = [
 
 export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
     const [isOpen, setIsOpen] = useState(true);
-    const { user } = useApp();
+    const { user = {}, logout } = useApp() || {};
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem('huari_token');
-        sessionStorage.removeItem('huari_token');
+        logout?.();
         if (onCloseMobile) onCloseMobile();
-        navigate('/');
+        navigate('/login');
     };
 
     const handleItemClick = () => {
