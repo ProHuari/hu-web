@@ -1,4 +1,5 @@
-import './style.css';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 export default function InputText({
   label,
@@ -11,7 +12,6 @@ export default function InputText({
 }) {
   return (
     <div className="input-container-group">
-
       {(label || labelAction) && (
         <div className="input-header-wrapper">
           {label && (
@@ -30,7 +30,7 @@ export default function InputText({
 
       <div className={`input-wrapper-field ${identifier}`}>
         {iconLeft && (
-          <span className="input-icon-left">
+          <span className="input-icon-left" aria-hidden="true">
             {iconLeft}
           </span>
         )}
@@ -44,7 +44,7 @@ export default function InputText({
         />
 
         {iconRight && (
-          <span className="input-icon-right">
+          <span className="input-icon-right" aria-hidden="true">
             {iconRight}
           </span>
         )}
@@ -52,3 +52,12 @@ export default function InputText({
     </div>
   );
 }
+
+InputText.propTypes = {
+  label: PropTypes.node,
+  labelAction: PropTypes.node,
+  type: PropTypes.string,
+  iconLeft: PropTypes.node,
+  iconRight: PropTypes.node,
+  identifier: PropTypes.string,
+};
