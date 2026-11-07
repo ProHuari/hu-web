@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate, Link } from "react-router-dom";
 import InputText from "../../components/input-text";
 import PasswordInput from "../../components/password-input";
 import Button from "../../components/button";
 import { GoogleIcon, GithubIcon, AppleIcon } from "../../components/icons";
+import { useApp } from "../../context/AppContext";
+import { authService } from "../../services/authService";
 import {
     RiUserLine,
     RiMailLine,
@@ -18,6 +20,7 @@ import "./style.css";
 
 export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome }) {
     const navigate = useNavigate();
+    const { register: registerContext, loginAsGuest } = useApp() || {};
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -26,7 +29,7 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
@@ -40,8 +43,8 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
             return;
         }
 
-        if (password.length < 6) {
-            setError("Password must contain at least 6 characters.");
+        if (password.length < 8) {
+            setError("Password must contain at least 8 characters.");
             return;
         }
 
@@ -51,17 +54,24 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
         }
 
         setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
+        try {
+            const result = await authService.register({ name, email, password });
+            registerContext?.(result.user, result.token);
+
             if (onNavigateToHome) {
                 onNavigateToHome();
             } else {
                 navigate("/dashboard");
             }
-        }, 500);
+        } catch (err) {
+            setError(err.message || "Registration failed. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleSocialLogin = () => {
+        loginAsGuest?.();
         if (onNavigateToHome) {
             onNavigateToHome();
         } else {
@@ -141,7 +151,7 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
 
                     <PasswordInput
                         label="Password"
-                        placeholder="Create a strong password (min. 6 chars)"
+                        placeholder="Create a strong password (min. 8 chars)"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
