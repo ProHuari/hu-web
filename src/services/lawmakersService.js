@@ -1,13 +1,13 @@
 /**
  * Lawmakers Service for Huari Civic Platform.
  * Connects to Spring Boot /lawmakers endpoints with search, filters,
- * pagination, and single mandate analysis, with MOCK_LAWMAKERS fallback.
+ * pagination (Spring Pageable), and single mandate analysis, with MOCK_LAWMAKERS fallback.
  */
 
 import { apiClient } from './api';
 import { MOCK_LAWMAKERS, CONGRESSIONAL_STATS } from '../data/lawmakers';
 
-const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'true';
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
 export const lawmakersService = {
     async getLawmakers(filters = {}, pagination = { page: 1, limit: 6 }) {
@@ -42,14 +42,14 @@ export const lawmakersService = {
             return {
                 items,
                 totalElements,
-                totalPages: Math.ceil(totalElements / limit),
+                totalPages: Math.ceil(totalElements / limit) || 1,
                 currentPage: page,
             };
         }
 
-        return apiClient('/lawmakers', {
+        const res = await apiClient('/lawmakers', {
             params: {
-                page: pagination.page,
+                page: Math.max(0, pagination.page - 1),
                 size: pagination.limit,
                 search: filters.search,
                 state: filters.state,
@@ -57,6 +57,13 @@ export const lawmakersService = {
                 sort: filters.sort,
             },
         });
+
+        return {
+            items: res?.content ?? res?.items ?? (Array.isArray(res) ? res : []),
+            totalElements: res?.page?.totalElements ?? res?.totalElements ?? (res?.content ? res.content.length : 0),
+            totalPages: res?.page?.totalPages ?? res?.totalPages ?? 1,
+            currentPage: pagination.page,
+        };
     },
 
     async getLawmakerById(id) {
@@ -70,7 +77,14 @@ export const lawmakersService = {
             return found;
         }
 
-        return apiClient(`/lawmakers/${id}`);
+        try {
+            return await apiClient(`/lawmakers/${id}`);
+        } catch (err) {
+            if (err.status === 404) {
+                return null;
+            }
+            throw err;
+        }
     },
 
     async getCongressionalStats() {
