@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import ParliamentarianCard from '../parliamentarian-card';
 import { MOCK_LAWMAKERS } from '../../data/lawmakers';
