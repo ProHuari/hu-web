@@ -1,67 +1,31 @@
-
-import './style.css';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ParliamentarianCard from '../parliamentarian-card';
+import { MOCK_LAWMAKERS } from '../../data/lawmakers';
+import './style.css';
 
-const parliamentarians = [
-    {
-        id: 1,
-        name: 'Parlamentar',
-        position: 'Deputado Federal',
-        party: 'PL',
-        state: 'SP',
-        attendance: '00',
-        projects: '00',
-        expenses: '00',
-    },
-    {
-        id: 2,
-        name: 'Parlamentar',
-        position: 'Deputado Federal',
-        party: 'PL',
-        state: 'SP',
-        attendance: '00',
-        projects: '00',
-        expenses: '00',
-    },
-    {
-        id: 3,
-        name: 'Parlamentar',
-        position: 'Deputado Federal',
-        party: 'PL',
-        state: 'SP',
-        attendance: '00',
-        projects: '00',
-        expenses: '00',
-    },
-    {
-        id: 4,
-        name: 'Parlamentar',
-        position: 'Deputado Federal',
-        party: 'PL',
-        state: 'SP',
-        attendance: '00',
-        projects: '00',
-        expenses: '00',
-    },
-];
-
-export default function ParliamentariansGrid() {
-    const handleView = (name) => {
-        console.log(`Visualizar parlamentar: ${name}`);
-    };
+export default function ParliamentariansGrid({
+    lawmakers,
+    className = '',
+}) {
+    const list = lawmakers || MOCK_LAWMAKERS.slice(0, 4);
 
     return (
         <section
-            className="parliamentarians-grid"
-            aria-label="Lista de parlamentares"
+            className={`parliamentarians-grid ${className}`.trim()}
+            aria-label="Featured Lawmakers Grid"
         >
-            {parliamentarians.map((parliamentarian) => (
+            {list.map((lawmaker) => (
                 <ParliamentarianCard
-                    key={parliamentarian.id}
-                    {...parliamentarian}
-                    onView={() => handleView(parliamentarian.name)}
+                    key={lawmaker.id}
+                    lawmaker={lawmaker}
                 />
             ))}
         </section>
     );
 }
+
+ParliamentariansGrid.propTypes = {
+    lawmakers: PropTypes.arrayOf(PropTypes.object),
+    className: PropTypes.string,
+};
