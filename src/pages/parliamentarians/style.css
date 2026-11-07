@@ -1,102 +1,34 @@
 /* =========================================
    Página: LawmakersPage (Listagem de Parlamentares)
 ========================================= */
-.lawmakers-page-layout {
-    display: flex;
-    align-items: stretch;
-    min-height: 100vh;
+.lawmakers-page-container {
     width: 100%;
-    background-color: #F8F9FB;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    color: #1F2937;
-    box-sizing: border-box;
-}
-
-.lawmakers-sidebar-wrapper {
-    flex-shrink: 0;
-}
-
-.lawmakers-main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-width: 0;
-    box-sizing: border-box;
-}
-
-.lawmakers-container {
-    width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 36px 40px 48px;
+    padding: 1.5rem 2rem 3rem;
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 1.75rem;
     box-sizing: border-box;
-}
-
-/* Header Institucional */
-.lawmakers-page-header {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.header-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 999px;
-    background-color: #FFF3ED;
-    border: 1px solid #FFEAE0;
-    color: #D4460E;
-    font-size: 0.76rem;
-    font-weight: 700;
-    width: fit-content;
-}
-
-.header-title-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.title-group h1 {
-    font-size: 1.85rem;
-    font-weight: 800;
-    color: #111827;
-    margin: 0 0 6px 0;
-    letter-spacing: -0.02em;
-}
-
-.title-group p {
-    font-size: 0.94rem;
-    color: #6B7280;
-    margin: 0;
-    max-width: 640px;
-    line-height: 1.5;
 }
 
 .congress-stat-chip {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 12px;
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    color: #2B2D42;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-md, 12px);
+    background-color: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    color: var(--color-text-primary, #111827);
     font-size: 0.88rem;
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 0, 0.05));
+    white-space: nowrap;
 }
 
 .congress-stat-chip svg {
-    color: #F15A24;
+    color: var(--color-scale-primary-500, #ea580c);
 }
 
 /* Grid de Cards */
@@ -107,7 +39,7 @@
 .lawmakers-cards-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
+    gap: 1.5rem;
 }
 
 /* Loading State */
@@ -116,17 +48,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 64px 20px;
-    gap: 16px;
-    color: #6B7280;
+    padding: 4rem 1.25rem;
+    gap: 1rem;
+    color: var(--color-text-muted, #6b7280);
 }
 
 .loading-spinner {
-    width: 38px;
-    height: 38px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
-    border: 3px solid #E5E7EB;
-    border-top-color: #F15A24;
+    border: 3px solid var(--color-border, #e5e7eb);
+    border-top-color: var(--color-scale-primary-500, #ea580c);
     animation: spin 0.8s linear infinite;
 }
 
@@ -136,59 +68,10 @@
     }
 }
 
-/* Empty State */
-.lawmakers-empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 64px 20px;
-    background-color: #FFFFFF;
-    border-radius: 16px;
-    border: 1px dashed #D1D5DB;
-    gap: 12px;
-}
-
-.lawmakers-empty-state svg {
-    color: #9CA3AF;
-}
-
-.lawmakers-empty-state h3 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #111827;
-    margin: 0;
-}
-
-.lawmakers-empty-state p {
-    font-size: 0.9rem;
-    color: #6B7280;
-    margin: 0;
-    max-width: 400px;
-}
-
-.btn-empty-reset {
-    margin-top: 6px;
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: none;
-    background-color: #F15A24;
-    color: #FFFFFF;
-    font-size: 0.88rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.btn-empty-reset:hover {
-    background-color: #D4460E;
-}
-
 .lawmakers-pagination-footer {
     display: flex;
     justify-content: center;
-    padding-top: 12px;
+    padding-top: 1rem;
 }
 
 /* =========================================
@@ -201,8 +84,8 @@
 }
 
 @media (max-width: 768px) {
-    .lawmakers-container {
-        padding: 24px 20px 36px;
+    .lawmakers-page-container {
+        padding: 1rem 1rem 2rem;
     }
 
     .lawmakers-cards-grid {
