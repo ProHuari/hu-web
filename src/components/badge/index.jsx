@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
 
@@ -31,9 +30,10 @@ Badge.propTypes = {
         'danger',
         'warning',
         'neutral',
+        'party',
+        'state',
     ]),
     size: PropTypes.oneOf(['sm', 'md', 'lg']),
     icon: PropTypes.elementType,
     className: PropTypes.string,
 };
-
