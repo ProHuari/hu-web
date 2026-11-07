@@ -1,0 +1,18 @@
+.password-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border: none;
+    border-radius: var(--radius-sm, 8px);
+    background: transparent;
+    color: var(--color-text-muted, #6B7280);
+    cursor: pointer;
+    transition: color 0.18s ease, background-color 0.18s ease;
+}
+
+.password-toggle-btn:hover {
+    color: var(--color-text-primary, #111827);
+    background-color: var(--color-surface-hover, #F3F4F6);
+}
+
