@@ -10,7 +10,7 @@ import './style.css';
 export default function MainLayout() {
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const location = useLocation();
-    const { user } = useApp();
+    const { user = {} } = useApp() || {};
 
     const isChatRoute = location.pathname.startsWith('/chat');
 
@@ -33,7 +33,7 @@ export default function MainLayout() {
                 </NavLink>
 
                 <NavLink to="/profile" className="mobile-user-avatar-btn" aria-label="User Profile">
-                    {user.avatar ? (
+                    {user?.avatar ? (
                         <img src={user.avatar} alt={user.name} />
                     ) : (
                         <RiUser3Line size={18} />
@@ -58,4 +58,3 @@ export default function MainLayout() {
         </div>
     );
 }
-
