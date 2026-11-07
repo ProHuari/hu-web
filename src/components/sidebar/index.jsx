@@ -53,9 +53,8 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
             )}
 
             <aside
-                className={`sidebar ${isOpen ? 'sidebar-open' : 'sidebar-closed'} ${
-                    isMobileOpen ? 'sidebar-mobile-visible' : ''
-                }`}
+                className={`sidebar ${isOpen ? 'sidebar-open' : 'sidebar-closed'} ${isMobileOpen ? 'sidebar-mobile-visible' : ''
+                    }`}
                 aria-label="Main Navigation"
             >
                 {/* Header Controls: Toggle Collapse (desktop) & Close Drawer (mobile) */}
