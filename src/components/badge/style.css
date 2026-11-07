@@ -25,12 +25,14 @@
     font-size: 0.84rem;
 }
 
-.badge-primary {
+.badge-primary,
+.badge-party {
     background-color: var(--color-scale-primary-500, #F15A24);
     color: #FFFFFF;
 }
 
-.badge-secondary {
+.badge-secondary,
+.badge-state {
     background-color: var(--color-secondary, #2B2D42);
     color: #FFFFFF;
 }
@@ -64,4 +66,3 @@
     color: var(--color-text-secondary, #4B5563);
     border: 1px solid var(--color-border, #E5E7EB);
 }
-
