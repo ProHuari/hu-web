@@ -1,10 +1,8 @@
 :root {
     /* Color Primary */
-    
     --color-primary: #F15A24;
 
     /* Scale Primary Styles */
-    
     --color-scale-primary-100: #FFEDE8;
     --color-scale-primary-200: #FFDBD0;
     --color-scale-primary-300: #FFB59E;
@@ -17,11 +15,9 @@
     --color-scale-primary-1000: #3A0B00;
 
     /* Color Secondary */
-
     --color-secondary: #2B2D42;
 
     /* Scale Secondary Styles */
-
     --color-scale-secondary-100: #F0F1F5;
     --color-scale-secondary-200: #E1E3EB;
     --color-scale-secondary-300: #D2D4EC;
@@ -32,15 +28,13 @@
     --color-scale-secondary-800: #393D62;
     --color-scale-secondary-900: #2B2D42;
     --color-scale-secondary-1000: #0F101A;
-    
-    /* Color Tertiary */
 
+    /* Color Tertiary */
     --color-tertiary: #FFF3ED;
 
     /* Scale Tertiary Styles */
-
     --color-scale-tertiary-100: #FFF3ED;
-    --color-scale-tertiary-200: #FFEAE0; 
+    --color-scale-tertiary-200: #FFEAE0;
     --color-scale-tertiary-300: #FAD1C0;
     --color-scale-tertiary-400: #E6B5A0;
     --color-scale-tertiary-500: #A1918A;
@@ -51,7 +45,6 @@
     --color-scale-tertiary-1000: #0F0B0A;
 
     /* Neutral Colors */
-    
     --color-neutral-0: #FFFFFF;
     --color-neutral-100: #FDFDFD;
     --color-neutral-200: #F8F9FA;
@@ -64,4 +57,44 @@
     --color-neutral-900: #212529;
     --color-neutral-1000: #000000;
 
+    /* Semantic Design Tokens */
+    --color-bg-page: #F8F9FB;
+    --color-surface: #FFFFFF;
+    --color-surface-subtle: #FAFAFC;
+    --color-surface-hover: #F3F4F6;
+    --color-border: #E5E7EB;
+    --color-border-subtle: #F3F4F6;
+    --color-border-strong: #D1D5DB;
+
+    --color-text-primary: #111827;
+    --color-text-secondary: #4B5563;
+    --color-text-muted: #6B7280;
+
+    /* Status Colors */
+    --color-success: #16A34A;
+    --color-success-bg: #DCFCE7;
+    --color-success-border: #86EFAC;
+    --color-danger: #DC2626;
+    --color-danger-bg: #FEE2E2;
+    --color-danger-border: #FECACA;
+    --color-info: #0284C7;
+    --color-info-bg: #E0F2FE;
+    --color-info-border: #BAE6FD;
+    --color-warning: #D97706;
+    --color-warning-bg: #FEF3C7;
+    --color-warning-border: #FDE68A;
+
+    /* Radii & Elevation */
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-pill: 999px;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.03);
+    --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.04);
+    --shadow-card-hover: 0 10px 24px rgba(0, 0, 0, 0.08);
+    --shadow-dropdown: 0 10px 25px rgba(0, 0, 0, 0.08);
+    --shadow-primary: 0 4px 14px rgba(241, 90, 36, 0.28);
 }
