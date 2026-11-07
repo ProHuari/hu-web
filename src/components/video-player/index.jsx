@@ -4,26 +4,19 @@ import { RiPlayCircleFill, RiFilmLine } from 'react-icons/ri';
 import './style.css';
 
 /**
- * VideoPlayer - Átomo para renderização de player de vídeo com proporção fixa 16:9.
- * Suporta embed do YouTube, link de vídeo HTML5 (.mp4) ou placeholder interativo.
- *
- * @param {string} videoUrl - URL do vídeo ou embed
- * @param {string} title - Título da aula / vídeo
- * @param {string} thumbnail - Imagem de capa opcional
- * @param {boolean} autoPlay - Iniciar automaticamente
+ * VideoPlayer - Responsive 16:9 video player supporting YouTube embeds and HTML5 video.
  */
 export default function VideoPlayer({
     videoUrl,
-    title = 'Vídeo da Aula',
+    title = 'Lesson Video',
     thumbnail,
     autoPlay = false,
 }) {
     const [isPlaying, setIsPlaying] = useState(autoPlay);
 
-    // Identifica se é um link do YouTube para gerar o iframe seguro
     const getYouTubeEmbedUrl = (url) => {
         if (!url) return null;
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
         const match = url.match(regExp);
         return match && match[2].length === 11
             ? `https://www.youtube-nocookie.com/embed/${match[2]}?autoplay=1`
@@ -50,7 +43,7 @@ export default function VideoPlayer({
                         controls
                         autoPlay
                     >
-                        Seu navegador não suporta a tag de vídeo.
+                        Your browser does not support HTML5 video playback.
                     </video>
                 ) : (
                     <div
@@ -62,14 +55,14 @@ export default function VideoPlayer({
                             type="button"
                             className="huari-play-btn"
                             onClick={() => setIsPlaying(true)}
-                            aria-label={`Assistir aula: ${title}`}
+                            aria-label={`Watch lesson: ${title}`}
                         >
                             <RiPlayCircleFill size={68} />
                         </button>
                         <div className="huari-video-meta">
                             <span className="huari-video-badge">
                                 <RiFilmLine size={14} />
-                                Aula Huari
+                                Huari Civic Academy
                             </span>
                             <h3 className="huari-video-title">{title}</h3>
                         </div>
