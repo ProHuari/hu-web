@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import {
@@ -15,7 +15,7 @@ import {
     RiErrorWarningLine,
 } from "react-icons/ri";
 import { useApp } from "../../context/AppContext";
-import { getLawmakerById, UF_OPTIONS } from "../../data/lawmakers";
+import { UF_OPTIONS } from "../../data/lawmakers";
 import { userService } from "../../services/userService";
 import PasswordInput from "../password-input";
 import Badge from "../badge";
@@ -37,6 +37,36 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
     const [passwordSaved, setPasswordSaved] = useState(false);
     const [passwordError, setPasswordError] = useState("");
     const [isSavingPassword, setIsSavingPassword] = useState(false);
+
+    // Bookmarked lawmakers list from backend
+    const [savedLawmakers, setSavedLawmakers] = useState([]);
+    const [isLoadingBookmarks, setIsLoadingBookmarks] = useState(false);
+
+    useEffect(() => {
+        if (activeTab === "bookmarks") {
+            let isMounted = true;
+            setIsLoadingBookmarks(true);
+
+            userService.getBookmarkedLawmakers()
+                .then((lawmakersList) => {
+                    if (isMounted && Array.isArray(lawmakersList)) {
+                        setSavedLawmakers(lawmakersList);
+                    }
+                })
+                .catch((err) => {
+                    console.error("Failed to load bookmarked lawmakers", err);
+                })
+                .finally(() => {
+                    if (isMounted) {
+                        setIsLoadingBookmarks(false);
+                    }
+                });
+
+            return () => {
+                isMounted = false;
+            };
+        }
+    }, [activeTab, bookmarkedLawmakerIds]);
 
     // Form data state
     const [formData, setFormData] = useState({
@@ -111,10 +141,14 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
         }
     };
 
-    // Resolve bookmarked lawmakers
-    const savedLawmakers = bookmarkedLawmakerIds
-        .map((id) => getLawmakerById(id))
-        .filter(Boolean);
+    const handleRemoveBookmark = (lawmakerId) => {
+        if (toggleBookmark) {
+            toggleBookmark(lawmakerId);
+        }
+        setSavedLawmakers((prev) => prev.filter((l) => Number(l.id) !== Number(lawmakerId)));
+    };
+
+    const displayBookmarkCount = Math.max(savedLawmakers.length, bookmarkedLawmakerIds.length);
 
     return (
         <section className="user-settings-card" aria-label="Account and Preference Settings">
@@ -139,7 +173,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                     onClick={() => setActiveTab("bookmarks")}
                 >
                     <RiBookmarkLine size={18} aria-hidden="true" />
-                    <span>Saved Lawmakers ({savedLawmakers.length})</span>
+                    <span>Saved Lawmakers ({displayBookmarkCount})</span>
                 </button>
 
                 <button
@@ -253,7 +287,22 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                         <p>Receive weekly voting alerts and CEAP expense audit digests for these representatives.</p>
                     </div>
 
-                    {savedLawmakers.length === 0 ? (
+                    {isLoadingBookmarks && savedLawmakers.length === 0 ? (
+                        <div
+                            className="saved-lawmakers-loading"
+                            style={{
+                                padding: "3rem 1rem",
+                                textAlign: "center",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: "1rem",
+                            }}
+                        >
+                            <div className="loading-spinner" />
+                            <p style={{ color: "var(--color-text-muted)" }}>Loading saved lawmakers...</p>
+                        </div>
+                    ) : savedLawmakers.length === 0 ? (
                         <div className="empty-bookmarks">
                             <RiBookmarkLine size={36} aria-hidden="true" />
                             <p>You are not currently following any lawmakers.</p>
@@ -301,7 +350,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                                         <button
                                             type="button"
                                             className="btn-remove-bookmark"
-                                            onClick={() => toggleBookmark(lawmaker.id)}
+                                            onClick={() => handleRemoveBookmark(lawmaker.id)}
                                             title="Unfollow lawmaker"
                                         >
                                             <RiDeleteBinLine size={16} aria-hidden="true" />
