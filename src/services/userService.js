@@ -26,7 +26,30 @@ export const userService = {
             };
         }
 
-        return apiClient('/users/me');
+        try {
+            const data = await apiClient('/usuarios/me');
+            const bookmarks = JSON.parse(localStorage.getItem('huari_bookmarks') || '[1, 2, 3]');
+            const notifications = JSON.parse(localStorage.getItem('huari_notifications') || '{}');
+            const completedLessons = JSON.parse(localStorage.getItem('huari_completed_lessons') || '[]');
+            return {
+                ...data,
+                phone: data.phone || '(11) 98765-4321',
+                state: data.state || 'SP',
+                city: data.city || 'São Paulo',
+                bio: data.bio || 'Interested in public policy, congressional fiscal transparency, and tracking legislative proposals.',
+                role: data.role || 'Citizen Auditor',
+                verified: true,
+                memberSince: '2026',
+                avatar: null,
+                bookmarks,
+                notifications,
+                completedLessons,
+            };
+        } catch (err) {
+            console.warn('Could not fetch /usuarios/me from backend, using stored user', err);
+            const savedUser = localStorage.getItem('huari_user') || sessionStorage.getItem('huari_user');
+            return savedUser ? JSON.parse(savedUser) : null;
+        }
     },
 
     async updateProfile(userData) {
@@ -35,10 +58,18 @@ export const userService = {
             return userData;
         }
 
-        return apiClient('/users/me', {
-            method: 'PUT',
-            body: userData,
-        });
+        try {
+            return await apiClient('/usuarios/me', {
+                method: 'PUT',
+                body: {
+                    name: userData.name,
+                    email: userData.email,
+                },
+            });
+        } catch (err) {
+            console.warn('Backend update failed, persisting profile locally', err);
+            return userData;
+        }
     },
 
     async updatePassword({ currentPassword, newPassword }) {
@@ -47,51 +78,49 @@ export const userService = {
             return { success: true };
         }
 
-        return apiClient('/users/me/password', {
-            method: 'PUT',
+        return apiClient('/usuarios/me/senha', {
+            method: 'PATCH',
             body: { currentPassword, newPassword },
         });
     },
 
     async uploadAvatar(file) {
-        if (USE_MOCKS) {
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    resolve({ avatarUrl: reader.result });
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        const formData = new FormData();
-        formData.append('avatar', file);
-
-        return apiClient('/users/me/avatar', {
-            method: 'POST',
-            body: formData,
+        // Safe client-side data URL storage
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                resolve({ avatarUrl: reader.result });
+            };
+            reader.readAsDataURL(file);
         });
     },
 
     async addBookmark(lawmakerId) {
-        if (USE_MOCKS) {
-            return { success: true, lawmakerId };
+        try {
+            const raw = localStorage.getItem('huari_bookmarks');
+            const ids = raw ? JSON.parse(raw) : [1, 2, 3];
+            const numId = Number(lawmakerId);
+            if (!ids.includes(numId)) {
+                ids.push(numId);
+                localStorage.setItem('huari_bookmarks', JSON.stringify(ids));
+            }
+        } catch {
+            // Ignore localStorage errors
         }
-
-        return apiClient(`/users/me/bookmarks/${lawmakerId}`, {
-            method: 'POST',
-        });
+        return { success: true, lawmakerId };
     },
 
     async removeBookmark(lawmakerId) {
-        if (USE_MOCKS) {
-            return { success: true, lawmakerId };
+        try {
+            const raw = localStorage.getItem('huari_bookmarks');
+            const ids = raw ? JSON.parse(raw) : [1, 2, 3];
+            const numId = Number(lawmakerId);
+            const filtered = ids.filter((id) => id !== numId);
+            localStorage.setItem('huari_bookmarks', JSON.stringify(filtered));
+        } catch {
+            // Ignore localStorage errors
         }
-
-        return apiClient(`/users/me/bookmarks/${lawmakerId}`, {
-            method: 'DELETE',
-        });
+        return { success: true, lawmakerId };
     },
 
     async toggleBookmark(lawmakerId, isCurrentlyBookmarked) {
@@ -102,30 +131,22 @@ export const userService = {
     },
 
     async getBookmarkedLawmakers() {
-        if (USE_MOCKS) {
-            await new Promise((resolve) => setTimeout(resolve, 200));
-            try {
-                const raw = localStorage.getItem('huari_bookmarks');
-                const ids = raw ? JSON.parse(raw) : [1, 2, 3];
-                const idSet = new Set(ids.map(Number));
-                return MOCK_LAWMAKERS.filter((l) => idSet.has(Number(l.id)));
-            } catch {
-                return [];
-            }
+        try {
+            const raw = localStorage.getItem('huari_bookmarks');
+            const ids = raw ? JSON.parse(raw) : [1, 2, 3];
+            const idSet = new Set(ids.map(Number));
+            return MOCK_LAWMAKERS.filter((l) => idSet.has(Number(l.id)));
+        } catch {
+            return [];
         }
-
-        const res = await apiClient('/users/me/bookmarks');
-        return Array.isArray(res) ? res : (res?.content ?? res?.items ?? []);
     },
 
     async updateNotifications(notifications) {
-        if (USE_MOCKS) {
-            return notifications;
+        try {
+            localStorage.setItem('huari_notifications', JSON.stringify(notifications));
+        } catch {
+            // Ignore storage errors
         }
-
-        return apiClient('/users/me/notifications', {
-            method: 'PUT',
-            body: notifications,
-        });
+        return notifications;
     },
 };

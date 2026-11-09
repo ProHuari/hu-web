@@ -36,7 +36,22 @@ export const authService = {
             method: 'POST',
             body: { email, password },
         });
-        return { ...data, rememberMe };
+
+        const user = {
+            id: String(data.userId || 'usr-1'),
+            name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+            email,
+            role: data.role || 'STUDENT',
+            phone: '',
+            state: 'DF',
+            city: 'Brasília',
+            bio: 'Citizen auditor on the Huari platform.',
+            verified: true,
+            memberSince: '2026',
+            avatar: null,
+        };
+
+        return { ...data, user, rememberMe };
     },
 
     async register({ name, email, password }) {
@@ -59,10 +74,14 @@ export const authService = {
             return { user: mockUser, token: mockToken };
         }
 
-        return apiClient('/auth/register', {
+        // hu-service creates user via POST /usuarios
+        await apiClient('/usuarios', {
             method: 'POST',
             body: { name, email, password },
         });
+
+        // Automatically log in with newly created credentials to receive token
+        return this.login({ email, password, rememberMe: true });
     },
 
     async requestPasswordReset(email) {

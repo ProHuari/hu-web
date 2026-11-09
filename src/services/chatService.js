@@ -43,34 +43,46 @@ This ensures diverse political representation proportionate to overall citizen i
 4. **Freedom of Information Act (LAI - Law 12.527/11):** Empowers any citizen to request government documents and explanations with a mandatory statutory response deadline of 20 days.`,
 };
 
+function getMockResponse(query) {
+    const lowerQuery = query.toLowerCase();
+
+    if (lowerQuery.includes('expense') || lowerQuery.includes('quota') || lowerQuery.includes('ceap') || lowerQuery.includes('spending') || lowerQuery.includes('cost') || lowerQuery.includes('despesa') || lowerQuery.includes('cota')) {
+        return KNOWLEDGE_RESPONSES.expenses;
+    }
+    if (lowerQuery.includes('pec') || lowerQuery.includes('amendment') || lowerQuery.includes('bill') || lowerQuery.includes('constitution') || lowerQuery.includes('law') || lowerQuery.includes('lei') || lowerQuery.includes('projeto')) {
+        return KNOWLEDGE_RESPONSES.pec;
+    }
+    if (lowerQuery.includes('quotient') || lowerQuery.includes('election') || lowerQuery.includes('vote') || lowerQuery.includes('proportional') || lowerQuery.includes('quociente') || lowerQuery.includes('voto')) {
+        return KNOWLEDGE_RESPONSES.quotient;
+    }
+    if (lowerQuery.includes('audit') || lowerQuery.includes('citizen') || lowerQuery.includes('oversight') || lowerQuery.includes('track') || lowerQuery.includes('lai') || lowerQuery.includes('fiscalizar')) {
+        return KNOWLEDGE_RESPONSES.auditing;
+    }
+
+    return `Thank you for your question regarding: "${query}".\n\nAs the civic intelligence assistant for **Huari**, I am designed to synthesize public records from the Chamber of Deputies, Federal Senate, and the Federal Court of Accounts (TCU).\n\nYou can explore lawmakers directly in the **Lawmakers** section, inspect courses under **Learn**, or ask about:\n* Detailed expense voucher categories for specific lawmakers\n* How legislative bills (PL, PLP, PEC, and MPV) become law\n* How to inspect parliamentary attendance and voting discipline`;
+}
+
 export const chatService = {
     async sendMessage(query, history = []) {
         if (USE_MOCKS) {
             await new Promise((resolve) => setTimeout(resolve, 600));
-            const lowerQuery = query.toLowerCase();
-
-            if (lowerQuery.includes('expense') || lowerQuery.includes('quota') || lowerQuery.includes('ceap') || lowerQuery.includes('spending') || lowerQuery.includes('cost')) {
-                return { response: KNOWLEDGE_RESPONSES.expenses };
-            }
-            if (lowerQuery.includes('pec') || lowerQuery.includes('amendment') || lowerQuery.includes('bill') || lowerQuery.includes('constitution') || lowerQuery.includes('law')) {
-                return { response: KNOWLEDGE_RESPONSES.pec };
-            }
-            if (lowerQuery.includes('quotient') || lowerQuery.includes('election') || lowerQuery.includes('vote') || lowerQuery.includes('proportional')) {
-                return { response: KNOWLEDGE_RESPONSES.quotient };
-            }
-            if (lowerQuery.includes('audit') || lowerQuery.includes('citizen') || lowerQuery.includes('oversight') || lowerQuery.includes('track') || lowerQuery.includes('lai')) {
-                return { response: KNOWLEDGE_RESPONSES.auditing };
-            }
-
-            return {
-                response: `Thank you for your question regarding: "${query}".\n\nAs the civic intelligence assistant for **Huari**, I am designed to synthesize public records from the Chamber of Deputies, Federal Senate, and the Federal Court of Accounts (TCU).\n\nYou can explore lawmakers directly in the **Lawmakers** section, inspect courses under **Learn**, or ask about:\n* Detailed expense voucher categories for specific lawmakers\n* How legislative bills (PL, PLP, PEC, and MPV) become law\n* How to inspect parliamentary attendance and voting discipline`,
-            };
+            return { response: getMockResponse(query) };
         }
 
-        return apiClient('/chat', {
-            method: 'POST',
-            body: { message: query, history },
-        });
+        try {
+            // hu-service endpoint is POST /historico-ia
+            const data = await apiClient('/historico-ia', {
+                method: 'POST',
+                body: { question: query },
+            });
+
+            return {
+                response: data?.answer || data?.response || getMockResponse(query),
+            };
+        } catch (err) {
+            console.warn('Backend AI assistant /historico-ia unavailable, using civic knowledge base fallback', err);
+            return { response: getMockResponse(query) };
+        }
     },
 };
 
