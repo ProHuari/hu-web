@@ -28,9 +28,9 @@ const RAW_COURSES = [
                     {
                         id: "lesson-1",
                         title: "Separation of Powers in the 1988 Constitution",
-                        duration: "18 min",
+                        duration: "22 min",
                         completed: true,
-                        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                        videoUrl: "https://youtu.be/2OxUH19ilWA?si=Hgcm9sLWht_Jxjcn",
                         summary: "Examines how the Executive, Legislative, and Judiciary act under the system of checks and balances, safeguarding democratic institutions.",
                     },
                     {
@@ -38,7 +38,7 @@ const RAW_COURSES = [
                         title: "The Federal Pact: Union, States, and Municipalities",
                         duration: "22 min",
                         completed: true,
-                        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                        videoUrl: "https://www.youtube.com/watch?v=7I5D43S3FJs",
                         summary: "Understanding the division of tax, administrative, and legislative competencies across Brazilian federative entities.",
                     },
                     {
@@ -46,7 +46,7 @@ const RAW_COURSES = [
                         title: "Roles of Federal Deputies vs. Federal Senators",
                         duration: "25 min",
                         completed: false,
-                        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                        videoUrl: "https://youtu.be/miC1gdNTqcY?si=8ND5VCb0yNUm62Hl",
                         summary: "Core distinctions between population representation in the Chamber of Deputies and state equality representation in the Federal Senate.",
                     },
                 ],
@@ -60,7 +60,7 @@ const RAW_COURSES = [
                         title: "Courts of Accounts & External Oversight",
                         duration: "20 min",
                         completed: false,
-                        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                        videoUrl: "https://youtu.be/7aqCfxncopg?si=n8zHDw1r4nKGdlsO",
                         summary: "How the Federal Court of Accounts (TCU) and state audit bodies scrutinize government bids, contracts, and financial statements.",
                     },
                     {
@@ -68,7 +68,7 @@ const RAW_COURSES = [
                         title: "Popular Legislative Initiatives & Referendums",
                         duration: "15 min",
                         completed: false,
-                        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                        videoUrl: "https://youtu.be/lj_aAS5YDfw?si=jgcWuspx5pd1KeCx",
                         summary: "Learn how citizens can draft bill proposals and vote in plebiscites under direct democracy guarantees.",
                     },
                     {
@@ -76,7 +76,7 @@ const RAW_COURSES = [
                         title: "Civic Participation Tools & Digital Town Halls",
                         duration: "35 min",
                         completed: false,
-                        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                        videoUrl: "https://youtu.be/IaCKZMWAUsk?si=yuWyJ-hMjlKZACRA",
                         summary: "Navigating digital platforms, participatory budgeting portals, and official legislative channels.",
                     },
                 ],
