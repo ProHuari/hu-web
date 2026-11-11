@@ -46,8 +46,13 @@ export default function Login({
             return;
         }
 
-        if (password.length < 8) {
+        if (activeTab === "register" && password.length < 8) {
             setError("Password must contain at least 8 characters.");
+            return;
+        }
+
+        if (activeTab === "login" && !password) {
+            setError("Please enter your password.");
             return;
         }
 

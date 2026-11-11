@@ -76,6 +76,13 @@ export async function apiClient(endpoint, options = {}) {
         const response = await fetch(url, config);
 
         if (response.status === 401) {
+            // Se for endpoint de login, extrai a mensagem de credenciais inválidas da API
+            if (endpoint.includes('/auth/login')) {
+                const data = await response.json().catch(() => null);
+                const message = data?.message || 'E-mail ou senha incorretos.';
+                throw new ApiError(message, 401, data);
+            }
+
             // Unauthorized - clear stored tokens
             localStorage.removeItem('huari_token');
             sessionStorage.removeItem('huari_token');

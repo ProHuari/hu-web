@@ -37,6 +37,16 @@ export const authService = {
             body: { email, password },
         });
 
+        if (data?.token) {
+            localStorage.setItem('huari_token', data.token);
+            if (data.refreshToken) {
+                localStorage.setItem('huari_refresh_token', data.refreshToken);
+            }
+            if (data.role) {
+                localStorage.setItem('huari_user_role', data.role);
+            }
+        }
+
         const user = {
             id: String(data.userId || 'usr-1'),
             name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
