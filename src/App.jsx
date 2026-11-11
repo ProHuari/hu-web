@@ -1,4 +1,4 @@
-import Login from './pages/Login';
+import Login from './pages/login';
 
 export default function App() {
   return (
@@ -7,5 +7,3 @@ export default function App() {
     </>
   );
 }
-
-
