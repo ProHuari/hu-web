@@ -69,16 +69,13 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
 
     const isLoadingBookmarks = activeTab === "bookmarks" && !bookmarksLoaded;
 
-    // Form data state
+    // Form data state initialized from authenticated user
     const [formData, setFormData] = useState({
-        name: user?.name || initialData.name || "Carlos Oliveira",
-        email: user?.email || initialData.email || "carlos.oliveira@huari.org",
-        phone: user?.phone || initialData.phone || "+55 (11) 98765-4321",
-        state: user?.state || initialData.state || "SP",
-        bio:
-            user?.bio ||
-            initialData.bio ||
-            "Citizen auditor passionate about public policy analysis, congressional fiscal oversight, and active civic participation.",
+        name: user?.name || initialData?.name || "",
+        email: user?.email || initialData?.email || "",
+        phone: user?.phone || initialData?.phone || "",
+        state: user?.state || initialData?.state || "SP",
+        bio: user?.bio || initialData?.bio || "",
     });
 
     // Password fields

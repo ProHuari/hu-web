@@ -1,7 +1,9 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { RiArrowLeftLine } from "react-icons/ri";
+import { PageTransition } from "../../components/motion/MotionPrimitives";
 import { useApp } from "../../context/AppContext";
+import { useToast } from "../../context/useToast";
 import { userService } from "../../services/userService";
 import UserProfileHeader from "../../components/user-profile-header";
 import UserSettingsForm from "../../components/user-settings-form";
@@ -9,11 +11,13 @@ import "./style.css";
 
 export default function UserProfile() {
     const { user, updateUser } = useApp() || {};
+    const toast = useToast();
     const fileInputRef = useRef(null);
 
     const handleSaveUserData = (updatedData) => {
         if (updateUser) {
             updateUser(updatedData);
+            toast.success("Profile settings updated.");
         }
     };
 
@@ -29,15 +33,16 @@ export default function UserProfile() {
             const result = await userService.uploadAvatar(file);
             if (result.avatarUrl && updateUser) {
                 updateUser({ avatar: result.avatarUrl });
+                toast.success("Profile picture updated.");
             }
         } catch (err) {
             console.error("Avatar upload failed", err);
-            alert("Could not upload profile picture. Please try again.");
+            toast.error("Could not upload profile picture. Please try again.");
         }
     };
 
     return (
-        <div className="user-profile-page-container">
+        <PageTransition className="user-profile-page-container">
             <input
                 type="file"
                 ref={fileInputRef}
@@ -58,9 +63,10 @@ export default function UserProfile() {
             />
 
             <UserSettingsForm
+                key={user?.id || user?.email || "guest"}
                 initialData={user}
                 onSave={handleSaveUserData}
             />
-        </div>
+        </PageTransition>
     );
 }
