@@ -111,3 +111,41 @@ PageLoader.propTypes = {
     label: PropTypes.string,
 };
 
+export function ParliamentarianCardSkeleton() {
+    return (
+        <article className="huari-skeleton-parliamentarian" aria-hidden="true">
+            <div className="huari-skeleton-parliamentarian-top">
+                <div className="huari-skeleton-block huari-skeleton-avatar-circle" />
+                <SkeletonBlock width="26px" height="26px" style={{ borderRadius: '6px' }} />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <SkeletonBlock width="70%" height="20px" />
+                <SkeletonBlock width="45%" height="14px" />
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+                <SkeletonBlock width="54px" height="22px" style={{ borderRadius: '999px' }} />
+                <SkeletonBlock width="44px" height="22px" style={{ borderRadius: '999px' }} />
+            </div>
+
+            <div className="huari-skeleton-stats-grid">
+                <div className="huari-skeleton-stat-col">
+                    <SkeletonBlock width="44px" height="11px" />
+                    <SkeletonBlock width="36px" height="15px" />
+                </div>
+                <div className="huari-skeleton-stat-col">
+                    <SkeletonBlock width="44px" height="11px" />
+                    <SkeletonBlock width="28px" height="15px" />
+                </div>
+                <div className="huari-skeleton-stat-col">
+                    <SkeletonBlock width="44px" height="11px" />
+                    <SkeletonBlock width="58px" height="15px" />
+                </div>
+            </div>
+
+            <SkeletonBlock width="100%" height="42px" style={{ borderRadius: '10px', marginTop: 'auto' }} />
+        </article>
+    );
+}
+
