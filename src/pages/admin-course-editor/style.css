@@ -1,0 +1,127 @@
+/* Admin Course Editor Page */
+.admin-editor-page {
+    padding: 1.5rem var(--page-padding-x, 2rem) 4rem;
+    max-width: var(--container-max, 1280px);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.admin-editor-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(248, 250, 252, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 0.9rem 1.25rem;
+    border: 1px solid var(--border-color-light, #e5e7eb);
+    border-radius: var(--radius-xl, 1rem);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.admin-editor-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.admin-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-md, 0.5rem);
+    border: 1px solid var(--border-color-light, #e5e7eb);
+    background: var(--color-neutral-0, #ffffff);
+    color: var(--text-secondary, #475569);
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.16s ease;
+}
+
+.admin-back-btn:hover {
+    color: var(--color-neutral-900, #111827);
+    border-color: var(--color-neutral-300, #cbd5e1);
+}
+
+.admin-editor-heading {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-neutral-900, #111827);
+}
+
+.admin-dirty-tag {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--color-scale-warning-700, #b45309);
+    background: var(--color-scale-warning-50, #fffbeb);
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+}
+
+.admin-editor-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.admin-editor-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--color-neutral-100, #f1f5f9);
+    padding: 0.35rem;
+    border-radius: var(--radius-lg, 0.75rem);
+    align-self: flex-start;
+}
+
+.admin-editor-tab {
+    position: relative;
+    border: none;
+    background: transparent;
+    padding: 0.58rem 1.15rem;
+    border-radius: var(--radius-md, 0.5rem);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-secondary, #475569);
+    cursor: pointer;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: color 0.16s ease;
+}
+
+.admin-editor-tab--active {
+    color: var(--color-neutral-900, #111827);
+}
+
+.admin-editor-tab-pill {
+    position: absolute;
+    inset: 0;
+    background: var(--color-neutral-0, #ffffff);
+    border-radius: var(--radius-md, 0.5rem);
+    box-shadow: var(--shadow-xs);
+    z-index: -1;
+}
+
+@media (max-width: 720px) {
+    .admin-editor-page {
+        padding: 1rem 1rem 3rem;
+    }
+
+    .admin-editor-topbar {
+        position: static;
+    }
+}
+
