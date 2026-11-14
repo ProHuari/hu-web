@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { motion } from 'motion/react';
 import { RiPlayCircleFill, RiFilmLine } from 'react-icons/ri';
 import './style.css';
 
@@ -12,7 +13,9 @@ export default function VideoPlayer({
     thumbnail,
     autoPlay = false,
 }) {
-    const [isPlaying, setIsPlaying] = useState(autoPlay);
+    const [playingUrl, setPlayingUrl] = useState(null);
+    const hasVideo = Boolean(videoUrl && String(videoUrl).trim());
+    const isPlaying = hasVideo && (autoPlay || playingUrl === videoUrl);
 
     const getYouTubeEmbedUrl = (url) => {
         if (!url) return null;
@@ -36,7 +39,7 @@ export default function VideoPlayer({
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                     />
-                ) : isPlaying && videoUrl && !youtubeEmbed ? (
+                ) : isPlaying && hasVideo && !youtubeEmbed ? (
                     <video
                         className="huari-video-element"
                         src={videoUrl}
@@ -51,14 +54,33 @@ export default function VideoPlayer({
                         style={thumbnail ? { backgroundImage: `url(${thumbnail})` } : {}}
                     >
                         <div className="huari-video-overlay" />
-                        <button
-                            type="button"
-                            className="huari-play-btn"
-                            onClick={() => setIsPlaying(true)}
-                            aria-label={`Watch lesson: ${title}`}
-                        >
-                            <RiPlayCircleFill size={68} />
-                        </button>
+                        {hasVideo ? (
+                            <motion.button
+                                type="button"
+                                className="huari-play-btn"
+                                onClick={() => setPlayingUrl(videoUrl)}
+                                whileHover={{ scale: 1.08 }}
+                                whileTap={{ scale: 0.94 }}
+                                aria-label={`Watch lesson: ${title}`}
+                            >
+                                <RiPlayCircleFill size={68} />
+                            </motion.button>
+                        ) : (
+                            <div
+                                style={{
+                                    position: 'relative',
+                                    zIndex: 2,
+                                    textAlign: 'center',
+                                    color: 'rgba(255, 255, 255, 0.85)',
+                                    padding: '1rem',
+                                }}
+                            >
+                                <RiFilmLine size={40} style={{ opacity: 0.85, marginBottom: '0.4rem' }} />
+                                <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 600 }}>
+                                    No video URL attached to this lesson yet
+                                </p>
+                            </div>
+                        )}
                         <div className="huari-video-meta">
                             <span className="huari-video-badge">
                                 <RiFilmLine size={14} />
