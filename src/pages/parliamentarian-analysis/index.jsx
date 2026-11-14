@@ -8,9 +8,12 @@ import {
     RiArrowLeftLine,
     RiAddLine,
     RiCheckLine,
+    RiDownloadLine,
 } from "react-icons/ri";
 import { lawmakersService } from "../../services/lawmakersService";
 import { useApp } from "../../context/AppContext";
+import { useToast } from "../../context/useToast";
+import { exportExpensesToCsv } from "../../utils/csvExport";
 import Avatar from "../../components/avatar";
 import Badge from "../../components/badge";
 import EmptyState from "../../components/empty-state";
@@ -19,6 +22,7 @@ import "./style.css";
 export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
     const { id } = useParams();
     const navigate = useNavigate();
+    const toast = useToast();
     const { bookmarkedLawmakerIds = [], toggleBookmark } = useApp() || {};
 
     const [fetchedLawmaker, setFetchedLawmaker] = useState(null);
@@ -133,6 +137,20 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
         });
     };
 
+    const handleExportCsv = () => {
+        const success = exportExpensesToCsv({
+            expenses: rawExpenses,
+            lawmakerName: lawmaker?.name,
+            year: selectedQuotaYear,
+        });
+
+        if (success) {
+            toast?.success?.("Demonstrativo de gastos exportado com sucesso!");
+        } else {
+            toast?.info?.("Não há dados de despesas disponíveis para exportação neste ano.");
+        }
+    };
+
     return (
         <div className="analysis-page-container">
             {/* Top Navigation */}
@@ -232,15 +250,28 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
                         <h2>Top Quota Expenses (CEAP)</h2>
                     </div>
 
-                    <select
-                        className="analysis-quota-select"
-                        value={selectedQuotaYear}
-                        onChange={(e) => setSelectedQuotaYear(e.target.value)}
-                        aria-label="Select parliamentary quota fiscal year"
-                    >
-                        <option value="Quota 2026">Quota 2026</option>
-                        <option value="Quota 2025">Quota 2025</option>
-                    </select>
+                    <div className="analysis-section-actions">
+                        <button
+                            type="button"
+                            className="btn-export-csv"
+                            onClick={handleExportCsv}
+                            title="Exportar demonstrativo de gastos em CSV"
+                            aria-label="Exportar gastos em CSV"
+                        >
+                            <RiDownloadLine size={16} aria-hidden="true" />
+                            <span>Exportar Gastos (CSV)</span>
+                        </button>
+
+                        <select
+                            className="analysis-quota-select"
+                            value={selectedQuotaYear}
+                            onChange={(e) => setSelectedQuotaYear(e.target.value)}
+                            aria-label="Select parliamentary quota fiscal year"
+                        >
+                            <option value="Quota 2026">Quota 2026</option>
+                            <option value="Quota 2025">Quota 2025</option>
+                        </select>
+                    </div>
                 </header>
 
                 <div className="analysis-expenses-list">
