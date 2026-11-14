@@ -1,0 +1,333 @@
+/* =========================================
+   UserHeroCarousel - Animated Today's Insights Carousel
+========================================= */
+
+.user-hero-carousel {
+    position: relative;
+    width: 100%;
+    min-height: 310px;
+    border-radius: var(--radius-xl, 16px);
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--color-secondary, #2B2D42) 0%, #151624 100%);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.1);
+    color: #ffffff;
+    user-select: none;
+}
+
+.user-hero-slide-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 310px;
+    display: flex;
+    align-items: center;
+}
+
+.user-hero-slide {
+    width: 100%;
+    height: 100%;
+    padding: 2.75rem 3.5rem 3.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.25rem;
+    position: relative;
+    z-index: 2;
+    cursor: grab;
+}
+
+.user-hero-slide:active {
+    cursor: grabbing;
+}
+
+/* Background Atmospheric Glows per slide */
+.user-hero-bg-glow {
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(241, 90, 36, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.user-hero-bg-glow--accent {
+    background: radial-gradient(circle, rgba(255, 139, 102, 0.22) 0%, transparent 70%);
+}
+
+.user-hero-bg-glow--ai {
+    background: radial-gradient(circle, rgba(241, 90, 36, 0.25) 0%, rgba(43, 45, 66, 0.1) 70%, transparent 100%);
+}
+
+/* Slide Content */
+.user-hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+    max-width: 860px;
+}
+
+.user-hero-kicker-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.85rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--radius-pill, 999px);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #ffffff;
+}
+
+.user-hero-kicker-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--color-primary, #F15A24);
+    box-shadow: 0 0 8px rgba(241, 90, 36, 0.9);
+}
+
+.user-hero-title {
+    margin: 0;
+    font-size: 2.15rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.user-hero-description {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.84);
+    max-width: 760px;
+}
+
+/* Feature tags inside slide 2 & 3 */
+.user-hero-tags-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.user-hero-tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill, 999px);
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Interactive Prompt Suggestion Chip */
+.user-hero-prompt-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.95rem;
+    border-radius: var(--radius-md, 10px);
+    background: rgba(241, 90, 36, 0.14);
+    border: 1px solid rgba(241, 90, 36, 0.32);
+    color: #FFEAE0;
+    font-size: 0.85rem;
+    font-style: italic;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.user-hero-prompt-chip:hover {
+    background: rgba(241, 90, 36, 0.24);
+    border-color: var(--color-primary, #F15A24);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* Action Buttons */
+.user-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    margin-top: 0.35rem;
+}
+
+.user-hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.72rem 1.35rem;
+    border-radius: var(--radius-md, 10px);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border: none;
+}
+
+.user-hero-btn--primary {
+    background-color: var(--color-primary, #F15A24);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(241, 90, 36, 0.38);
+}
+
+.user-hero-btn--primary:hover {
+    background-color: var(--color-scale-primary-600, #D4460E);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(241, 90, 36, 0.45);
+}
+
+.user-hero-btn--secondary {
+    background-color: #ffffff;
+    color: var(--color-text-primary, #111827);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.user-hero-btn--secondary:hover {
+    background-color: #F8F9FA;
+    transform: translateY(-1px);
+}
+
+.user-hero-btn--outline {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.user-hero-btn--outline:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+}
+
+/* Arrow Navigation Buttons */
+.user-hero-arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background-color: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.18s ease;
+}
+
+.user-hero-arrow-btn:hover {
+    background-color: rgba(241, 90, 36, 0.85);
+    border-color: var(--color-primary, #F15A24);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.user-hero-arrow-btn--prev {
+    left: 1rem;
+}
+
+.user-hero-arrow-btn--next {
+    right: 1rem;
+}
+
+/* Pagination Dots */
+.user-hero-pagination {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 10;
+    padding: 0.35rem 0.65rem;
+    background-color: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(6px);
+    border-radius: var(--radius-pill, 999px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-hero-dot-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-hero-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.35);
+    transition: all 0.22s ease;
+}
+
+.user-hero-dot--active {
+    width: 24px;
+    border-radius: var(--radius-pill, 999px);
+    background-color: var(--color-primary, #F15A24);
+    box-shadow: 0 0 8px rgba(241, 90, 36, 0.7);
+}
+
+/* Media Queries */
+@media (max-width: 900px) {
+    .user-hero-slide {
+        padding: 2.25rem 2rem 3rem;
+    }
+
+    .user-hero-title {
+        font-size: 1.75rem;
+    }
+
+    .user-hero-arrow-btn {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .user-hero-slide {
+        padding: 1.75rem 1.25rem 3rem;
+        gap: 1rem;
+    }
+
+    .user-hero-title {
+        font-size: 1.45rem;
+    }
+
+    .user-hero-description {
+        font-size: 0.88rem;
+    }
+
+    .user-hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .user-hero-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
