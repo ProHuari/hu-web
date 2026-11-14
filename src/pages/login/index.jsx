@@ -6,6 +6,7 @@ import InputText from "../../components/input-text";
 import PasswordInput from "../../components/password-input";
 import { GoogleIcon, GithubIcon, AppleIcon } from "../../components/icons";
 import { useApp } from "../../context/AppContext";
+import { useToast } from "../../context/useToast";
 import { authService } from "../../services/authService";
 import {
     RiUserAddFill,
@@ -28,6 +29,7 @@ export default function Login({
 }) {
     const navigate = useNavigate();
     const { login, loginAsGuest } = useApp() || {};
+    const toast = useToast();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -93,10 +95,34 @@ export default function Login({
 
     const handleGuestAccess = () => {
         loginAsGuest?.();
+        toast.info("Signed in as Guest Citizen.");
         if (onNavigateToHome) {
             onNavigateToHome();
         } else {
             navigate("/dashboard");
+        }
+    };
+
+    const handleDemoAdminAccess = async () => {
+        setError("");
+        setIsLoading(true);
+        try {
+            const result = await authService.login({
+                email: "admin@huari.org",
+                password: "demo-admin-password",
+                rememberMe: true,
+            });
+            login?.(result.user, result.token, true);
+            toast.success("Signed in as Administrator.");
+            if (onNavigateToHome) {
+                onNavigateToHome();
+            } else {
+                navigate("/dashboard");
+            }
+        } catch (err) {
+            setError(err.message || "Demo admin sign-in failed.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -247,6 +273,17 @@ export default function Login({
                             identifier="btn-visitor btn-radius-40"
                             type="button"
                             onClick={handleGuestAccess}
+                        />
+                    )}
+
+                    {activeTab === "login" && USE_MOCKS && (
+                        <Button
+                            title="Demo Admin Studio Access"
+                            icon={<RiShieldCheckLine size={18} />}
+                            identifier="btn-secondary btn-radius-40"
+                            type="button"
+                            disabled={isLoading}
+                            onClick={handleDemoAdminAccess}
                         />
                     )}
                 </div>
