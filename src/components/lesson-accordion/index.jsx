@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import {
     RiArrowDownSLine,
     RiCheckboxCircleFill,
@@ -11,7 +12,7 @@ import { useApp } from '../../context/AppContext';
 import './style.css';
 
 /**
- * LessonAccordion - Course syllabus sidebar with expandable modules and lessons.
+ * LessonAccordion - Course syllabus sidebar with auto-expanded active module and smooth spring animations.
  */
 export default function LessonAccordion({
     modules = [],
@@ -20,10 +21,26 @@ export default function LessonAccordion({
     onSelectLesson,
 }) {
     const { isLessonCompleted } = useApp() || {};
-    const [openModules, setOpenModules] = useState({ 0: true });
+    const [toggledModules, setToggledModules] = useState({});
+
+    const activeModuleIndex = useMemo(
+        () =>
+            modules.findIndex((mod) =>
+                (mod.lessons || []).some((l) => l.id === currentLessonId)
+            ),
+        [modules, currentLessonId]
+    );
+
+    const isModuleOpen = (index) => {
+        if (Object.prototype.hasOwnProperty.call(toggledModules, index)) {
+            return toggledModules[index];
+        }
+        return activeModuleIndex >= 0 ? index === activeModuleIndex : index === 0;
+    };
 
     const toggleModule = (index) => {
-        setOpenModules((prev) => ({ ...prev, [index]: !prev[index] }));
+        const currentlyOpen = isModuleOpen(index);
+        setToggledModules((prev) => ({ ...prev, [index]: !currentlyOpen }));
     };
 
     return (
@@ -35,7 +52,7 @@ export default function LessonAccordion({
 
             <div className="accordion-modules-list">
                 {modules.map((moduleItem, modIdx) => {
-                    const isOpen = Boolean(openModules[modIdx]);
+                    const isOpen = isModuleOpen(modIdx);
 
                     return (
                         <div key={moduleItem.id || modIdx} className="accordion-module-group">
@@ -55,50 +72,59 @@ export default function LessonAccordion({
                                 />
                             </button>
 
-                            {isOpen && (
-                                <ul className="module-lessons-list">
-                                    {moduleItem.lessons.map((lesson) => {
-                                        const isCurrent = lesson.id === currentLessonId;
-                                        const lessonUrl = `/learn/${currentCourseId}/${lesson.id}`;
-                                        const completed = isLessonCompleted
-                                            ? isLessonCompleted(currentCourseId, lesson.id)
-                                            : Boolean(lesson.completed);
+                            <AnimatePresence initial={false}>
+                                {isOpen && (
+                                    <motion.ul
+                                        className="module-lessons-list"
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                                        style={{ overflow: 'hidden' }}
+                                    >
+                                        {(moduleItem.lessons || []).map((lesson) => {
+                                            const isCurrent = lesson.id === currentLessonId;
+                                            const lessonUrl = `/learn/${currentCourseId}/${lesson.id}`;
+                                            const completed = isLessonCompleted
+                                                ? isLessonCompleted(currentCourseId, lesson.id)
+                                                : Boolean(lesson.completed);
 
-                                        return (
-                                            <li key={lesson.id}>
-                                                <NavLink
-                                                    to={lessonUrl}
-                                                    onClick={() => onSelectLesson?.(lesson)}
-                                                    className={`lesson-item-btn ${isCurrent ? 'is-current' : ''}`}
-                                                >
-                                                    <div className="lesson-item-left">
-                                                        {completed ? (
-                                                            <RiCheckboxCircleFill
-                                                                className="lesson-check-done"
-                                                                size={18}
-                                                                title="Completed Lesson"
-                                                            />
-                                                        ) : (
-                                                            <RiPlayCircleLine
-                                                                className="lesson-play-icon"
-                                                                size={18}
-                                                            />
+                                            return (
+                                                <li key={lesson.id}>
+                                                    <NavLink
+                                                        to={lessonUrl}
+                                                        onClick={() => onSelectLesson?.(lesson)}
+                                                        className={`lesson-item-btn ${isCurrent ? 'is-current' : ''}`}
+                                                    >
+                                                        <div className="lesson-item-left">
+                                                            {completed ? (
+                                                                <RiCheckboxCircleFill
+                                                                    className="lesson-check-done"
+                                                                    size={18}
+                                                                    title="Completed Lesson"
+                                                                />
+                                                            ) : (
+                                                                <RiPlayCircleLine
+                                                                    className="lesson-play-icon"
+                                                                    size={18}
+                                                                />
+                                                            )}
+                                                            <span className="lesson-item-title">{lesson.title}</span>
+                                                        </div>
+
+                                                        {lesson.duration && (
+                                                            <span className="lesson-duration tabular-nums">
+                                                                <RiTimeLine size={13} />
+                                                                {lesson.duration}
+                                                            </span>
                                                         )}
-                                                        <span className="lesson-item-title">{lesson.title}</span>
-                                                    </div>
-
-                                                    {lesson.duration && (
-                                                        <span className="lesson-duration">
-                                                            <RiTimeLine size={13} />
-                                                            {lesson.duration}
-                                                        </span>
-                                                    )}
-                                                </NavLink>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            )}
+                                                    </NavLink>
+                                                </li>
+                                            );
+                                        })}
+                                    </motion.ul>
+                                )}
+                            </AnimatePresence>
                         </div>
                     );
                 })}
@@ -114,15 +140,15 @@ LessonAccordion.propTypes = {
             title: PropTypes.string.isRequired,
             lessons: PropTypes.arrayOf(
                 PropTypes.shape({
-                    id: PropTypes.string.isRequired,
+                    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
                     title: PropTypes.string.isRequired,
                     duration: PropTypes.string,
                     completed: PropTypes.bool,
                 })
-            ).isRequired,
+            ),
         })
-    ).isRequired,
-    currentCourseId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    currentLessonId: PropTypes.string,
+    ),
+    currentCourseId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    currentLessonId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onSelectLesson: PropTypes.func,
 };
