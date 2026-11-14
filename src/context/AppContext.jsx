@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { AppContext } from './contextInstance';
 import { useApp } from './useApp';
 import { userService } from '../services/userService';
 import { coursesService } from '../services/coursesService';
+import { isAdminRole, normalizeRole } from '../utils/roles';
 
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
@@ -15,7 +16,7 @@ const INITIAL_USER = {
     state: 'SP',
     city: 'São Paulo',
     bio: 'Interested in public policy, congressional fiscal transparency, and tracking legislative proposals.',
-    role: 'Citizen Auditor',
+    role: 'STUDENT',
     verified: true,
     memberSince: 'October 2026',
     avatar: null,
@@ -29,14 +30,14 @@ const GUEST_USER = {
     state: 'DF',
     city: 'Brasília',
     bio: 'Exploring congressional open data and civic courses as a guest.',
-    role: 'Citizen Visitor',
+    role: 'STUDENT',
     verified: false,
     memberSince: 'Today',
     avatar: null,
     isGuest: true,
 };
 
-const INITIAL_BOOKMARKS = [1, 2, 3]; // Default bookmarked lawmaker IDs
+const INITIAL_BOOKMARKS = [1, 2, 3];
 
 const INITIAL_NOTIFICATIONS = {
     emailAlerts: true,
@@ -47,8 +48,21 @@ const INITIAL_NOTIFICATIONS = {
 
 const INITIAL_COMPLETED_LESSONS = ['intro-to-politics:lesson-1', 'intro-to-politics:lesson-2'];
 
+function readStoredUser() {
+    try {
+        const saved = localStorage.getItem('huari_user') || sessionStorage.getItem('huari_user');
+        const hasToken = localStorage.getItem('huari_token') || sessionStorage.getItem('huari_token');
+        if (saved && hasToken) {
+            const parsed = JSON.parse(saved);
+            return { ...parsed, role: normalizeRole(parsed.role) };
+        }
+        return null;
+    } catch {
+        return null;
+    }
+}
+
 export function AppProvider({ children }) {
-    // 1. Session Token State
     const [token, setToken] = useState(() => {
         return (
             localStorage.getItem('huari_token') ||
@@ -57,23 +71,8 @@ export function AppProvider({ children }) {
         );
     });
 
-    // 2. User State (only restored if token or guest session exists)
-    const [user, setUser] = useState(() => {
-        try {
-            const savedLocal = localStorage.getItem('huari_user');
-            const savedSession = sessionStorage.getItem('huari_user');
-            const saved = savedLocal || savedSession;
-            const hasToken = localStorage.getItem('huari_token') || sessionStorage.getItem('huari_token');
-            if (saved && hasToken) {
-                return JSON.parse(saved);
-            }
-            return null;
-        } catch {
-            return null;
-        }
-    });
+    const [user, setUser] = useState(readStoredUser);
 
-    // 3. Bookmarked Lawmakers State with localStorage persistence and atomic API sync
     const [bookmarkedLawmakerIds, setBookmarkedLawmakerIds] = useState(() => {
         try {
             const saved = localStorage.getItem('huari_bookmarks');
@@ -83,7 +82,6 @@ export function AppProvider({ children }) {
         }
     });
 
-    // 4. Notification Settings State with backend sync
     const [notifications, setNotifications] = useState(() => {
         try {
             const saved = localStorage.getItem('huari_notifications');
@@ -93,7 +91,6 @@ export function AppProvider({ children }) {
         }
     });
 
-    // 5. Course Lessons Completed & Progress Tracking with Compound Keys (${courseId}:${lessonId})
     const [completedLessonIds, setCompletedLessonIds] = useState(() => {
         try {
             const saved = localStorage.getItem('huari_completed_lessons');
@@ -103,32 +100,42 @@ export function AppProvider({ children }) {
         }
     });
 
-    // Initial session sync with Spring Boot backend (GET /users/me)
     useEffect(() => {
         if (token && !USE_MOCKS) {
-            userService.getMe().then((profile) => {
-                if (profile) {
-                    setUser((prev) => ({ ...prev, ...profile }));
-                    if (Array.isArray(profile.bookmarks)) {
-                        setBookmarkedLawmakerIds(profile.bookmarks.map(Number));
+            userService
+                .getMe()
+                .then((profile) => {
+                    if (profile) {
+                        setUser((prev) => ({
+                            ...prev,
+                            ...profile,
+                            role: normalizeRole(profile.role || prev?.role),
+                        }));
+                        if (Array.isArray(profile.bookmarks)) {
+                            setBookmarkedLawmakerIds(profile.bookmarks.map(Number));
+                        }
+                        if (profile.notifications) {
+                            setNotifications((prev) => ({ ...prev, ...profile.notifications }));
+                        }
+                        if (Array.isArray(profile.completedLessons)) {
+                            setCompletedLessonIds(profile.completedLessons);
+                        }
                     }
-                    if (profile.notifications) {
-                        setNotifications((prev) => ({ ...prev, ...profile.notifications }));
-                    }
-                    if (Array.isArray(profile.completedLessons)) {
-                        setCompletedLessonIds(profile.completedLessons);
-                    }
-                }
-            }).catch((err) => {
-                console.error('Failed to sync initial session with GET /users/me', err);
-            });
+                })
+                .catch((err) => {
+                    console.error('Failed to sync initial session with GET /usuarios/me', err);
+                });
         }
     }, [token]);
 
-    const updateUser = (updatedFields) => {
+    const updateUser = useCallback((updatedFields) => {
         setUser((prev) => {
             if (!prev) return prev;
-            const next = { ...prev, ...updatedFields };
+            const next = {
+                ...prev,
+                ...updatedFields,
+                role: normalizeRole(updatedFields.role || prev.role),
+            };
             try {
                 if (localStorage.getItem('huari_user')) {
                     localStorage.setItem('huari_user', JSON.stringify(next));
@@ -141,10 +148,11 @@ export function AppProvider({ children }) {
             }
             return next;
         });
-    };
+    }, []);
 
-    const login = (userData, authToken, rememberMe = true) => {
-        const targetUser = userData || INITIAL_USER;
+    const login = useCallback((userData, authToken, rememberMe = true) => {
+        const baseUser = userData || INITIAL_USER;
+        const targetUser = { ...baseUser, role: normalizeRole(baseUser.role) };
         const targetToken = authToken || `mock-jwt-token-${Date.now()}`;
         setUser(targetUser);
         setToken(targetToken);
@@ -154,33 +162,44 @@ export function AppProvider({ children }) {
 
         otherStorage.removeItem('huari_token');
         otherStorage.removeItem('huari_user');
+        otherStorage.removeItem('huari_refresh_token');
+        otherStorage.removeItem('huari_user_role');
 
         try {
             storage.setItem('huari_token', targetToken);
             storage.setItem('huari_user', JSON.stringify(targetUser));
+            storage.setItem('huari_user_role', targetUser.role);
         } catch (e) {
             console.error('Failed to store session', e);
         }
-    };
+    }, []);
 
-    const loginAsGuest = () => {
+    const loginAsGuest = useCallback(() => {
         login(GUEST_USER, 'guest-session-token', false);
-    };
+    }, [login]);
 
-    const register = (newUserData, authToken) => {
-        login(newUserData, authToken, true);
-    };
+    const register = useCallback(
+        (newUserData, authToken) => {
+            login(newUserData, authToken, true);
+        },
+        [login]
+    );
 
-    const logout = () => {
+    const logout = useCallback(() => {
         setUser(null);
         setToken(null);
         localStorage.removeItem('huari_token');
         sessionStorage.removeItem('huari_token');
         localStorage.removeItem('huari_user');
         sessionStorage.removeItem('huari_user');
-    };
+        localStorage.removeItem('huari_refresh_token');
+        sessionStorage.removeItem('huari_refresh_token');
+        localStorage.removeItem('huari_user_role');
+        sessionStorage.removeItem('huari_user_role');
+    }, []);
 
     const isAuthenticated = Boolean(token && user);
+    const isAdmin = Boolean(isAuthenticated && isAdminRole(user?.role));
 
     useEffect(() => {
         try {
@@ -190,29 +209,33 @@ export function AppProvider({ children }) {
         }
     }, [bookmarkedLawmakerIds]);
 
-    const toggleBookmark = (id) => {
-        const numId = Number(id);
-        const isCurrentlyBookmarked = bookmarkedLawmakerIds.includes(numId);
+    const toggleBookmark = useCallback(
+        (id) => {
+            const numId = Number(id);
+            const isCurrentlyBookmarked = bookmarkedLawmakerIds.includes(numId);
 
-        setBookmarkedLawmakerIds((prev) => {
-            if (prev.includes(numId)) {
-                return prev.filter((item) => item !== numId);
-            }
-            return [...prev, numId];
-        });
-
-        if (!USE_MOCKS) {
-            userService.toggleBookmark(numId, isCurrentlyBookmarked).catch((err) => {
-                console.error('Failed to sync bookmark with backend', err);
+            setBookmarkedLawmakerIds((prev) => {
+                if (prev.includes(numId)) {
+                    return prev.filter((item) => item !== numId);
+                }
+                return [...prev, numId];
             });
-        }
-    };
 
-    const isBookmarked = (id) => {
-        return bookmarkedLawmakerIds.includes(Number(id));
-    };
+            if (!USE_MOCKS) {
+                userService.toggleBookmark(numId, isCurrentlyBookmarked).catch((err) => {
+                    console.error('Failed to sync bookmark with backend', err);
+                });
+            }
+        },
+        [bookmarkedLawmakerIds]
+    );
 
-    const toggleNotification = (key) => {
+    const isBookmarked = useCallback(
+        (id) => bookmarkedLawmakerIds.includes(Number(id)),
+        [bookmarkedLawmakerIds]
+    );
+
+    const toggleNotification = useCallback((key) => {
         setNotifications((prev) => {
             const updated = { ...prev, [key]: !prev[key] };
             try {
@@ -227,9 +250,9 @@ export function AppProvider({ children }) {
             }
             return updated;
         });
-    };
+    }, []);
 
-    const toggleLessonCompleted = (courseId, lessonId) => {
+    const toggleLessonCompleted = useCallback((courseId, lessonId) => {
         if (!courseId) return;
         const compoundKey = lessonId ? `${courseId}:${lessonId}` : courseId;
         const targetCourseId = lessonId ? courseId : null;
@@ -254,22 +277,40 @@ export function AppProvider({ children }) {
                 console.error('Failed to sync lesson completion with backend', err);
             });
         }
-    };
+    }, []);
 
-    const isLessonCompleted = (courseId, lessonId) => {
-        if (!lessonId) {
-            return completedLessonIds.includes(courseId) || completedLessonIds.some((k) => k.endsWith(`:${courseId}`));
-        }
-        const compoundKey = `${courseId}:${lessonId}`;
-        return completedLessonIds.includes(compoundKey) || completedLessonIds.includes(lessonId);
-    };
+    const isLessonCompleted = useCallback(
+        (courseId, lessonId) => {
+            if (!lessonId) {
+                return (
+                    completedLessonIds.includes(courseId) ||
+                    completedLessonIds.some((k) => k.endsWith(`:${courseId}`))
+                );
+            }
+            const compoundKey = `${courseId}:${lessonId}`;
+            return completedLessonIds.includes(compoundKey) || completedLessonIds.includes(lessonId);
+        },
+        [completedLessonIds]
+    );
+
+    const getCourseProgress = useCallback(
+        (course) => {
+            if (!course) return 0;
+            const lessons = (course.modules || []).flatMap((m) => m.lessons || []);
+            if (lessons.length === 0) return course.progress || 0;
+            const completedCount = lessons.filter((l) => isLessonCompleted(course.id, l.id)).length;
+            return Math.round((completedCount / lessons.length) * 100);
+        },
+        [isLessonCompleted]
+    );
 
     return (
         <AppContext.Provider
             value={{
                 token,
-                user: user || INITIAL_USER,
+                user,
                 isAuthenticated,
+                isAdmin,
                 login,
                 loginAsGuest,
                 register,
@@ -283,6 +324,7 @@ export function AppProvider({ children }) {
                 completedLessonIds,
                 toggleLessonCompleted,
                 isLessonCompleted,
+                getCourseProgress,
             }}
         >
             {children}
