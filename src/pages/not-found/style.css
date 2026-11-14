@@ -1,0 +1,46 @@
+/* Branded 404 Page */
+.not-found-page {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.not-found-card {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    background: var(--color-neutral-0, #ffffff);
+    border: 1px solid var(--border-color-light, #e5e7eb);
+    border-radius: var(--radius-2xl, 1.25rem);
+    padding: 3rem 2.25rem;
+    box-shadow: var(--shadow-md);
+}
+
+.not-found-code {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--color-primary, #f15a24);
+    background: var(--color-scale-primary-50, #fff5f1);
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+}
+
+.not-found-title {
+    margin: 0 0 0.65rem;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--color-neutral-900, #111827);
+}
+
+.not-found-desc {
+    margin: 0 0 1.75rem;
+    color: var(--text-secondary, #475569);
+    font-size: 0.96rem;
+    line-height: 1.6;
+}
+
