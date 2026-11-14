@@ -1,33 +1,46 @@
 /**
  * Authentication Service for Huari Civic Platform.
  * Supports Spring Boot endpoints (/auth/login, /auth/register, etc.)
- * with seamless VITE_USE_MOCKS fallback.
+ * with seamless VITE_USE_MOCKS fallback and role normalization.
  */
 
 import { apiClient } from './api';
+import { normalizeRole } from '../utils/roles';
 
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
+
+function buildMockUserFromEmail(email) {
+    const isAdminEmail = email.toLowerCase().includes('admin');
+    const derivedName = email
+        .split('@')[0]
+        .replace(/[._-]/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+
+    return {
+        id: isAdminEmail ? 'usr-admin-1' : 'usr-1',
+        name: derivedName || (isAdminEmail ? 'Huari Admin' : 'Carlos Oliveira'),
+        email,
+        phone: '(11) 98765-4321',
+        state: isAdminEmail ? 'DF' : 'SP',
+        city: isAdminEmail ? 'Brasília' : 'São Paulo',
+        bio: isAdminEmail
+            ? 'Platform curriculum coordinator and civic education administrator.'
+            : 'Interested in public policy, congressional fiscal transparency, and tracking legislative proposals.',
+        role: isAdminEmail ? 'ADMIN' : 'STUDENT',
+        verified: true,
+        memberSince: 'October 2026',
+        avatar: null,
+    };
+}
 
 export const authService = {
     async login({ email, password, rememberMe = true }) {
         if (USE_MOCKS) {
-            await new Promise((resolve) => setTimeout(resolve, 400));
+            await new Promise((resolve) => setTimeout(resolve, 350));
             if (!email || !password) {
                 throw new Error('Please provide both email and password.');
             }
-            const mockUser = {
-                id: 'usr-1',
-                name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, (c) => c.toUpperCase()) || 'Carlos Oliveira',
-                email,
-                phone: '(11) 98765-4321',
-                state: 'SP',
-                city: 'São Paulo',
-                bio: 'Interested in public policy, congressional fiscal transparency, and tracking legislative proposals.',
-                role: 'Citizen Auditor',
-                verified: true,
-                memberSince: 'October 2026',
-                avatar: null,
-            };
+            const mockUser = buildMockUserFromEmail(email);
             const mockToken = `mock-jwt-token-${Date.now()}`;
             return { user: mockUser, token: mockToken, rememberMe };
         }
@@ -37,28 +50,39 @@ export const authService = {
             body: { email, password },
         });
 
+        const normalizedRole = normalizeRole(data?.role);
+        const storage = rememberMe ? localStorage : sessionStorage;
+        const otherStorage = rememberMe ? sessionStorage : localStorage;
+
+        otherStorage.removeItem('huari_token');
+        otherStorage.removeItem('huari_refresh_token');
+        otherStorage.removeItem('huari_user_role');
+
         if (data?.token) {
-            localStorage.setItem('huari_token', data.token);
+            storage.setItem('huari_token', data.token);
             if (data.refreshToken) {
-                localStorage.setItem('huari_refresh_token', data.refreshToken);
+                storage.setItem('huari_refresh_token', data.refreshToken);
             }
-            if (data.role) {
-                localStorage.setItem('huari_user_role', data.role);
-            }
+            storage.setItem('huari_user_role', normalizedRole);
         }
 
         const user = {
             id: String(data.userId || 'usr-1'),
-            name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+            name:
+                data.name ||
+                email
+                    .split('@')[0]
+                    .replace(/[._-]/g, ' ')
+                    .replace(/\b\w/g, (c) => c.toUpperCase()),
             email,
-            role: data.role || 'STUDENT',
-            phone: '',
-            state: 'DF',
-            city: 'Brasília',
-            bio: 'Citizen auditor on the Huari platform.',
+            role: normalizedRole,
+            phone: data.phone || '',
+            state: data.state || 'DF',
+            city: data.city || 'Brasília',
+            bio: data.bio || 'Citizen auditor on the Huari platform.',
             verified: true,
             memberSince: '2026',
-            avatar: null,
+            avatar: data.avatar || null,
         };
 
         return { ...data, user, rememberMe };
@@ -66,7 +90,7 @@ export const authService = {
 
     async register({ name, email, password }) {
         if (USE_MOCKS) {
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await new Promise((resolve) => setTimeout(resolve, 450));
             const mockUser = {
                 id: `usr-${Date.now()}`,
                 name,
@@ -75,7 +99,7 @@ export const authService = {
                 state: 'DF',
                 city: 'Brasília',
                 bio: 'New citizen auditor on the Huari platform.',
-                role: 'Citizen Auditor',
+                role: 'STUDENT',
                 verified: false,
                 memberSince: 'November 2026',
                 avatar: null,
@@ -84,19 +108,17 @@ export const authService = {
             return { user: mockUser, token: mockToken };
         }
 
-        // hu-service creates user via POST /usuarios
         await apiClient('/usuarios', {
             method: 'POST',
             body: { name, email, password },
         });
 
-        // Automatically log in with newly created credentials to receive token
         return this.login({ email, password, rememberMe: true });
     },
 
     async requestPasswordReset(email) {
         if (USE_MOCKS) {
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await new Promise((resolve) => setTimeout(resolve, 450));
             return { success: true, message: 'Reset instructions dispatched.' };
         }
 
@@ -108,7 +130,7 @@ export const authService = {
 
     async resetPassword({ token, newPassword }) {
         if (USE_MOCKS) {
-            await new Promise((resolve) => setTimeout(resolve, 600));
+            await new Promise((resolve) => setTimeout(resolve, 500));
             return { success: true, message: 'Password successfully updated.' };
         }
 
