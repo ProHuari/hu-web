@@ -150,10 +150,11 @@ export function AppProvider({ children }) {
         });
     }, []);
 
-    const login = useCallback((userData, authToken, rememberMe = true) => {
+    const login = useCallback((userData, authToken, rememberMe = true, refreshToken = null) => {
         const baseUser = userData || INITIAL_USER;
         const targetUser = { ...baseUser, role: normalizeRole(baseUser.role) };
         const targetToken = authToken || `mock-jwt-token-${Date.now()}`;
+        const targetRefreshToken = refreshToken || (targetToken ? `mock-refresh-token-${Date.now()}` : null);
         setUser(targetUser);
         setToken(targetToken);
 
@@ -167,6 +168,9 @@ export function AppProvider({ children }) {
 
         try {
             storage.setItem('huari_token', targetToken);
+            if (targetRefreshToken) {
+                storage.setItem('huari_refresh_token', targetRefreshToken);
+            }
             storage.setItem('huari_user', JSON.stringify(targetUser));
             storage.setItem('huari_user_role', targetUser.role);
         } catch (e) {

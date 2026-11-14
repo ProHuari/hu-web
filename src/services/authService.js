@@ -42,7 +42,11 @@ export const authService = {
             }
             const mockUser = buildMockUserFromEmail(email);
             const mockToken = `mock-jwt-token-${Date.now()}`;
-            return { user: mockUser, token: mockToken, rememberMe };
+            const mockRefreshToken = `mock-refresh-token-${Date.now()}`;
+            const storage = rememberMe ? localStorage : sessionStorage;
+            storage.setItem('huari_token', mockToken);
+            storage.setItem('huari_refresh_token', mockRefreshToken);
+            return { user: mockUser, token: mockToken, refreshToken: mockRefreshToken, rememberMe };
         }
 
         const data = await apiClient('/auth/login', {
@@ -105,7 +109,10 @@ export const authService = {
                 avatar: null,
             };
             const mockToken = `mock-jwt-token-${Date.now()}`;
-            return { user: mockUser, token: mockToken };
+            const mockRefreshToken = `mock-refresh-token-${Date.now()}`;
+            localStorage.setItem('huari_token', mockToken);
+            localStorage.setItem('huari_refresh_token', mockRefreshToken);
+            return { user: mockUser, token: mockToken, refreshToken: mockRefreshToken };
         }
 
         await apiClient('/usuarios', {
