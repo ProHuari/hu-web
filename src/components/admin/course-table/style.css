@@ -1,0 +1,169 @@
+/* Admin Courses Table */
+.admin-courses-table-wrapper {
+    background: var(--color-neutral-0, #ffffff);
+    border: 1px solid var(--border-color-light, #e5e7eb);
+    border-radius: var(--radius-xl, 1rem);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.admin-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-courses-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    min-width: 780px;
+}
+
+.admin-courses-table th {
+    padding: 0.9rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary, #64748b);
+    background: var(--bg-subtle, #f9fafb);
+    border-bottom: 1px solid var(--border-color-light, #e5e7eb);
+}
+
+.admin-courses-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color-light, #f3f4f6);
+    vertical-align: middle;
+    font-size: 0.9rem;
+    color: var(--text-primary, #111827);
+}
+
+.admin-courses-table tbody tr {
+    transition: background-color 0.16s ease;
+}
+
+.admin-courses-table tbody tr:hover {
+    background-color: var(--color-neutral-50, #f8fafc);
+}
+
+.admin-courses-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-course-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-width: 240px;
+}
+
+.admin-course-thumb {
+    width: 58px;
+    height: 42px;
+    border-radius: var(--radius-md, 0.5rem);
+    object-fit: cover;
+    background: linear-gradient(135deg, var(--color-neutral-800, #2b2d42), var(--color-primary, #f15a24));
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1rem;
+    overflow: hidden;
+}
+
+.admin-course-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.admin-course-title {
+    font-weight: 700;
+    color: var(--color-neutral-900, #111827);
+    margin-bottom: 0.15rem;
+    line-height: 1.3;
+}
+
+.admin-course-meta {
+    font-size: 0.78rem;
+    color: var(--text-tertiary, #64748b);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.admin-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.admin-status-pill--published {
+    background: var(--color-scale-success-50, #ecfdf5);
+    color: var(--color-scale-success-700, #047857);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.admin-status-pill--draft {
+    background: var(--color-scale-warning-50, #fffbeb);
+    color: var(--color-scale-warning-700, #b45309);
+    border: 1px solid rgba(245, 158, 11, 0.28);
+}
+
+.admin-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.admin-actions-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.4rem;
+}
+
+.admin-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    height: 34px;
+    padding: 0 0.65rem;
+    border-radius: var(--radius-md, 0.5rem);
+    border: 1px solid var(--border-color-light, #e5e7eb);
+    background: var(--color-neutral-0, #ffffff);
+    color: var(--text-secondary, #475569);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    text-decoration: none;
+}
+
+.admin-icon-btn:hover {
+    border-color: var(--color-neutral-300, #cbd5e1);
+    color: var(--color-neutral-900, #111827);
+    background: var(--color-neutral-50, #f8fafc);
+}
+
+.admin-icon-btn--edit:hover {
+    border-color: var(--color-primary, #f15a24);
+    color: var(--color-primary, #f15a24);
+    background: var(--color-scale-primary-50, #fff5f1);
+}
+
+.admin-icon-btn--danger:hover {
+    border-color: var(--color-danger, #ef4444);
+    color: var(--color-danger, #ef4444);
+    background: var(--color-scale-danger-50, #fef2f2);
+}
+
