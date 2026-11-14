@@ -5,6 +5,7 @@ import PageHeader from '../../components/page-header';
 import EmptyState from '../../components/empty-state';
 import LawmakerFilters from '../../components/lawmaker-filters';
 import ParliamentarianCard from '../../components/parliamentarian-card';
+import { ParliamentarianCardSkeleton } from '../../components/skeleton';
 import Pagination from '../../components/pagination';
 import { lawmakersService } from '../../services/lawmakersService';
 import './style.css';
@@ -90,9 +91,10 @@ export default function LawmakersPage() {
 
             <section className="lawmakers-grid-section" aria-label="Lawmakers Directory List">
                 {loading ? (
-                    <div className="lawmakers-loading-state">
-                        <div className="loading-spinner" />
-                        <p>Loading congressional open data...</p>
+                    <div className="lawmakers-cards-grid" role="status" aria-label="Loading lawmakers data">
+                        {Array.from({ length: ITEMS_PER_PAGE }).map((_, idx) => (
+                            <ParliamentarianCardSkeleton key={idx} />
+                        ))}
                     </div>
                 ) : data.length === 0 ? (
                     <EmptyState
