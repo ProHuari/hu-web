@@ -9,6 +9,13 @@
     box-sizing: border-box;
 }
 
+.dashboard-citizen-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
 .dashboard-section {
     width: 100%;
 }
