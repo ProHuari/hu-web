@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { motion } from 'motion/react';
 import './style.css';
 
 /**
- * ProgressBar - Atomic horizontal progress bar indicator with percentage.
+ * ProgressBar - Atomic horizontal progress bar with spring-animated fill.
  */
 export default function ProgressBar({
     progress = 0,
@@ -24,13 +25,15 @@ export default function ProgressBar({
                 aria-valuemax={100}
                 aria-label={`${clampedProgress}% completed`}
             >
-                <div
+                <motion.div
                     className="huari-progress-fill"
-                    style={{ width: `${clampedProgress}%` }}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${clampedProgress}%` }}
+                    transition={{ type: 'spring', stiffness: 180, damping: 24 }}
                 />
             </div>
             {showLabel && (
-                <span className="huari-progress-label">
+                <span className="huari-progress-label tabular-nums">
                     {clampedProgress}% completed
                 </span>
             )}
