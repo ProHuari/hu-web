@@ -23,7 +23,13 @@ export default function Avatar({
     return (
         <div className={`huari-avatar-container avatar-${size} ${className}`}>
             {src ? (
-                <img src={src} alt={alt || name || 'User avatar'} className="huari-avatar-img" />
+                <img
+                    src={src}
+                    alt={alt || name || 'User avatar'}
+                    className="huari-avatar-img"
+                    loading="lazy"
+                    decoding="async"
+                />
             ) : initials ? (
                 <div className="huari-avatar-initials">{initials}</div>
             ) : (

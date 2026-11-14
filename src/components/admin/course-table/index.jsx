@@ -37,7 +37,12 @@ export default function AdminCourseTable({ courses, onToggleStatus, onDeleteRequ
                                         <div className="admin-course-cell">
                                             <div className="admin-course-thumb">
                                                 {course.image ? (
-                                                    <img src={course.image} alt={course.title} />
+                                                    <img
+                                                        src={course.image}
+                                                        alt={course.title}
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
                                                 ) : (
                                                     <FiBookOpen aria-hidden="true" />
                                                 )}

@@ -119,7 +119,12 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
                     <div className="sidebar-user">
                         <div className="sidebar-user-avatar">
                             {user.avatar ? (
-                                <img src={user.avatar} alt={user.name} />
+                                <img
+                                    src={user.avatar}
+                                    alt={user.name}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
                             ) : (
                                 <RiUser3Line size={20} />
                             )}

@@ -20,7 +20,7 @@ export default function WebsiteInformation({ backgroundImage }) {
         >
             <header className="hero-header">
                 <div className="brand">
-                    <img src={logoHuari} alt="Huari Logo" />
+                    <img src={logoHuari} alt="Huari Logo" decoding="async" />
 
                     <div className="brand-info">
                         <h2 className="text-h2-bold">Huari</h2>

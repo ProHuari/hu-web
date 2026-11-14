@@ -28,13 +28,23 @@ export default function MainLayout() {
                 </button>
 
                 <NavLink to="/dashboard" className="mobile-brand-link">
-                    <img src={logoHuari} alt="Huari Logo" className="mobile-logo-img" />
+                    <img
+                        src={logoHuari}
+                        alt="Huari Logo"
+                        className="mobile-logo-img"
+                        decoding="async"
+                    />
                     <span className="mobile-brand-title">HUARI</span>
                 </NavLink>
 
                 <NavLink to="/profile" className="mobile-user-avatar-btn" aria-label="User Profile">
                     {user?.avatar ? (
-                        <img src={user.avatar} alt={user.name} />
+                        <img
+                            src={user.avatar}
+                            alt={user.name}
+                            loading="lazy"
+                            decoding="async"
+                        />
                     ) : (
                         <RiUser3Line size={18} />
                     )}

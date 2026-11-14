@@ -72,7 +72,12 @@ export default function Footer() {
             <div className="footer-content">
                 <section className="footer-brand">
                     <NavLink to="/dashboard" className="footer-logo">
-                        <img src={logoHuari} alt="Huari Logo" />
+                        <img
+                            src={logoHuari}
+                            alt="Huari Logo"
+                            loading="lazy"
+                            decoding="async"
+                        />
                         <h2 className="footer-logo-title">Huari</h2>
                     </NavLink>
 

@@ -31,6 +31,8 @@ export default function UserProfileHeader({ user: propUser, onEditAvatar }) {
                         src={user.avatar}
                         alt={user.name}
                         className="user-profile-avatar-img"
+                        loading="lazy"
+                        decoding="async"
                     />
                 ) : (
                     <div className="user-profile-avatar-placeholder">
