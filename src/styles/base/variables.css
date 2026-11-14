@@ -3,6 +3,7 @@
     --color-primary: #F15A24;
 
     /* Scale Primary Styles */
+    --color-scale-primary-50: #FFF7F3;
     --color-scale-primary-100: #FFEDE8;
     --color-scale-primary-200: #FFDBD0;
     --color-scale-primary-300: #FFB59E;
@@ -85,16 +86,24 @@
     --color-warning-border: #FDE68A;
 
     /* Radii & Elevation */
-    --radius-xs: 4px;
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
+    --radius-xs: 6px;
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
     --radius-pill: 999px;
 
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.03);
-    --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.04);
-    --shadow-card-hover: 0 10px 24px rgba(0, 0, 0, 0.08);
-    --shadow-dropdown: 0 10px 25px rgba(0, 0, 0, 0.08);
-    --shadow-primary: 0 4px 14px rgba(241, 90, 36, 0.28);
+    --shadow-sm: 0 1px 3px rgba(17, 24, 39, 0.04);
+    --shadow-card: 0 2px 10px rgba(17, 24, 39, 0.04);
+    --shadow-card-hover: 0 12px 28px rgba(17, 24, 39, 0.08);
+    --shadow-dropdown: 0 12px 28px rgba(17, 24, 39, 0.1);
+    --shadow-primary: 0 6px 18px rgba(241, 90, 36, 0.24);
+    --focus-ring: 0 0 0 3px rgba(241, 90, 36, 0.22);
+
+    /* Motion & Timing */
+    --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-fast: 150ms;
+    --duration-normal: 240ms;
+    --duration-slow: 360ms;
 }
