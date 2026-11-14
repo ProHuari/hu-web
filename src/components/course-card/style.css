@@ -14,9 +14,37 @@
 }
 
 .huari-course-card:hover {
-    transform: translateY(-4px);
-    border-color: #D1D5DB;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    border-color: var(--color-scale-primary-200, #ffd4c4);
+    box-shadow: var(--shadow-card-hover, 0 12px 28px rgba(15, 23, 42, 0.08));
+}
+
+.course-thumb-right {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.course-admin-edit-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background-color: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(6px);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.course-admin-edit-pill:hover {
+    background-color: var(--color-primary, #F15A24);
+    transform: translateY(-1px);
 }
 
 .huari-course-card-thumb {
