@@ -6,13 +6,14 @@
     width: 100%;
     min-height: 280px;
     padding: 3rem 2.5rem;
-    background: linear-gradient(135deg, var(--color-scale-primary-800, #1e3a8a) 0%, var(--color-scale-primary-700, #1d4ed8) 100%);
+    background: linear-gradient(135deg, var(--color-neutral-800, #2B2D42) 0%, #151624 100%);
     color: var(--color-neutral-0, #ffffff);
     box-sizing: border-box;
-    border-radius: var(--radius-md, 12px);
+    border-radius: var(--radius-xl, 16px);
     margin-bottom: 1.5rem;
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow-md);
 }
 
 .home-header-content {
@@ -113,7 +114,7 @@
 
 .home-header-button-light {
     background-color: var(--color-neutral-0, #ffffff);
-    color: var(--color-scale-primary-800, #1e3a8a);
+    color: var(--color-neutral-900, #111827);
 }
 
 .home-header-button-light:hover {
@@ -121,13 +122,13 @@
 }
 
 .home-header-button-accent {
-    background-color: var(--color-scale-primary-500, #3b82f6);
+    background: linear-gradient(135deg, var(--color-scale-primary-500, #F15A24) 0%, var(--color-scale-primary-600, #D4460E) 100%);
     color: var(--color-neutral-0, #ffffff);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .home-header-button-accent:hover {
-    background-color: var(--color-scale-primary-400, #60a5fa);
+    background: linear-gradient(135deg, #FF703D 0%, var(--color-scale-primary-500, #F15A24) 100%);
 }
 
 @media (max-width: 768px) {
