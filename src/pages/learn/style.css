@@ -64,7 +64,71 @@
     flex-wrap: wrap;
 }
 
+/* Contextual Admin Bar inside Student Catalog */
+.learn-admin-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.75rem 1.15rem;
+    background: var(--color-scale-primary-50, #fff5f1);
+    border: 1px solid rgba(241, 90, 36, 0.22);
+    border-radius: var(--radius-lg, 14px);
+}
+
+.learn-admin-bar-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-scale-primary-600, #d4460e);
+}
+
+.learn-admin-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.learn-admin-secondary-link,
+.learn-admin-primary-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.48rem 0.9rem;
+    border-radius: var(--radius-pill, 999px);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.18s ease;
+}
+
+.learn-admin-secondary-link {
+    background: var(--color-neutral-0, #ffffff);
+    color: var(--color-neutral-800, #1f2937);
+    border: 1px solid var(--border-color-light, #e5e7eb);
+}
+
+.learn-admin-secondary-link:hover {
+    border-color: var(--color-primary, #f15a24);
+    color: var(--color-primary, #f15a24);
+}
+
+.learn-admin-primary-link {
+    background: var(--color-primary, #f15a24);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(241, 90, 36, 0.24);
+}
+
+.learn-admin-primary-link:hover {
+    background: var(--color-scale-primary-600, #d4460e);
+}
+
 .category-pill-btn {
+    position: relative;
     padding: 0.55rem 1.15rem;
     border-radius: var(--radius-pill, 999px);
     border: 1.5px solid var(--color-border, #e5e7eb);
@@ -74,21 +138,28 @@
     font-size: 0.86rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    overflow: hidden;
+    transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .category-pill-btn:hover {
     border-color: #d1d5db;
-    background-color: #f9fafb;
     color: var(--color-text-primary, #111827);
 }
 
 .category-pill-btn.is-active {
-    background-color: var(--color-scale-primary-500, #f15a24);
     border-color: var(--color-scale-primary-500, #f15a24);
     color: #ffffff;
     font-weight: 700;
     box-shadow: 0 2px 8px rgba(241, 90, 36, 0.25);
+}
+
+.category-pill-active-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #f15a24 0%, #d4460e 100%);
+    border-radius: var(--radius-pill, 999px);
+    z-index: 0;
 }
 
 /* Grade de Cards */

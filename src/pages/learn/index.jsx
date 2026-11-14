@@ -1,16 +1,22 @@
 import { useState, useEffect, useMemo } from 'react';
-import { RiSearchLine } from 'react-icons/ri';
+import { Link } from 'react-router-dom';
+import { motion } from 'motion/react';
+import { RiSearchLine, RiAddLine, RiSettings4Line, RiShieldStarLine } from 'react-icons/ri';
+import { PageTransition, StaggerGrid, StaggerItem } from '../../components/motion/MotionPrimitives';
 import PageHeader from '../../components/page-header';
 import EmptyState from '../../components/empty-state';
 import CourseCard from '../../components/course-card';
+import { CourseCardSkeleton } from '../../components/skeleton';
+import { useApp } from '../../context/AppContext';
 import { coursesService } from '../../services/coursesService';
 import './style.css';
 
 /**
  * LearnCatalog - Civic Academy Learning Portal (/learn)
- * Course catalog with category tabs and real-time search.
+ * Elevated course catalog with animated category pills, skeletons, and contextual admin shortcuts.
  */
 export default function LearnCatalog() {
+    const { isAdmin = false } = useApp() || {};
     const [courses, setCourses] = useState([]);
     const [categories, setCategories] = useState([
         'All',
@@ -66,12 +72,31 @@ export default function LearnCatalog() {
     }, [courses, selectedCategory, searchQuery]);
 
     return (
-        <div className="learn-page-container">
+        <PageTransition className="learn-page-container">
             <PageHeader
                 badgeText="Huari Civic Academy"
-                title="Citizen Education &amp; Oversight Tracks"
+                title="Citizen Education & Oversight Tracks"
                 description="Free, non-partisan, and structured learning tracks designed to empower citizens to understand, audit, and navigate government institutions."
             />
+
+            {isAdmin && (
+                <div className="learn-admin-bar" role="region" aria-label="Administrator course shortcuts">
+                    <div className="learn-admin-bar-label">
+                        <RiShieldStarLine size={16} aria-hidden="true" />
+                        <span>Admin Quick Actions</span>
+                    </div>
+                    <div className="learn-admin-bar-actions">
+                        <Link to="/admin/courses" className="learn-admin-secondary-link">
+                            <RiSettings4Line size={15} aria-hidden="true" />
+                            <span>Manage All Courses</span>
+                        </Link>
+                        <Link to="/admin/courses/new" className="learn-admin-primary-link">
+                            <RiAddLine size={16} aria-hidden="true" />
+                            <span>New Course</span>
+                        </Link>
+                    </div>
+                </div>
+            )}
 
             {/* Filter and Search Bar */}
             <div className="learn-filters-bar">
@@ -88,27 +113,38 @@ export default function LearnCatalog() {
                 </div>
 
                 <div className="learn-category-pills" role="tablist" aria-label="Course Categories">
-                    {categories.map((cat) => (
-                        <button
-                            key={cat}
-                            type="button"
-                            role="tab"
-                            aria-selected={selectedCategory === cat}
-                            className={`category-pill-btn ${selectedCategory === cat ? 'is-active' : ''}`}
-                            onClick={() => setSelectedCategory(cat)}
-                        >
-                            {cat}
-                        </button>
-                    ))}
+                    {categories.map((cat) => {
+                        const isActive = selectedCategory === cat;
+                        return (
+                            <button
+                                key={cat}
+                                type="button"
+                                role="tab"
+                                aria-selected={isActive}
+                                className={`category-pill-btn ${isActive ? 'is-active' : ''}`}
+                                onClick={() => setSelectedCategory(cat)}
+                            >
+                                {isActive && (
+                                    <motion.span
+                                        layoutId="learnCategoryPill"
+                                        className="category-pill-active-bg"
+                                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                                    />
+                                )}
+                                <span style={{ position: 'relative', zIndex: 1 }}>{cat}</span>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
             {/* Courses Grid */}
             <section className="learn-courses-grid-section" aria-label="Course Tracks Catalog">
                 {loading ? (
-                    <div className="courses-loading-state" style={{ padding: '4rem 1rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                        <div className="loading-spinner" />
-                        <p style={{ color: 'var(--color-text-muted)' }}>Loading civic academy tracks...</p>
+                    <div className="learn-courses-grid" role="status" aria-label="Loading civic tracks">
+                        {Array.from({ length: 6 }).map((_, idx) => (
+                            <CourseCardSkeleton key={idx} />
+                        ))}
                     </div>
                 ) : filteredCourses.length === 0 ? (
                     <EmptyState
@@ -121,13 +157,15 @@ export default function LearnCatalog() {
                         }}
                     />
                 ) : (
-                    <div className="learn-courses-grid">
+                    <StaggerGrid className="learn-courses-grid">
                         {filteredCourses.map((course) => (
-                            <CourseCard key={course.id} course={course} />
+                            <StaggerItem key={course.id}>
+                                <CourseCard course={course} />
+                            </StaggerItem>
                         ))}
-                    </div>
+                    </StaggerGrid>
                 )}
             </section>
-        </div>
+        </PageTransition>
     );
 }
