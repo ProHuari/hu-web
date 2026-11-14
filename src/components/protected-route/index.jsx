@@ -11,14 +11,7 @@ export default function ProtectedRoute({ children }) {
     const location = useLocation();
     const { isAuthenticated } = useApp() || {};
 
-    const hasStoredToken = Boolean(
-        localStorage.getItem('huari_token') ||
-        sessionStorage.getItem('huari_token')
-    );
-
-    const isAuthorized = Boolean(isAuthenticated || hasStoredToken);
-
-    if (!isAuthorized) {
+    if (!isAuthenticated) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
