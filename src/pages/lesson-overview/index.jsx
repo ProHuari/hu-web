@@ -10,15 +10,22 @@ import {
     RiFileTextLine,
     RiQuestionnaireLine,
     RiCheckboxCircleLine,
+    RiCheckboxCircleFill,
     RiUserLine,
+    RiEditLine,
 } from 'react-icons/ri';
-import { coursesService } from '../../services/coursesService';
+import { PageTransition } from '../../components/motion/MotionPrimitives';
+import { CourseOverviewSkeleton } from '../../components/skeleton';
+import ProgressBar from '../../components/progress-bar';
 import EmptyState from '../../components/empty-state';
+import { coursesService } from '../../services/coursesService';
+import { useApp } from '../../context/AppContext';
 import './style.css';
 
 export default function LessonOverview() {
     const { courseId } = useParams();
     const navigate = useNavigate();
+    const { isAdmin = false, isLessonCompleted, getCourseProgress } = useApp() || {};
 
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -27,7 +34,8 @@ export default function LessonOverview() {
     useEffect(() => {
         let isMounted = true;
 
-        coursesService.getCourseById(courseId)
+        coursesService
+            .getCourseById(courseId)
             .then((data) => {
                 if (isMounted) {
                     if (data) {
@@ -63,20 +71,7 @@ export default function LessonOverview() {
                     <RiArrowLeftLine size={18} aria-hidden="true" />
                     <span>Back to Course Catalog</span>
                 </Link>
-                <div
-                    className="overview-loading-state"
-                    style={{
-                        padding: '4rem 1rem',
-                        textAlign: 'center',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '1rem',
-                    }}
-                >
-                    <div className="loading-spinner" />
-                    <p style={{ color: 'var(--color-text-muted)' }}>Loading course overview...</p>
-                </div>
+                <CourseOverviewSkeleton />
             </div>
         );
     }
@@ -105,15 +100,40 @@ export default function LessonOverview() {
         }))
     );
 
-    const firstLesson = lessons[0] || { id: 'lesson-1', title: 'Course Introduction', duration: '15 min' };
+    const nextUncompleted = lessons.find((lesson) =>
+        isLessonCompleted ? !isLessonCompleted(course.id, lesson.id) : !lesson.completed
+    );
+    const targetLesson = nextUncompleted || lessons[0] || {
+        id: 'lesson-1',
+        title: 'Course Introduction',
+        duration: '15 min',
+    };
     const totalLessons = lessons.length;
+    const progress = getCourseProgress ? getCourseProgress(course) : course.progress || 0;
 
     return (
-        <div className="lesson-overview-page-container">
-            <Link to="/learn" className="overview-back-link">
-                <RiArrowLeftLine size={18} aria-hidden="true" />
-                <span>Back to Course Catalog</span>
-            </Link>
+        <PageTransition className="lesson-overview-page-container">
+            <div className="overview-topbar">
+                <Link to="/learn" className="overview-back-link">
+                    <RiArrowLeftLine size={18} aria-hidden="true" />
+                    <span>Back to Course Catalog</span>
+                </Link>
+
+                {isAdmin && (
+                    <div className="overview-admin-controls">
+                        <span className="overview-admin-status">
+                            {course.status === 'PUBLISHED' ? 'Published Track' : 'Draft Preview'}
+                        </span>
+                        <Link
+                            to={`/admin/courses/${course.id}/edit`}
+                            className="overview-admin-edit-btn"
+                        >
+                            <RiEditLine size={16} aria-hidden="true" />
+                            <span>Edit Course</span>
+                        </Link>
+                    </div>
+                )}
+            </div>
 
             {/* Hero banner */}
             <section className="overview-hero" aria-label="Course Track Overview">
@@ -127,9 +147,7 @@ export default function LessonOverview() {
 
                     <h1>{course.title}</h1>
 
-                    <p className="overview-hero-description">
-                        {course.description}
-                    </p>
+                    <p className="overview-hero-description">{course.description}</p>
 
                     <div className="overview-hero-meta">
                         <span>
@@ -137,9 +155,9 @@ export default function LessonOverview() {
                             {course.duration}
                         </span>
 
-                        <span>
+                        <span className="tabular-nums">
                             <RiBookOpenLine size={17} aria-hidden="true" />
-                            {totalLessons} lessons in track
+                            {totalLessons} {totalLessons === 1 ? 'lesson' : 'lessons'} in track
                         </span>
 
                         <span>
@@ -148,42 +166,70 @@ export default function LessonOverview() {
                         </span>
                     </div>
 
+                    {progress > 0 && (
+                        <div className="overview-hero-progress">
+                            <ProgressBar progress={progress} height="8px" />
+                        </div>
+                    )}
+
                     <NavLink
-                        to={`/learn/${course.id}/${firstLesson.id}`}
+                        to={`/learn/${course.id}/${targetLesson.id}`}
                         className="overview-start-button"
                     >
-                        <span>Start Learning Track</span>
+                        <span>
+                            {progress > 0 && progress < 100
+                                ? 'Continue Learning Track'
+                                : progress === 100
+                                  ? 'Review Track Lessons'
+                                  : 'Start Learning Track'}
+                        </span>
                         <RiArrowRightLine size={19} aria-hidden="true" />
                     </NavLink>
                 </div>
 
-                <div className="overview-hero-image" aria-hidden="true">
+                <div
+                    className="overview-hero-image"
+                    style={
+                        course.image
+                            ? {
+                                  backgroundImage: `url(${course.image})`,
+                                  backgroundSize: 'cover',
+                                  backgroundPosition: 'center',
+                              }
+                            : {}
+                    }
+                    aria-hidden="true"
+                >
                     <div className="overview-image-overlay" />
-                    <div className="overview-image-icon">
-                        <RiGraduationCapLine size={58} />
-                    </div>
+                    {!course.image && (
+                        <div className="overview-image-icon">
+                            <RiGraduationCapLine size={58} />
+                        </div>
+                    )}
                 </div>
             </section>
 
             {/* Learning objectives */}
-            <section className="overview-section" aria-label="Learning Objectives">
-                <div className="overview-section-heading">
-                    <span className="overview-section-label">ABOUT THIS TRACK</span>
-                    <h2>What will you master?</h2>
-                    <p>
-                        Key competencies and oversight skills acquired throughout this curriculum.
-                    </p>
-                </div>
+            {course.objectives && course.objectives.length > 0 && (
+                <section className="overview-section" aria-label="Learning Objectives">
+                    <div className="overview-section-heading">
+                        <span className="overview-section-label">ABOUT THIS TRACK</span>
+                        <h2>What will you master?</h2>
+                        <p>
+                            Key competencies and oversight skills acquired throughout this curriculum.
+                        </p>
+                    </div>
 
-                <div className="overview-objectives-grid">
-                    {course.objectives?.map((objective, index) => (
-                        <div className="overview-objective-card" key={index}>
-                            <RiCheckboxCircleLine size={22} aria-hidden="true" />
-                            <span>{objective}</span>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                    <div className="overview-objectives-grid">
+                        {course.objectives.map((objective, index) => (
+                            <div className="overview-objective-card" key={index}>
+                                <RiCheckboxCircleLine size={22} aria-hidden="true" />
+                                <span>{objective}</span>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {/* Learning methodology */}
             <section className="overview-section" aria-label="Course Methodology">
@@ -247,23 +293,37 @@ export default function LessonOverview() {
                                     <h3>{module.title}</h3>
                                 </div>
 
-                                <span className="overview-module-count">
+                                <span className="overview-module-count tabular-nums">
                                     {(module.lessons || []).length} lessons
                                 </span>
                             </div>
 
                             <div className="overview-module-lessons">
-                                {(module.lessons || []).map((lesson) => (
-                                    <NavLink
-                                        to={`/learn/${course.id}/${lesson.id}`}
-                                        className="overview-lesson-item"
-                                        key={lesson.id}
-                                    >
-                                        <RiPlayCircleLine size={19} aria-hidden="true" />
-                                        <span>{lesson.title}</span>
-                                        <small>{lesson.duration}</small>
-                                    </NavLink>
-                                ))}
+                                {(module.lessons || []).map((lesson) => {
+                                    const done = isLessonCompleted
+                                        ? isLessonCompleted(course.id, lesson.id)
+                                        : Boolean(lesson.completed);
+
+                                    return (
+                                        <NavLink
+                                            to={`/learn/${course.id}/${lesson.id}`}
+                                            className="overview-lesson-item"
+                                            key={lesson.id}
+                                        >
+                                            {done ? (
+                                                <RiCheckboxCircleFill
+                                                    size={19}
+                                                    style={{ color: '#16a34a' }}
+                                                    aria-label="Completed"
+                                                />
+                                            ) : (
+                                                <RiPlayCircleLine size={19} aria-hidden="true" />
+                                            )}
+                                            <span>{lesson.title}</span>
+                                            <small className="tabular-nums">{lesson.duration}</small>
+                                        </NavLink>
+                                    );
+                                })}
                             </div>
                         </article>
                     ))}
@@ -280,13 +340,13 @@ export default function LessonOverview() {
                 </div>
 
                 <NavLink
-                    to={`/learn/${course.id}/${firstLesson.id}`}
+                    to={`/learn/${course.id}/${targetLesson.id}`}
                     className="overview-start-button"
                 >
-                    <span>Begin Lesson 1</span>
+                    <span>{progress > 0 ? 'Continue Learning' : 'Begin Lesson 1'}</span>
                     <RiArrowRightLine size={19} aria-hidden="true" />
                 </NavLink>
             </section>
-        </div>
+        </PageTransition>
     );
 }

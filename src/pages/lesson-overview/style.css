@@ -12,6 +12,58 @@
     box-sizing: border-box;
 }
 
+.overview-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.overview-admin-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.overview-admin-status {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-neutral-700, #334155);
+    background: var(--color-neutral-100, #f1f5f9);
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+}
+
+.overview-admin-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.48rem 0.95rem;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--color-scale-primary-500, #f15a24);
+    color: #ffffff;
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(241, 90, 36, 0.25);
+    transition: background-color 0.18s ease, transform 0.15s ease;
+}
+
+.overview-admin-edit-btn:hover {
+    background: var(--color-scale-primary-600, #d4460e);
+    transform: translateY(-1px);
+}
+
+.overview-hero-progress {
+    width: 100%;
+    max-width: 340px;
+}
+
+.overview-hero-progress .huari-progress-label {
+    color: rgba(255, 255, 255, 0.88);
+}
+
 .overview-back-link {
     display: inline-flex;
     align-items: center;
