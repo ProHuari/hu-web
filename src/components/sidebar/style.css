@@ -228,7 +228,27 @@
     padding-left: 8px;
 }
 
+.sidebar-user-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.sidebar-role-badge {
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background-color: var(--color-scale-primary-100, #fff3ed);
+    color: var(--color-scale-primary-600, #d4460e);
+    flex-shrink: 0;
+}
+
 .sidebar-item {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -246,6 +266,16 @@
     cursor: pointer;
     box-sizing: border-box;
     transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.sidebar-active-indicator {
+    position: absolute;
+    left: 0;
+    top: 7px;
+    bottom: 7px;
+    width: 3.5px;
+    border-radius: 0 4px 4px 0;
+    background-color: var(--color-primary, #F15A24);
 }
 
 .sidebar-item:hover {
