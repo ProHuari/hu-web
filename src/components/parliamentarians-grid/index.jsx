@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ParliamentarianCard from '../parliamentarian-card';
+import { ParliamentarianCardSkeleton } from '../skeleton';
 import EmptyState from '../empty-state';
 import { lawmakersService } from '../../services/lawmakersService';
 import './style.css';
@@ -47,9 +48,10 @@ export default function ParliamentariansGrid({
             aria-label="Featured Lawmakers Grid"
         >
             {isLoading && list.length === 0 ? (
-                <div className="parliamentarians-grid-loading">
-                    <div className="loading-spinner" />
-                    <p>Loading featured lawmakers...</p>
+                <div className="parliamentarians-cards-list" role="status" aria-label="Loading featured lawmakers">
+                    {Array.from({ length: 4 }).map((_, idx) => (
+                        <ParliamentarianCardSkeleton key={idx} />
+                    ))}
                 </div>
             ) : list.length === 0 ? (
                 <div className="parliamentarians-grid-empty">
