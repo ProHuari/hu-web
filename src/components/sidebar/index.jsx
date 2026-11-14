@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { motion } from 'motion/react';
 import logoHuari from '../../assets/images/logoHuari.svg';
 import { useApp } from '../../context/AppContext';
 import {
@@ -14,6 +15,8 @@ import {
     RiArrowRightSLine,
     RiCloseLine,
     RiUser3Line,
+    RiShieldStarLine,
+    RiAddCircleLine,
 } from 'react-icons/ri';
 import './style.css';
 
@@ -24,9 +27,14 @@ const MENU_ITEMS = [
     { label: 'Chat Huari', path: '/chat', icon: RiChatSmile3Line, badge: 'AI' },
 ];
 
+const ADMIN_ITEMS = [
+    { label: 'Manage Courses', path: '/admin/courses', icon: RiShieldStarLine },
+    { label: 'New Course', path: '/admin/courses/new', icon: RiAddCircleLine },
+];
+
 export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
     const [isOpen, setIsOpen] = useState(true);
-    const { user = {}, logout } = useApp() || {};
+    const { user = {}, isAdmin = false, logout } = useApp() || {};
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -119,9 +127,14 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
 
                         {isOpen && (
                             <div className="sidebar-user-info">
-                                <strong className="sidebar-user-name" title={user.name}>
-                                    {user.name}
-                                </strong>
+                                <div className="sidebar-user-name-row">
+                                    <strong className="sidebar-user-name" title={user.name}>
+                                        {user.name}
+                                    </strong>
+                                    {isAdmin && (
+                                        <span className="sidebar-role-badge">Admin</span>
+                                    )}
+                                </div>
                                 <span className="sidebar-user-email" title={user.email}>
                                     {user.email}
                                 </span>
@@ -150,13 +163,60 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
                             onClick={handleItemClick}
                             title={!isOpen ? label : undefined}
                         >
-                            <Icon className="sidebar-item-icon" size={20} />
-                            {isOpen && <span className="sidebar-item-label">{label}</span>}
-                            {isOpen && badge && (
-                                <span className="sidebar-badge">{badge}</span>
+                            {({ isActive }) => (
+                                <>
+                                    {isActive && (
+                                        <motion.span
+                                            layoutId="sidebarActivePill"
+                                            className="sidebar-active-indicator"
+                                            transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                                        />
+                                    )}
+                                    <Icon className="sidebar-item-icon" size={20} />
+                                    {isOpen && <span className="sidebar-item-label">{label}</span>}
+                                    {isOpen && badge && (
+                                        <span className="sidebar-badge">{badge}</span>
+                                    )}
+                                </>
                             )}
                         </NavLink>
                     ))}
+
+                    {isAdmin && (
+                        <>
+                            {isOpen && (
+                                <span className="sidebar-section-title" style={{ marginTop: '12px' }}>
+                                    Admin Studio
+                                </span>
+                            )}
+                            {ADMIN_ITEMS.map(({ label, path, icon: Icon }) => (
+                                <NavLink
+                                    key={label}
+                                    to={path}
+                                    end={path === '/admin/courses'}
+                                    className={({ isActive }) =>
+                                        `sidebar-item ${isActive ? 'is-active' : ''}`
+                                    }
+                                    onClick={handleItemClick}
+                                    title={!isOpen ? label : undefined}
+                                >
+                                    {({ isActive }) => (
+                                        <>
+                                            {isActive && (
+                                                <motion.span
+                                                    layoutId="sidebarActivePill"
+                                                    className="sidebar-active-indicator"
+                                                    transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                                                />
+                                            )}
+                                            <Icon className="sidebar-item-icon" size={20} />
+                                            {isOpen && <span className="sidebar-item-label">{label}</span>}
+                                        </>
+                                    )}
+                                </NavLink>
+                            ))}
+                        </>
+                    )}
                 </nav>
 
                 {/* Bottom Actions: Settings & Logout */}
