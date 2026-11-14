@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PageTransition } from '../../components/motion/MotionPrimitives';
 import HomeHeader from '../../components/home-header';
 import HomeStats from '../../components/home-stats';
 import ParliamentariansGrid from '../../components/parliamentarians-grid';
@@ -11,7 +12,7 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     return (
-        <div className="dashboard-page">
+        <PageTransition className="dashboard-page">
             <HomeHeader
                 onViewParliamentarians={() => navigate('/lawmakers')}
                 onExploreLearn={() => navigate('/learn')}
@@ -46,6 +47,6 @@ export default function Dashboard() {
             <section className="dashboard-section dashboard-education-section" aria-label="Civic Academy Banner">
                 <EducationalBanner />
             </section>
-        </div>
+        </PageTransition>
     );
 }
