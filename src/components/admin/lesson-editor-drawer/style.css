@@ -1,0 +1,101 @@
+/* Slide-over Lesson Editor Drawer */
+.lesson-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal, 100);
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.lesson-drawer-panel {
+    width: 100%;
+    max-width: 540px;
+    height: 100%;
+    background: var(--color-neutral-0, #ffffff);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.lesson-drawer-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color-light, #e5e7eb);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: var(--bg-subtle, #f9fafb);
+}
+
+.lesson-drawer-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-neutral-900, #111827);
+}
+
+.lesson-drawer-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-md, 0.5rem);
+    border: 1px solid var(--border-color-light, #e5e7eb);
+    background: var(--color-neutral-0, #ffffff);
+    color: var(--text-secondary, #475569);
+    cursor: pointer;
+}
+
+.lesson-drawer-close:hover {
+    color: var(--color-neutral-900, #111827);
+    background: var(--color-neutral-100, #f1f5f9);
+}
+
+.lesson-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.lesson-drawer-preview {
+    border-radius: var(--radius-lg, 0.75rem);
+    overflow: hidden;
+    border: 1px solid var(--border-color-light, #e5e7eb);
+}
+
+.lesson-drawer-resources {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.lesson-resource-item {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr auto;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.lesson-drawer-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color-light, #e5e7eb);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: var(--bg-subtle, #f9fafb);
+}
+
+@media (max-width: 640px) {
+    .lesson-resource-item {
+        grid-template-columns: 1fr;
+    }
+}
+
