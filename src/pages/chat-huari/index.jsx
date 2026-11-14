@@ -52,16 +52,17 @@ const INITIAL_MESSAGES = [
 ];
 
 /**
- * Sanitize raw string against XSS injection before parsing markdown tokens.
+ * Safe React inline bold tokenizer (**bold**) without dangerouslySetInnerHTML.
  */
-function escapeHtml(str) {
-    if (!str) return "";
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+function renderInlineBold(text) {
+    if (!text) return null;
+    const parts = String(text).split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, idx) => {
+        if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+            return <strong key={idx}>{part.slice(2, -2)}</strong>;
+        }
+        return part;
+    });
 }
 
 function renderFormattedMessage(text) {
@@ -70,7 +71,7 @@ function renderFormattedMessage(text) {
             const rawQuote = paragraph.replace(/^>\s*/, "");
             return (
                 <blockquote key={idx} className="bubble-quote">
-                    {escapeHtml(rawQuote)}
+                    {renderInlineBold(rawQuote)}
                 </blockquote>
             );
         }
@@ -83,22 +84,13 @@ function renderFormattedMessage(text) {
                 <ul key={idx} className="bubble-list">
                     {lines.map((item, itemIdx) => {
                         const cleanItem = item.replace(/^(\*|\d+\.)\s/, "");
-                        const safeItem = escapeHtml(cleanItem);
-                        const formattedHtml = safeItem.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-                        return (
-                            <li
-                                key={itemIdx}
-                                dangerouslySetInnerHTML={{ __html: formattedHtml }}
-                            />
-                        );
+                        return <li key={itemIdx}>{renderInlineBold(cleanItem)}</li>;
                     })}
                 </ul>
             );
         }
 
-        const safeParagraph = escapeHtml(paragraph);
-        const formattedHtml = safeParagraph.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-        return <p key={idx} dangerouslySetInnerHTML={{ __html: formattedHtml }} />;
+        return <p key={idx}>{renderInlineBold(paragraph)}</p>;
     });
 }
 
