@@ -5,13 +5,17 @@ import {
     RiCheckboxCircleFill,
     RiShareForwardLine,
     RiDownloadLine,
+    RiEditLine,
 } from 'react-icons/ri';
+import { PageTransition } from '../../components/motion/MotionPrimitives';
+import { CourseOverviewSkeleton } from '../../components/skeleton';
 import VideoPlayer from '../../components/video-player';
 import LessonAccordion from '../../components/lesson-accordion';
 import ProgressBar from '../../components/progress-bar';
 import EmptyState from '../../components/empty-state';
 import { coursesService } from '../../services/coursesService';
 import { useApp } from '../../context/AppContext';
+import { useToast } from '../../context/useToast';
 import './style.css';
 
 /**
@@ -20,7 +24,8 @@ import './style.css';
 export default function LessonPage() {
     const { courseId, lessonId } = useParams();
     const navigate = useNavigate();
-    const { isLessonCompleted, toggleLessonCompleted } = useApp() || {};
+    const { isAdmin = false, isLessonCompleted, toggleLessonCompleted } = useApp() || {};
+    const toast = useToast();
 
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -29,7 +34,8 @@ export default function LessonPage() {
     useEffect(() => {
         let isMounted = true;
 
-        coursesService.getCourseById(courseId)
+        coursesService
+            .getCourseById(courseId)
             .then((data) => {
                 if (isMounted) {
                     if (data) {
@@ -67,20 +73,7 @@ export default function LessonPage() {
                         <span>Back to Course Catalog</span>
                     </Link>
                 </div>
-                <div
-                    className="lesson-loading-state"
-                    style={{
-                        padding: '4rem 1rem',
-                        textAlign: 'center',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '1rem',
-                    }}
-                >
-                    <div className="loading-spinner" />
-                    <p style={{ color: 'var(--color-text-muted)' }}>Loading lesson curriculum...</p>
-                </div>
+                <CourseOverviewSkeleton />
             </div>
         );
     }
@@ -104,7 +97,6 @@ export default function LessonPage() {
         );
     }
 
-    // Find active lesson
     let activeLesson = null;
     let totalLessons = 0;
     let completedLessonsCount = 0;
@@ -112,7 +104,9 @@ export default function LessonPage() {
     course.modules?.forEach((moduleItem) => {
         moduleItem.lessons?.forEach((l) => {
             totalLessons += 1;
-            const completed = isLessonCompleted ? isLessonCompleted(course.id, l.id) : Boolean(l.completed);
+            const completed = isLessonCompleted
+                ? isLessonCompleted(course.id, l.id)
+                : Boolean(l.completed);
             if (completed) completedLessonsCount += 1;
             if (l.id === lessonId) activeLesson = l;
         });
@@ -129,38 +123,72 @@ export default function LessonPage() {
     const toggleCompletion = () => {
         if (activeLesson?.id && toggleLessonCompleted) {
             toggleLessonCompleted(course.id, activeLesson.id);
+            toast.success(
+                isCurrentCompleted
+                    ? 'Lesson marked as incomplete.'
+                    : 'Lesson completed! Progress updated.'
+            );
         }
     };
 
-    const overallProgress = totalLessons > 0
-        ? Math.round((completedLessonsCount / totalLessons) * 100)
-        : 0;
+    const handleCopyShareLink = async () => {
+        try {
+            if (navigator.clipboard) {
+                await navigator.clipboard.writeText(window.location.href);
+                toast.success('Lesson link copied to clipboard!');
+            } else {
+                toast.info('Copy the address from your browser bar to share.');
+            }
+        } catch {
+            toast.error('Unable to copy link automatically.');
+        }
+    };
+
+    const overallProgress =
+        totalLessons > 0 ? Math.round((completedLessonsCount / totalLessons) * 100) : 0;
+
+    const lessonResources = Array.isArray(activeLesson?.resources)
+        ? activeLesson.resources.filter((res) => res?.url)
+        : [];
 
     return (
-        <div className="lesson-page-container">
+        <PageTransition className="lesson-page-container">
             {/* Top Navigation Bar */}
             <div className="lesson-nav-top-bar">
-                <Link to="/learn" className="lesson-back-btn">
-                    <RiArrowLeftLine size={18} aria-hidden="true" />
-                    <span>Back to Course Catalog</span>
-                </Link>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                    <Link to={`/learn/${course.id}/overview`} className="lesson-back-btn">
+                        <RiArrowLeftLine size={18} aria-hidden="true" />
+                        <span>Back to Course Overview</span>
+                    </Link>
+
+                    {isAdmin && (
+                        <Link
+                            to={`/admin/courses/${course.id}/edit`}
+                            className="lesson-admin-edit-link"
+                        >
+                            <RiEditLine size={15} aria-hidden="true" />
+                            <span>Edit Course</span>
+                        </Link>
+                    )}
+                </div>
 
                 <div className="lesson-progress-chip">
                     <span>Track Progress:</span>
                     <div className="chip-progress-bar">
                         <ProgressBar progress={overallProgress} showLabel={false} height="6px" />
                     </div>
-                    <strong>{overallProgress}%</strong>
+                    <strong className="tabular-nums">{overallProgress}%</strong>
                 </div>
             </div>
 
-            {/* Split Content: Video & Overview (70%) + Syllabus Accordion (30%) */}
+            {/* Split Content: Video & Overview + Syllabus Accordion */}
             <div className="lesson-content-split">
                 <section className="lesson-primary-col" aria-label="Lesson Video and Notes">
                     <VideoPlayer
                         key={activeLesson?.id}
                         title={activeLesson?.title || 'Lesson Video'}
                         videoUrl={activeLesson?.videoUrl}
+                        thumbnail={course.image || undefined}
                         autoPlay={false}
                     />
 
@@ -185,27 +213,44 @@ export default function LessonPage() {
 
                         <div className="lesson-summary-box">
                             <h3>Lesson Summary &amp; Key Takeaways</h3>
-                            <p>{activeLesson?.summary || 'Follow along with the video masterclass above to review the constitutional and statutory foundations covered in this lesson.'}</p>
+                            <p>
+                                {activeLesson?.summary ||
+                                    'Follow along with the video masterclass above to review the constitutional and statutory foundations covered in this lesson.'}
+                            </p>
                         </div>
 
                         <div className="lesson-resources-row">
-                            <button
-                                type="button"
-                                className="btn-resource"
-                                onClick={() => alert('Downloading official lesson curriculum PDF...')}
-                            >
-                                <RiDownloadLine size={16} aria-hidden="true" />
-                                <span>PDF Study Guide</span>
-                            </button>
-                            <button
-                                type="button"
-                                className="btn-resource"
-                                onClick={() => {
-                                    if (navigator.clipboard) {
-                                        navigator.clipboard.writeText(window.location.href);
-                                        alert('Lesson link copied to clipboard!');
+                            {lessonResources.length > 0 ? (
+                                lessonResources.map((res) => (
+                                    <a
+                                        key={res.id || res.url}
+                                        href={res.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn-resource"
+                                        style={{ textDecoration: 'none' }}
+                                    >
+                                        <RiDownloadLine size={16} aria-hidden="true" />
+                                        <span>{res.title || 'PDF Study Guide'}</span>
+                                    </a>
+                                ))
+                            ) : (
+                                <button
+                                    type="button"
+                                    className="btn-resource"
+                                    onClick={() =>
+                                        toast.info('No external PDF guide attached to this lesson yet.')
                                     }
-                                }}
+                                >
+                                    <RiDownloadLine size={16} aria-hidden="true" />
+                                    <span>PDF Study Guide</span>
+                                </button>
+                            )}
+
+                            <button
+                                type="button"
+                                className="btn-resource"
+                                onClick={handleCopyShareLink}
                             >
                                 <RiShareForwardLine size={16} aria-hidden="true" />
                                 <span>Share Lesson</span>
@@ -222,6 +267,6 @@ export default function LessonPage() {
                     />
                 </section>
             </div>
-        </div>
+        </PageTransition>
     );
 }

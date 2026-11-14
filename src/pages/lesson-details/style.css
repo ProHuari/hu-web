@@ -37,6 +37,26 @@
     transform: translateX(-2px);
 }
 
+.lesson-admin-edit-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.38rem 0.85rem;
+    border-radius: 999px;
+    background-color: var(--color-scale-primary-50, #fff5f1);
+    color: var(--color-scale-primary-600, #d4460e);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid rgba(241, 90, 36, 0.25);
+    transition: all 0.16s ease;
+}
+
+.lesson-admin-edit-link:hover {
+    background-color: var(--color-primary, #f15a24);
+    color: #ffffff;
+}
+
 .lesson-progress-chip {
     display: inline-flex;
     align-items: center;
