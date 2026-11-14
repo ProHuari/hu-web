@@ -76,18 +76,22 @@ export async function apiClient(endpoint, options = {}) {
         const response = await fetch(url, config);
 
         if (response.status === 401) {
-            // Se for endpoint de login, extrai a mensagem de credenciais inválidas da API
+            // Extract API invalid credentials message on login endpoint
             if (endpoint.includes('/auth/login')) {
                 const data = await response.json().catch(() => null);
-                const message = data?.message || 'E-mail ou senha incorretos.';
+                const message = data?.message || 'Incorrect email or password.';
                 throw new ApiError(message, 401, data);
             }
 
-            // Unauthorized - clear stored tokens
+            // Unauthorized - clear all stored session keys
             localStorage.removeItem('huari_token');
             sessionStorage.removeItem('huari_token');
             localStorage.removeItem('huari_user');
             sessionStorage.removeItem('huari_user');
+            localStorage.removeItem('huari_refresh_token');
+            sessionStorage.removeItem('huari_refresh_token');
+            localStorage.removeItem('huari_user_role');
+            sessionStorage.removeItem('huari_user_role');
 
             if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
                 window.location.href = '/login?expired=true';
