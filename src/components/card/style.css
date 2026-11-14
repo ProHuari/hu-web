@@ -15,7 +15,7 @@
 .stat-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-card-hover, 0 4px 12px rgba(0, 0, 0, 0.08));
-    border-color: var(--color-scale-primary-300, #93c5fd);
+    border-color: var(--color-scale-primary-200, #ffd4c4);
 }
 
 .stat-card-header {
@@ -37,8 +37,8 @@
     width: 2.25rem;
     height: 2.25rem;
     border-radius: var(--radius-sm, 8px);
-    background-color: var(--color-scale-primary-50, #eff6ff);
-    color: var(--color-scale-primary-600, #2563eb);
+    background-color: var(--color-scale-primary-50, #fff5f1);
+    color: var(--color-scale-primary-600, #d4460e);
 }
 
 .stat-card--orange .stat-card-icon {
