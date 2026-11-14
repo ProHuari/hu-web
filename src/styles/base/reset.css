@@ -1,8 +1,50 @@
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
     padding: 0;
     margin: 0;
+    background-color: var(--color-bg-page, #F8F9FB);
+    color: var(--color-text-primary, #111827);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-scale-primary-500, #F15A24);
+    outline-offset: 2px;
+}
+
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
+}
+
+@keyframes huari-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
