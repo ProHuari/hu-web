@@ -73,7 +73,7 @@ export const chatService = {
             // hu-service endpoint is POST /historico-ia
             const data = await apiClient('/historico-ia', {
                 method: 'POST',
-                body: { question: query },
+                body: { question: query, history },
             });
 
             return {
