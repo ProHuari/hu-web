@@ -170,8 +170,28 @@ export const coursesService = {
         }
 
         try {
-            const courseData = await apiClient(`/cursos/${encodeURIComponent(courseId)}`);
-            return courseData ? normalizeCourse(courseData) : null;
+            if (/^\d+$/.test(String(courseId))) {
+                const courseData = await apiClient(`/cursos/${encodeURIComponent(courseId)}`);
+                if (courseData) return normalizeCourse(courseData);
+            }
+
+            // Se for slug textual ou id não numérico, busca na listagem da API
+            const allCourses = await this.getCourses();
+            const found = allCourses.find(
+                (c) => String(c.id) === String(courseId) || slugify(c.title) === String(courseId)
+            );
+            if (found) {
+                if (/^\d+$/.test(String(found.id))) {
+                    try {
+                        const detailed = await apiClient(`/cursos/${found.id}`);
+                        if (detailed) return normalizeCourse(detailed);
+                    } catch {
+                        // fallback para o curso encontrado na listagem
+                    }
+                }
+                return found;
+            }
+            return null;
         } catch (err) {
             if (err?.status === 404) return null;
             throw err;
@@ -193,11 +213,19 @@ export const coursesService = {
             return normalized;
         }
 
+        const requestBody = {
+            title: payload.title,
+            description: payload.description || 'Trilha de formação cívica e auditoria cidadã.',
+            videoUrl: payload.videoUrl || 'https://www.youtube.com/watch?v=intro',
+            categoryId: typeof payload.categoryId === 'number' ? payload.categoryId : 1,
+            authorId: typeof payload.authorId === 'number' ? payload.authorId : 1,
+        };
+
         const created = await apiClient('/cursos', {
             method: 'POST',
-            body: normalized,
+            body: requestBody,
         });
-        return normalizeCourse(created);
+        return normalizeCourse({ ...created, modules: payload.modules });
     },
 
     async updateCourse(courseId, payload) {
@@ -218,11 +246,19 @@ export const coursesService = {
             return normalized;
         }
 
+        const requestBody = {
+            title: payload.title,
+            description: payload.description || 'Trilha de formação cívica e auditoria cidadã.',
+            videoUrl: payload.videoUrl || 'https://www.youtube.com/watch?v=intro',
+            categoryId: typeof payload.categoryId === 'number' ? payload.categoryId : 1,
+            authorId: typeof payload.authorId === 'number' ? payload.authorId : 1,
+        };
+
         const updated = await apiClient(`/cursos/${encodeURIComponent(courseId)}`, {
             method: 'PUT',
-            body: normalized,
+            body: requestBody,
         });
-        return normalizeCourse(updated);
+        return normalizeCourse({ ...updated, modules: payload.modules });
     },
 
     async updateCourseStatus(courseId, status) {
@@ -286,8 +322,13 @@ export const coursesService = {
             return { success: true, courseId, lessonId };
         }
         try {
-            return await apiClient(`/cursos/${encodeURIComponent(courseId)}/aulas/${encodeURIComponent(lessonId)}/concluir`, {
-                method: 'PATCH',
+            const numericLessonId = parseInt(String(lessonId).replace(/\D+/g, ''), 10) || 1;
+            return await apiClient('/progresso-aulas', {
+                method: 'POST',
+                body: {
+                    lessonId: numericLessonId,
+                    status: 'COMPLETED',
+                },
             });
         } catch {
             return { success: true, courseId, lessonId };
