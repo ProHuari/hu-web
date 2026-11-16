@@ -20,22 +20,28 @@ export class ApiError extends Error {
  * Get active access token from localStorage or sessionStorage.
  */
 export function getAuthToken() {
-    return (
+    const token =
         localStorage.getItem('huari_token') ||
         sessionStorage.getItem('huari_token') ||
-        null
-    );
+        null;
+    if (token === 'guest-session-token') {
+        return null;
+    }
+    return token;
 }
 
 /**
  * Get active refresh token from localStorage or sessionStorage.
  */
 export function getRefreshToken() {
-    return (
+    const refreshToken =
         localStorage.getItem('huari_refresh_token') ||
         sessionStorage.getItem('huari_refresh_token') ||
-        null
-    );
+        null;
+    if (refreshToken === 'guest-session-token' || refreshToken?.startsWith('guest-')) {
+        return null;
+    }
+    return refreshToken;
 }
 
 /**
@@ -151,6 +157,15 @@ export async function apiClient(endpoint, options = {}) {
                 const data = await response.json().catch(() => null);
                 const message = data?.message || 'Incorrect email or password.';
                 throw new ApiError(message, 401, data);
+            }
+
+            // 1b. If the current session is a guest or unauthenticated, do not treat 401 as expired session and do not redirect
+            const isGuestSession =
+                localStorage.getItem('huari_token') === 'guest-session-token' ||
+                sessionStorage.getItem('huari_token') === 'guest-session-token';
+            if (isGuestSession || !token) {
+                const data = await response.json().catch(() => null);
+                throw new ApiError(data?.message || 'Unauthorized', 401, data);
             }
 
             // 2. Failure during refresh itself or already retried: terminate session

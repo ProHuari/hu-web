@@ -101,7 +101,7 @@ export function AppProvider({ children }) {
     });
 
     useEffect(() => {
-        if (token && !USE_MOCKS) {
+        if (token && token !== 'guest-session-token' && !USE_MOCKS) {
             userService
                 .getMe()
                 .then((profile) => {
@@ -225,7 +225,7 @@ export function AppProvider({ children }) {
                 return [...prev, numId];
             });
 
-            if (!USE_MOCKS) {
+            if (!USE_MOCKS && token && token !== 'guest-session-token') {
                 userService.toggleBookmark(numId, isCurrentlyBookmarked).catch((err) => {
                     console.error('Failed to sync bookmark with backend', err);
                 });
@@ -247,7 +247,7 @@ export function AppProvider({ children }) {
             } catch (e) {
                 console.error('Failed to save notifications', e);
             }
-            if (!USE_MOCKS) {
+            if (!USE_MOCKS && token && token !== 'guest-session-token') {
                 userService.updateNotifications(updated).catch((err) => {
                     console.error('Failed to sync notifications with backend', err);
                 });
@@ -276,7 +276,7 @@ export function AppProvider({ children }) {
             return next;
         });
 
-        if (!USE_MOCKS && targetCourseId && targetLessonId) {
+        if (!USE_MOCKS && token && token !== 'guest-session-token' && targetCourseId && targetLessonId) {
             coursesService.toggleLesson(targetCourseId, targetLessonId).catch((err) => {
                 console.error('Failed to sync lesson completion with backend', err);
             });
