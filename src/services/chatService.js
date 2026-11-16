@@ -1,6 +1,6 @@
 /**
  * Civic AI Assistant Service for Huari Platform.
- * Supports Spring Boot /chat endpoint with client-side fallback knowledge base.
+ * Supports Spring Boot /ia/tutor and /historico-ia endpoints with client-side fallback knowledge base.
  */
 
 import { apiClient } from './api';
@@ -8,81 +8,136 @@ import { apiClient } from './api';
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
 const KNOWLEDGE_RESPONSES = {
-    expenses: `The **Parliamentary Quota (CEAP - Cota para o Exercício da Atividade Parlamentar)** is a monthly expense allowance allocated to members of Congress to reimburse mandate-related activities.
+    expenses: `A **Cota para o Exercício da Atividade Parlamentar (CEAP)** é um benefício mensal concedido a deputados e senadores para custear despesas exclusivamente ligadas ao mandato.
 
-Key permitted expense categories:
-1. **Mandate Communication & Outreach:** Educational newsletters, video production, social media management, and activity reports.
-2. **Commercial Airfare & Lodging:** Travel between the lawmaker's electoral home state and Brasília.
-3. **Vehicle Rental & Fuel:** Ground transportation logistics within their state.
-4. **Consulting & Technical Advisory:** Specialized research and policy analysis reports.
+As principais categorias de gastos permitidas incluem:
+1. **Divulgação da Atividade Parlamentar:** Produção de vídeos, relatórios de prestação de contas, informativos e gerenciamento de redes sociais.
+2. **Passagens Aéreas e Hospedagem:** Deslocamento regular entre a base eleitoral do parlamentar e Brasília.
+3. **Locação de Veículos e Combustíveis:** Transporte terrestre para vistorias e compromissos no estado de origem.
+4. **Consultorias e Pareceres Técnicos:** Pesquisas especializadas de apoio à redação de projetos de lei e fiscalização de políticas públicas.
 
-> **Transparency Note:** All invoices, merchant CNPJ identifiers, and receipts are publicly available in real time through official Chamber and Senate Open Data APIs!`,
+> **Nota de Transparência:** Todas as notas fiscais, recibos e CNPJs dos fornecedores contratados são dados públicos e ficam disponíveis nos Portais de Dados Abertos da Câmara e do Senado!`,
 
-    pec: `A **Constitutional Amendment Proposal (PEC - Proposta de Emenda à Constituição)** modifies the text of the 1988 Federal Constitution and requires a rigorous legislative pathway:
+    pec: `Uma **Proposta de Emenda à Constituição (PEC)** altera o texto da Constituição de 1988 e segue o rito legislativo mais exigente do país:
 
-1. **Sponsorship:** Must be co-sponsored by at least 1/3 of Federal Deputies (171), 1/3 of Senators (27), or the President of the Republic.
-2. **Constitution & Justice Committee (CCJ):** Assesses constitutional admissibility and legal harmony.
-3. **Special Committee:** Reviews policy merits and proposed substitutions.
-4. **Two-Round Supermajority Floor Vote:** Must be approved in both the Chamber and Senate by **3/5 supermajority** (308 Deputies and 49 Senators) in two separate voting rounds.
+1. **Iniciativa:** Deve ser proposta por no mínimo 1/3 dos deputados (171) ou senadores (27), pelo Presidente da República ou por mais da metade das Assembleias Legislativas.
+2. **Comissão de Constituição e Justiça (CCJ):** Avalia a admissibilidade jurídica e o respeito às cláusulas pétreas.
+3. **Comissão Especial:** Debate o mérito do texto e emendas sugeridas por deputados.
+4. **Dois Turnos com Quórum Qualificado:** Precisa ser aprovada por **3/5 dos votos** (308 na Câmara e 49 no Senado) em dois turnos de votação em cada uma das Casas.
 
-Executive sanction or veto does not apply: once passed by both houses, it is promulgated directly by Congress!`,
+Não há sanção nem veto presidencial: a emenda promulgada pelas Mesas da Câmara e do Senado entra em vigor imediatamente!`,
 
-    quotient: `In Brazilian elections for Federal Deputy, State Deputy, and Municipal Councilor, elections operate under the **open-list proportional representation system**:
+    quotient: `Nas eleições para Deputado Federal, Deputado Estadual e Vereador no Brasil, o sistema adotado é o **proporcional de lista aberta**:
 
-* **Electoral Quotient (QE):** Calculated by dividing total valid votes cast by the number of legislative seats to be filled.
-* **Party Quotient (QP):** Calculated by dividing total votes received by a party list by the QE. This determines direct seats won.
-* **Remaining Seat Allocation (Sobras):** Leftover seats are distributed using the highest-average (D'Hondt) method among parties meeting minimum electoral thresholds.
+* **Quociente Eleitoral (QE):** Divide-se o número de votos válidos da eleição pelo número de vagas disponíveis na Casa.
+* **Quociente Partidário (QP):** Divide-se o total de votos recebidos por um partido pelo QE. O resultado inteiro indica o número de vagas diretas conquistadas pela legenda.
+* **Distribuição das Sobras:** As vagas remanescentes são distribuídas pela regra da maior média (D'Hondt) entre os partidos que atingiram a cláusula de barreira mínima.
 
-This ensures diverse political representation proportionate to overall citizen ideological preference!`,
+Esse cálculo assegura que a composição do Parlamento represente de forma plural o percentual ideológico escolhido pela população!`,
 
-    auditing: `Every citizen can audit congressional representatives using open civic tools:
+    auditing: `Qualquer cidadão pode auditar parlamentares usando dados abertos e instrumentos institucionais:
 
-1. **Official Congressional Portals:** The *Dados Abertos* and *Transparência* portals publish line-item expense receipts and roll-call voting records.
-2. **Huari Civic Platform:** We correlate roll-call votes, floor attendance, and CEAP expense claims into intuitive, accessible dashboards.
-3. **Federal Transparency Portal (CGU):** Directly inspect federal procurement contracts, grants, and transfers.
-4. **Freedom of Information Act (LAI - Law 12.527/11):** Empowers any citizen to request government documents and explanations with a mandatory statutory response deadline of 20 days.`,
+1. **Portais de Transparência da Câmara e do Senado:** Consulta aberta de reembolsos da CEAP, notas fiscais digitalizadas e presenças em votações nominais.
+2. **Plataforma Huari:** Cruzamos votações nominais, índice de presença e despesas em gráficos acessíveis para facilitar o monitoramento.
+3. **Portal da Transparência da CGU:** Consulta a contratos públicos, emendas parlamentares e transferências de recursos federais.
+4. **Lei de Acesso à Informação (LAI - Lei 12.527/11):** Permite a qualquer pessoa solicitar documentos e explicações a órgãos públicos com prazo legal máximo de resposta de 20 dias.`,
 };
 
 function getMockResponse(query) {
     const lowerQuery = query.toLowerCase();
 
-    if (lowerQuery.includes('expense') || lowerQuery.includes('quota') || lowerQuery.includes('ceap') || lowerQuery.includes('spending') || lowerQuery.includes('cost') || lowerQuery.includes('despesa') || lowerQuery.includes('cota')) {
+    if (
+        lowerQuery.includes('expense') ||
+        lowerQuery.includes('quota') ||
+        lowerQuery.includes('ceap') ||
+        lowerQuery.includes('spending') ||
+        lowerQuery.includes('cost') ||
+        lowerQuery.includes('despesa') ||
+        lowerQuery.includes('gasto') ||
+        lowerQuery.includes('cota')
+    ) {
         return KNOWLEDGE_RESPONSES.expenses;
     }
-    if (lowerQuery.includes('pec') || lowerQuery.includes('amendment') || lowerQuery.includes('bill') || lowerQuery.includes('constitution') || lowerQuery.includes('law') || lowerQuery.includes('lei') || lowerQuery.includes('projeto')) {
+    if (
+        lowerQuery.includes('pec') ||
+        lowerQuery.includes('emenda') ||
+        lowerQuery.includes('amendment') ||
+        lowerQuery.includes('bill') ||
+        lowerQuery.includes('constitution') ||
+        lowerQuery.includes('lei') ||
+        lowerQuery.includes('projeto') ||
+        lowerQuery.includes('tramita')
+    ) {
         return KNOWLEDGE_RESPONSES.pec;
     }
-    if (lowerQuery.includes('quotient') || lowerQuery.includes('election') || lowerQuery.includes('vote') || lowerQuery.includes('proportional') || lowerQuery.includes('quociente') || lowerQuery.includes('voto')) {
+    if (
+        lowerQuery.includes('quotient') ||
+        lowerQuery.includes('election') ||
+        lowerQuery.includes('vote') ||
+        lowerQuery.includes('proportional') ||
+        lowerQuery.includes('quociente') ||
+        lowerQuery.includes('partid') ||
+        lowerQuery.includes('voto')
+    ) {
         return KNOWLEDGE_RESPONSES.quotient;
     }
-    if (lowerQuery.includes('audit') || lowerQuery.includes('citizen') || lowerQuery.includes('oversight') || lowerQuery.includes('track') || lowerQuery.includes('lai') || lowerQuery.includes('fiscalizar')) {
+    if (
+        lowerQuery.includes('audit') ||
+        lowerQuery.includes('citizen') ||
+        lowerQuery.includes('oversight') ||
+        lowerQuery.includes('track') ||
+        lowerQuery.includes('lai') ||
+        lowerQuery.includes('fiscalizar') ||
+        lowerQuery.includes('nota fiscal') ||
+        lowerQuery.includes('auditar')
+    ) {
         return KNOWLEDGE_RESPONSES.auditing;
     }
 
-    return `Thank you for your question regarding: "${query}".\n\nAs the civic intelligence assistant for **Huari**, I am designed to synthesize public records from the Chamber of Deputies, Federal Senate, and the Federal Court of Accounts (TCU).\n\nYou can explore lawmakers directly in the **Lawmakers** section, inspect courses under **Learn**, or ask about:\n* Detailed expense voucher categories for specific lawmakers\n* How legislative bills (PL, PLP, PEC, and MPV) become law\n* How to inspect parliamentary attendance and voting discipline`;
+    return `Olá! Sou a assistente de inteligência cívica e transparência da **Huari**.\n\nMinha missão é analisar dados públicos da Câmara dos Deputados, Senado Federal e TCU para fortalecer o controle social e a fiscalização dos gastos públicos.\n\nVocê pode me perguntar sobre:\n* Detalhamento de notas fiscais e reembolsos da Cota Parlamentar (CEAP)\n* Como tramitam e são votados Projetos de Lei (PLs) e PECs\n* Como consultar presença e fidelidade partidária em votações nominais\n* Como fiscalizar contratos e emendas orçamentárias no seu estado ou município.`;
 }
 
 export const chatService = {
     async sendMessage(query, history = []) {
         if (USE_MOCKS) {
-            await new Promise((resolve) => setTimeout(resolve, 600));
+            await new Promise((resolve) => setTimeout(resolve, 500));
             return { response: getMockResponse(query) };
         }
 
         try {
-            // hu-service endpoint is POST /historico-ia
-            const data = await apiClient('/historico-ia', {
+            // Prioridade 1: Endpoint /ia/tutor (público, Gemini 2.5 Flash + RAG)
+            const data = await apiClient('/ia/tutor', {
                 method: 'POST',
-                body: { question: query, history },
+                body: {
+                    question: query,
+                    subject: 'Auditoria Cívica e Transparência',
+                },
             });
 
-            return {
-                response: data?.answer || data?.response || getMockResponse(query),
-            };
+            if (data?.answer || data?.response) {
+                return {
+                    response: data.answer || data.response,
+                };
+            }
         } catch (err) {
-            console.warn('Backend AI assistant /historico-ia unavailable, using civic knowledge base fallback', err);
-            return { response: getMockResponse(query) };
+            console.warn('Backend /ia/tutor indisponível, tentando /historico-ia', err);
+            try {
+                // Prioridade 2: /historico-ia caso o usuário esteja autenticado
+                const histData = await apiClient('/historico-ia', {
+                    method: 'POST',
+                    body: { question: query, history },
+                });
+
+                if (histData?.answer || histData?.response) {
+                    return {
+                        response: histData.answer || histData.response,
+                    };
+                }
+            } catch (fallbackErr) {
+                console.warn('Backend IA indisponível, ativando base cívica de contingência', fallbackErr);
+            }
         }
+
+        return { response: getMockResponse(query) };
     },
 };
-
