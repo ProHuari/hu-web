@@ -231,7 +231,7 @@ export function AppProvider({ children }) {
                 });
             }
         },
-        [bookmarkedLawmakerIds]
+        [bookmarkedLawmakerIds, token]
     );
 
     const isBookmarked = useCallback(
@@ -239,49 +239,55 @@ export function AppProvider({ children }) {
         [bookmarkedLawmakerIds]
     );
 
-    const toggleNotification = useCallback((key) => {
-        setNotifications((prev) => {
-            const updated = { ...prev, [key]: !prev[key] };
-            try {
-                localStorage.setItem('huari_notifications', JSON.stringify(updated));
-            } catch (e) {
-                console.error('Failed to save notifications', e);
-            }
-            if (!USE_MOCKS && token && token !== 'guest-session-token') {
-                userService.updateNotifications(updated).catch((err) => {
-                    console.error('Failed to sync notifications with backend', err);
+    const toggleNotification = useCallback(
+        (key) => {
+            setNotifications((prev) => {
+                const updated = { ...prev, [key]: !prev[key] };
+                try {
+                    localStorage.setItem('huari_notifications', JSON.stringify(updated));
+                } catch (e) {
+                    console.error('Failed to save notifications', e);
+                }
+                if (!USE_MOCKS && token && token !== 'guest-session-token') {
+                    userService.updateNotifications(updated).catch((err) => {
+                        console.error('Failed to sync notifications with backend', err);
+                    });
+                }
+                return updated;
+            });
+        },
+        [token]
+    );
+
+    const toggleLessonCompleted = useCallback(
+        (courseId, lessonId) => {
+            if (!courseId) return;
+            const compoundKey = lessonId ? `${courseId}:${lessonId}` : courseId;
+            const targetCourseId = lessonId ? courseId : null;
+            const targetLessonId = lessonId || courseId;
+
+            setCompletedLessonIds((prev) => {
+                const isCompleted = prev.includes(compoundKey) || (lessonId && prev.includes(lessonId));
+                const next = isCompleted
+                    ? prev.filter((id) => id !== compoundKey && id !== lessonId)
+                    : [...prev, compoundKey];
+
+                try {
+                    localStorage.setItem('huari_completed_lessons', JSON.stringify(next));
+                } catch (e) {
+                    console.error('Failed to store completed lessons', e);
+                }
+                return next;
+            });
+
+            if (!USE_MOCKS && token && token !== 'guest-session-token' && targetCourseId && targetLessonId) {
+                coursesService.toggleLesson(targetCourseId, targetLessonId).catch((err) => {
+                    console.error('Failed to sync lesson completion with backend', err);
                 });
             }
-            return updated;
-        });
-    }, []);
-
-    const toggleLessonCompleted = useCallback((courseId, lessonId) => {
-        if (!courseId) return;
-        const compoundKey = lessonId ? `${courseId}:${lessonId}` : courseId;
-        const targetCourseId = lessonId ? courseId : null;
-        const targetLessonId = lessonId || courseId;
-
-        setCompletedLessonIds((prev) => {
-            const isCompleted = prev.includes(compoundKey) || (lessonId && prev.includes(lessonId));
-            const next = isCompleted
-                ? prev.filter((id) => id !== compoundKey && id !== lessonId)
-                : [...prev, compoundKey];
-
-            try {
-                localStorage.setItem('huari_completed_lessons', JSON.stringify(next));
-            } catch (e) {
-                console.error('Failed to store completed lessons', e);
-            }
-            return next;
-        });
-
-        if (!USE_MOCKS && token && token !== 'guest-session-token' && targetCourseId && targetLessonId) {
-            coursesService.toggleLesson(targetCourseId, targetLessonId).catch((err) => {
-                console.error('Failed to sync lesson completion with backend', err);
-            });
-        }
-    }, []);
+        },
+        [token]
+    );
 
     const isLessonCompleted = useCallback(
         (courseId, lessonId) => {
