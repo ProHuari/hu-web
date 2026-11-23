@@ -44,6 +44,10 @@ export default function MainLayout() {
                             alt={user.name}
                             loading="lazy"
                             decoding="async"
+                            onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = '/images/default-avatar.png';
+                            }}
                         />
                     ) : (
                         <RiUser3Line size={18} />
