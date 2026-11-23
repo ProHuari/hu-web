@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { RiUser3Line } from 'react-icons/ri';
 import './style.css';
+
+export const DEFAULT_AVATAR_URL = '/images/default-avatar.png';
 
 export default function Avatar({
     src,
@@ -10,33 +11,33 @@ export default function Avatar({
     size = 'md',
     isOnline = false,
     className = '',
+    fallbackSrc = DEFAULT_AVATAR_URL,
 }) {
-    const getInitials = (fullName) => {
-        if (!fullName) return '';
-        const parts = fullName.trim().split(/\s+/);
-        if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    const [failedSrc, setFailedSrc] = useState(null);
+
+    const normalizedSrc = typeof src === 'string' && src.trim() !== '' ? src.trim() : null;
+    const hasFailed = Boolean(normalizedSrc && failedSrc === normalizedSrc);
+    const activeSrc = normalizedSrc && !hasFailed ? normalizedSrc : fallbackSrc;
+
+    const handleImageError = (e) => {
+        if (normalizedSrc && failedSrc !== normalizedSrc) {
+            setFailedSrc(normalizedSrc);
+        } else if (e.currentTarget.src !== window.location.origin + DEFAULT_AVATAR_URL) {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = DEFAULT_AVATAR_URL;
+        }
     };
 
-    const initials = getInitials(name);
-
     return (
-        <div className={`huari-avatar-container avatar-${size} ${className}`}>
-            {src ? (
-                <img
-                    src={src}
-                    alt={alt || name || 'User avatar'}
-                    className="huari-avatar-img"
-                    loading="lazy"
-                    decoding="async"
-                />
-            ) : initials ? (
-                <div className="huari-avatar-initials">{initials}</div>
-            ) : (
-                <div className="huari-avatar-placeholder">
-                    <RiUser3Line />
-                </div>
-            )}
+        <div className={`huari-avatar-container avatar-${size} ${className}`.trim()}>
+            <img
+                src={activeSrc}
+                alt={alt || name || 'User avatar'}
+                className="huari-avatar-img"
+                loading="lazy"
+                decoding="async"
+                onError={handleImageError}
+            />
 
             {isOnline && <span className="huari-avatar-online-dot" title="Online" />}
         </div>
@@ -50,5 +51,5 @@ Avatar.propTypes = {
     size: PropTypes.oneOf(['sm', 'md', 'lg', 'xl']),
     isOnline: PropTypes.bool,
     className: PropTypes.string,
+    fallbackSrc: PropTypes.string,
 };
-
