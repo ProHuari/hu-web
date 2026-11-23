@@ -8,18 +8,26 @@ import { apiClient } from './api';
 import { MOCK_LAWMAKERS, CONGRESSIONAL_STATS } from '../data/lawmakers';
 
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
+export const DEFAULT_LAWMAKER_AVATAR = '/images/default-avatar.png';
 
 function normalizeLawmaker(item) {
     if (!item) return null;
     const isSenator = item.chamber === 'FEDERAL_SENATE';
     const role = isSenator ? 'Senator' : 'Federal Deputy';
-    const avatar =
+    const rawAvatar =
         item.avatar ||
+        item.photoUrl ||
+        item.urlFoto ||
         (item.externalId
             ? `https://www.camara.leg.br/internet/deputado/bandep/${item.externalId}.jpg`
             : null);
+    const avatar =
+        typeof rawAvatar === 'string' && rawAvatar.trim() !== ''
+            ? rawAvatar.trim()
+            : DEFAULT_LAWMAKER_AVATAR;
 
     return {
+        ...item,
         id: item.id,
         name: item.name,
         party: item.party,
@@ -34,7 +42,6 @@ function normalizeLawmaker(item) {
         projectsNum: item.projectsNum || 16,
         expenses: item.expenses || 'R$ 32.000',
         expensesNum: item.expensesNum || 32000,
-        ...item,
     };
 }
 
