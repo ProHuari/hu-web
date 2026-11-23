@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { AppContext } from './contextInstance';
 import { useApp } from './useApp';
 import { userService } from '../services/userService';
-import { coursesService } from '../services/coursesService';
+import { coursesService } from '../services/courses-service';
 import { isAdminRole, normalizeRole } from '../utils/roles';
 
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';

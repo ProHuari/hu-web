@@ -8,7 +8,7 @@ import EmptyState from '../../components/empty-state';
 import CourseCard from '../../components/course-card';
 import { CourseCardSkeleton } from '../../components/skeleton';
 import { useApp } from '../../context/AppContext';
-import { coursesService } from '../../services/coursesService';
+import { coursesService } from '../../services/courses-service';
 import './style.css';
 
 /**

@@ -4,7 +4,7 @@
  * Designed with a structured mock schema that easily hooks into future backend telemetry endpoints.
  */
 
-import { coursesService } from './coursesService';
+import { coursesService } from './courses-service';
 
 export const INITIAL_ADMIN_METRICS = {
     overview: {

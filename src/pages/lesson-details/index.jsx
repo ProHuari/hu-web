@@ -13,7 +13,7 @@ import VideoPlayer from '../../components/video-player';
 import LessonAccordion from '../../components/lesson-accordion';
 import ProgressBar from '../../components/progress-bar';
 import EmptyState from '../../components/empty-state';
-import { coursesService } from '../../services/coursesService';
+import { coursesService } from '../../services/courses-service';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/useToast';
 import './style.css';

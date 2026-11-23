@@ -18,7 +18,7 @@ import { PageTransition } from '../../components/motion/MotionPrimitives';
 import { CourseOverviewSkeleton } from '../../components/skeleton';
 import ProgressBar from '../../components/progress-bar';
 import EmptyState from '../../components/empty-state';
-import { coursesService } from '../../services/coursesService';
+import { coursesService } from '../../services/courses-service';
 import { useApp } from '../../context/AppContext';
 import './style.css';
 

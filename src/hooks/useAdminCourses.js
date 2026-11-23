@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { coursesService } from '../services/coursesService';
+import { coursesService } from '../services/courses-service';
 import { useToast } from '../context/useToast';
 
 export function useAdminCourses() {
