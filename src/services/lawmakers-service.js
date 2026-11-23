@@ -1,7 +1,7 @@
 /**
  * Lawmakers Service for Huari Civic Platform.
- * Connects to Spring Boot /transparencia endpoints with search, filters,
- * pagination (Spring Pageable), and mandate analysis.
+ * Connects to Spring Boot /transparencia endpoints with server-side search/filters,
+ * pagination (Spring Pageable), real CEAP expenses, legislative bills, and metrics.
  */
 
 import { apiClient } from './api';
@@ -10,21 +10,42 @@ import { MOCK_LAWMAKERS, CONGRESSIONAL_STATS } from '../data/lawmakers';
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 export const DEFAULT_LAWMAKER_AVATAR = '/images/default-avatar.png';
 
-function normalizeLawmaker(item) {
+const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+});
+
+const compactCurrencyFormatter = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    maximumFractionDigits: 0,
+});
+
+function resolveOfficialPhotoUrl(item) {
+    const explicit = item?.avatar || item?.photoUrl || item?.urlFoto;
+    if (typeof explicit === 'string' && explicit.trim() !== '') {
+        return explicit.trim();
+    }
+    if (!item?.externalId) {
+        return null;
+    }
+    const externalId = encodeURIComponent(String(item.externalId).trim());
+    if (item.chamber === 'FEDERAL_SENATE') {
+        return `https://www.senado.leg.br/senadores/img/fotos-oficiais/senador${externalId}.jpg`;
+    }
+    return `https://www.camara.leg.br/internet/deputado/bandep/${externalId}.jpg`;
+}
+
+export function normalizeLawmaker(item) {
     if (!item) return null;
     const isSenator = item.chamber === 'FEDERAL_SENATE';
-    const role = isSenator ? 'Senator' : 'Federal Deputy';
-    const rawAvatar =
-        item.avatar ||
-        item.photoUrl ||
-        item.urlFoto ||
-        (item.externalId
-            ? `https://www.camara.leg.br/internet/deputado/bandep/${item.externalId}.jpg`
-            : null);
-    const avatar =
-        typeof rawAvatar === 'string' && rawAvatar.trim() !== ''
-            ? rawAvatar.trim()
-            : DEFAULT_LAWMAKER_AVATAR;
+    const roleLabel = isSenator ? 'Senador' : 'Deputado Federal';
+    const chamberLabel = isSenator ? 'Senado Federal' : 'Câmara dos Deputados';
+    const avatar = resolveOfficialPhotoUrl(item) || DEFAULT_LAWMAKER_AVATAR;
+
+    const billsCount = Number(item.billsCount ?? item.projectsNum ?? (parseInt(item.projects, 10) || 0));
+    const expensesCount = Number(item.expensesCount ?? 0);
+    const totalExpensesNum = Number(item.totalExpenses ?? item.expensesNum ?? 0);
 
     return {
         ...item,
@@ -33,44 +54,69 @@ function normalizeLawmaker(item) {
         party: item.party,
         state: item.state,
         chamber: item.chamber,
-        role: item.role || role,
-        position: item.position || role,
+        chamberLabel,
+        role: item.role || roleLabel,
+        position: item.position || roleLabel,
         avatar,
-        attendance: item.attendance || '94.2%',
-        attendanceNum: item.attendanceNum || 94.2,
-        projects: item.projects || '16',
-        projectsNum: item.projectsNum || 16,
-        expenses: item.expenses || 'R$ 32.000',
-        expensesNum: item.expensesNum || 32000,
+        attendance: item.attendance || null,
+        attendanceNum: typeof item.attendanceNum === 'number' ? item.attendanceNum : null,
+        billsCount,
+        projects: String(billsCount),
+        projectsNum: billsCount,
+        expensesCount,
+        expenses: totalExpensesNum > 0
+            ? compactCurrencyFormatter.format(totalExpensesNum)
+            : (item.expenses || 'Sem registros'),
+        expensesNum: totalExpensesNum,
+        totalExpensesFormatted: currencyFormatter.format(totalExpensesNum),
     };
 }
 
+function mapSortToBackend(sortKey) {
+    switch (sortKey) {
+        case 'name_desc':
+            return 'name,desc';
+        case 'party_asc':
+            return 'party,asc';
+        case 'state_asc':
+            return 'state,asc';
+        case 'name_asc':
+        default:
+            return 'name,asc';
+    }
+}
+
+function sortClientItems(items, sortKey) {
+    const list = [...items];
+    list.sort((a, b) => {
+        if (sortKey === 'name_desc') return (b.name || '').localeCompare(a.name || '');
+        if (sortKey === 'bills_desc') return (b.billsCount || 0) - (a.billsCount || 0);
+        if (sortKey === 'expenses_asc') return (a.expensesNum || 0) - (b.expensesNum || 0);
+        if (sortKey === 'expenses_desc') return (b.expensesNum || 0) - (a.expensesNum || 0);
+        return (a.name || '').localeCompare(b.name || '');
+    });
+    return list;
+}
+
 function filterAndPaginateMock(filters = {}, pagination = { page: 1, limit: 6 }) {
-    const { search = '', state = '', party = '', sort = 'name_asc' } = filters;
+    const { search = '', state = '', party = '', chamber = '', sort = 'name_asc' } = filters;
     const { page = 1, limit = 6 } = pagination;
 
-    let result = MOCK_LAWMAKERS.filter((item) => {
+    const filtered = MOCK_LAWMAKERS.filter((item) => {
         const matchesSearch = search
-            ? item.name.toLowerCase().includes(search.toLowerCase())
+            ? item.name.toLowerCase().includes(search.toLowerCase()) ||
+              item.party.toLowerCase().includes(search.toLowerCase())
             : true;
         const matchesState = state ? item.state === state : true;
         const matchesParty = party ? item.party === party : true;
-        return matchesSearch && matchesState && matchesParty;
+        const matchesChamber = chamber ? item.chamber === chamber : true;
+        return matchesSearch && matchesState && matchesParty && matchesChamber;
     });
 
-    result.sort((a, b) => {
-        if (sort === 'name_asc') return a.name.localeCompare(b.name);
-        if (sort === 'name_desc') return b.name.localeCompare(a.name);
-        if (sort === 'attendance_desc') return b.attendanceNum - a.attendanceNum;
-        if (sort === 'bills_desc') return b.projectsNum - a.projectsNum;
-        if (sort === 'expenses_asc') return a.expensesNum - b.expensesNum;
-        if (sort === 'expenses_desc') return b.expensesNum - a.expensesNum;
-        return 0;
-    });
-
-    const totalElements = result.length;
+    const sorted = sortClientItems(filtered.map(normalizeLawmaker), sort);
+    const totalElements = sorted.length;
     const startIndex = (page - 1) * limit;
-    const items = result.slice(startIndex, startIndex + limit);
+    const items = sorted.slice(startIndex, startIndex + limit);
 
     return {
         items,
@@ -80,6 +126,74 @@ function filterAndPaginateMock(filters = {}, pagination = { page: 1, limit: 6 })
     };
 }
 
+function groupExpensesByYearAndCategory(rawExpenses = []) {
+    if (!Array.isArray(rawExpenses) || rawExpenses.length === 0) {
+        return { expensesByYear: {}, formattedRows: [], grandTotal: 0 };
+    }
+
+    const groupedByYear = {};
+    const formattedRows = [];
+    let grandTotal = 0;
+
+    rawExpenses.forEach((exp) => {
+        const numericAmount = Number(exp.amount || 0);
+        grandTotal += numericAmount;
+        const rawDate = exp.expenseDate || '';
+        const yearMatch = String(rawDate).match(/^(\d{4})/);
+        const yearKey = yearMatch ? `Cota ${yearMatch[1]}` : 'Registros CEAP';
+        const category = exp.expenseCategory || 'Outras despesas parlamentares';
+
+        if (!groupedByYear[yearKey]) {
+            groupedByYear[yearKey] = { total: 0, byCategory: {} };
+        }
+        groupedByYear[yearKey].total += numericAmount;
+        groupedByYear[yearKey].byCategory[category] =
+            (groupedByYear[yearKey].byCategory[category] || 0) + numericAmount;
+
+        formattedRows.push({
+            id: exp.id,
+            date: rawDate,
+            yearKey,
+            category,
+            supplier: exp.supplierName || 'Fornecedor não informado',
+            amountNum: numericAmount,
+            amountFormatted: currencyFormatter.format(numericAmount),
+            documentUrl: exp.documentUrl || null,
+        });
+    });
+
+    const expensesByYear = {};
+    Object.keys(groupedByYear)
+        .sort((a, b) => b.localeCompare(a))
+        .forEach((yearKey) => {
+            const yearBucket = groupedByYear[yearKey];
+            const yearTotal = yearBucket.total || 1;
+
+            expensesByYear[yearKey] = Object.entries(yearBucket.byCategory)
+                .map(([category, sumAmount]) => {
+                    const percentage = Math.min(100, Math.max(1, Math.round((sumAmount / yearTotal) * 100)));
+                    const tone = percentage >= 35 ? 'high' : percentage >= 18 ? 'medium' : 'low';
+                    return {
+                        title: category,
+                        category,
+                        amountNum: sumAmount,
+                        amount: currencyFormatter.format(sumAmount),
+                        percentage,
+                        tone,
+                    };
+                })
+                .sort((a, b) => b.amountNum - a.amountNum);
+        });
+
+    const grandDenominator = grandTotal || 1;
+    const enrichedRows = formattedRows.map((row) => ({
+        ...row,
+        percentage: Number(((row.amountNum / grandDenominator) * 100).toFixed(1)),
+    }));
+
+    return { expensesByYear, formattedRows: enrichedRows, grandTotal };
+}
+
 export const lawmakersService = {
     async getLawmakers(filters = {}, pagination = { page: 1, limit: 6 }) {
         if (USE_MOCKS) {
@@ -87,124 +201,114 @@ export const lawmakersService = {
             return filterAndPaginateMock(filters, pagination);
         }
 
-        try {
-            const res = await apiClient('/transparencia/parlamentares', {
-                params: {
-                    page: Math.max(0, pagination.page - 1),
-                    size: pagination.limit,
-                },
-            });
+        const { search = '', state = '', party = '', chamber = '', sort = 'name_asc' } = filters;
+        const pageNumber = Math.max(0, (pagination.page || 1) - 1);
+        const pageSize = pagination.limit || 6;
 
-            const rawItems = res?.content ?? (Array.isArray(res) ? res : []);
+        const res = await apiClient('/transparencia/parlamentares', {
+            params: {
+                page: pageNumber,
+                size: pageSize,
+                sort: mapSortToBackend(sort),
+                search: search.trim() || undefined,
+                state: state.trim() || undefined,
+                party: party.trim() || undefined,
+                chamber: chamber || undefined,
+            },
+        });
 
-            if (rawItems.length === 0) {
-                return filterAndPaginateMock(filters, pagination);
-            }
+        const rawItems = res?.content ?? (Array.isArray(res) ? res : []);
+        let normalizedItems = rawItems.map(normalizeLawmaker);
 
-            const normalizedItems = rawItems.map(normalizeLawmaker);
-
-            // Filtros client-side adicionais
-            const { search = '', state = '', party = '' } = filters;
-            const filtered = normalizedItems.filter((item) => {
-                const matchesSearch = search ? item.name.toLowerCase().includes(search.toLowerCase()) : true;
-                const matchesState = state ? item.state === state : true;
-                const matchesParty = party ? item.party === party : true;
-                return matchesSearch && matchesState && matchesParty;
-            });
-
-            return {
-                items: filtered,
-                totalElements: res?.page?.totalElements ?? res?.totalElements ?? filtered.length,
-                totalPages: res?.page?.totalPages ?? res?.totalPages ?? 1,
-                currentPage: pagination.page,
-            };
-        } catch (err) {
-            console.warn('Falha ao consultar /transparencia/parlamentares, usando dados de contingência', err);
-            return filterAndPaginateMock(filters, pagination);
+        if (sort === 'bills_desc' || sort === 'expenses_asc' || sort === 'expenses_desc') {
+            normalizedItems = sortClientItems(normalizedItems, sort);
         }
+
+        return {
+            items: normalizedItems,
+            totalElements: res?.page?.totalElements ?? res?.totalElements ?? normalizedItems.length,
+            totalPages: res?.page?.totalPages ?? res?.totalPages ?? 1,
+            currentPage: pagination.page || 1,
+        };
     },
 
     async getLawmakerById(id) {
+        if (!id) return null;
+
         if (USE_MOCKS) {
             await new Promise((resolve) => setTimeout(resolve, 200));
             const numId = Number(id);
             const found = MOCK_LAWMAKERS.find((l) => l.id === numId);
-            return found || null;
+            return found ? normalizeLawmaker(found) : null;
         }
 
-        try {
-            const data = await apiClient(`/transparencia/parlamentares/${id}`);
-            if (data) {
-                let expensesList = [];
-                try {
-                    const expRes = await apiClient(`/transparencia/despesas`, {
-                        params: { 'parlamentar-id': id },
-                    });
-                    expensesList = expRes?.content ?? (Array.isArray(expRes) ? expRes : []);
-                } catch {
-                    // segue se as despesas não puderem ser consultadas
-                }
+        const [lawmakerRes, expensesRes, billsRes] = await Promise.allSettled([
+            apiClient(`/transparencia/parlamentares/${encodeURIComponent(id)}`),
+            apiClient('/transparencia/despesas', {
+                params: { parliamentarianId: id, size: 200 },
+            }),
+            apiClient('/transparencia/projetos-lei', {
+                params: { authorId: id, size: 50 },
+            }),
+        ]);
 
-                const formattedExpenses = expensesList.map((exp) => ({
-                    title: exp.expenseCategory,
-                    category: exp.expenseCategory,
-                    amount: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(exp.amount),
-                    percentage: Math.min(100, Math.round((Number(exp.amount) / 20000) * 100)),
-                    tone: 'medium',
-                }));
-
-                const fallbackExpenses = [
-                    { title: 'Divulgação da Atividade Parlamentar', amount: 'R$ 12.400,00', percentage: 65, tone: 'high' },
-                    { title: 'Passagens Aéreas e Hospedagem', amount: 'R$ 8.900,00', percentage: 48, tone: 'medium' },
-                    { title: 'Locação de Veículos e Combustíveis', amount: 'R$ 4.500,00', percentage: 25, tone: 'low' },
-                    { title: 'Consultorias e Pesquisas Técnicas', amount: 'R$ 6.200,00', percentage: 32, tone: 'medium' },
-                ];
-
-                const expensesByYear = {
-                    'Quota 2026': formattedExpenses.length > 0 ? formattedExpenses : fallbackExpenses,
-                    'Quota 2025': fallbackExpenses,
-                };
-
-                const defaultVotes = [
-                    {
-                        title: 'Reforma Tributária sobre o Consumo (PEC 45/2019)',
-                        position: 'SIM (Favorável)',
-                        status: 'vote-positive',
-                        description: 'Votação em plenário para unificação e simplificação de tributos sobre o consumo.',
-                    },
-                    {
-                        title: 'Marco Legal da Inteligência Artificial (PL 2338/2023)',
-                        position: 'SIM (Favorável)',
-                        status: 'vote-positive',
-                        description: 'Aprovação de diretrizes de governança e transparência algorítmica para modelos de IA.',
-                    },
-                    {
-                        title: 'Marco Fiscal Sustentável (PLP 93/2023)',
-                        position: 'SIM (Favorável)',
-                        status: 'vote-positive',
-                        description: 'Regime fiscal sustentável e limite de despesas da União.',
-                    },
-                ];
-
-                return normalizeLawmaker({
-                    ...data,
-                    expensesByYear,
-                    quotaExpenses: expensesByYear,
-                    votes: data.votes || defaultVotes,
-                    sessionsCount: data.sessionsCount || '98 sessões deliberativas presenciais',
-                    expensesYearly: data.expensesYearly || 'R$ 32.000 / ano',
-                });
-            }
-        } catch (err) {
-            console.warn(`Falha ao carregar parlamentar ${id} do backend`, err);
+        if (lawmakerRes.status === 'rejected') {
+            if (lawmakerRes.reason?.status === 404) return null;
+            throw lawmakerRes.reason;
         }
 
-        const numId = Number(id);
-        const found = MOCK_LAWMAKERS.find((l) => l.id === numId);
-        return found || null;
+        const data = lawmakerRes.value;
+        if (!data) return null;
+
+        const rawExpenses =
+            expensesRes.status === 'fulfilled'
+                ? expensesRes.value?.content ?? (Array.isArray(expensesRes.value) ? expensesRes.value : [])
+                : [];
+
+        const rawBills =
+            billsRes.status === 'fulfilled'
+                ? billsRes.value?.content ?? (Array.isArray(billsRes.value) ? billsRes.value : [])
+                : [];
+
+        const { expensesByYear, formattedRows, grandTotal } = groupExpensesByYearAndCategory(rawExpenses);
+        const totalExpenses = grandTotal > 0 ? grandTotal : Number(data.totalExpenses || 0);
+        const billsCount = rawBills.length > 0 ? rawBills.length : Number(data.billsCount || 0);
+        const expensesCount = rawExpenses.length > 0 ? rawExpenses.length : Number(data.expensesCount || 0);
+
+        return normalizeLawmaker({
+            ...data,
+            totalExpenses,
+            expensesCount,
+            billsCount,
+            expensesByYear,
+            quotaExpenses: expensesByYear,
+            expenseRecords: formattedRows,
+            bills: rawBills,
+            totalExpensesFormatted: currencyFormatter.format(totalExpenses),
+        });
     },
 
     async getCongressionalStats() {
-        return CONGRESSIONAL_STATS;
+        if (USE_MOCKS) {
+            return CONGRESSIONAL_STATS;
+        }
+
+        const data = await apiClient('/transparencia/resumo');
+        const deputiesCount = Number(data?.deputiesCount || 0);
+        const senatorsCount = Number(data?.senatorsCount || 0);
+        const totalParliamentarians = Number(data?.totalParliamentarians ?? deputiesCount + senatorsCount);
+        const totalExpensesAmount = Number(data?.totalExpensesAmount || 0);
+        const totalExpensesCount = Number(data?.totalExpensesCount || 0);
+        const totalBillsCount = Number(data?.totalBillsCount || 0);
+
+        return {
+            totalParliamentarians,
+            deputiesCount,
+            senatorsCount,
+            totalExpensesAmount,
+            totalExpensesFormatted: currencyFormatter.format(totalExpensesAmount),
+            totalExpensesCount,
+            totalBillsCount,
+        };
     },
 };

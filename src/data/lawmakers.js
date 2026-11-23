@@ -938,7 +938,7 @@ export const UF_OPTIONS = [
     { value: "AM", label: "Amazonas (AM)" },
     { value: "BA", label: "Bahia (BA)" },
     { value: "CE", label: "Ceará (CE)" },
-    { value: "DF", label: "Federal District (DF)" },
+    { value: "DF", label: "Distrito Federal (DF)" },
     { value: "ES", label: "Espírito Santo (ES)" },
     { value: "GO", label: "Goiás (GO)" },
     { value: "MA", label: "Maranhão (MA)" },
@@ -961,65 +961,45 @@ export const UF_OPTIONS = [
     { value: "TO", label: "Tocantins (TO)" },
 ];
 
+export const CHAMBER_OPTIONS = [
+    { value: "", label: "Câmara e Senado" },
+    { value: "CHAMBER_OF_DEPUTIES", label: "Câmara dos Deputados" },
+    { value: "FEDERAL_SENATE", label: "Senado Federal" },
+];
+
 export const PARTY_OPTIONS = [
-    { value: "", label: "All Parties" },
-    { value: "PL", label: "PL — Liberal Party" },
-    { value: "PT", label: "PT — Workers' Party" },
-    { value: "UNIÃO", label: "UNIÃO — Brazil Union" },
-    { value: "PP", label: "PP — Progressives" },
-    { value: "MDB", label: "MDB — Brazilian Democratic Movement" },
-    { value: "PSD", label: "PSD — Social Democratic Party" },
-    { value: "REPUBLICANOS", label: "REPUBLICANOS" },
-    { value: "PSB", label: "PSB — Brazilian Socialist Party" },
-    { value: "PSOL", label: "PSOL — Socialism and Liberty Party" },
-    { value: "PODEMOS", label: "PODEMOS" },
-    { value: "PDT", label: "PDT — Democratic Labor Party" },
+    { value: "", label: "Todos os partidos" },
+    { value: "PL", label: "PL — Partido Liberal" },
+    { value: "PT", label: "PT — Partido dos Trabalhadores" },
+    { value: "UNIÃO", label: "UNIÃO — União Brasil" },
+    { value: "PP", label: "PP — Progressistas" },
+    { value: "MDB", label: "MDB — Movimento Democrático Brasileiro" },
+    { value: "PSD", label: "PSD — Partido Social Democrático" },
+    { value: "REPUBLICANOS", label: "Republicanos" },
+    { value: "PSB", label: "PSB — Partido Socialista Brasileiro" },
+    { value: "PSOL", label: "PSOL — Partido Socialismo e Liberdade" },
+    { value: "PODEMOS", label: "Podemos" },
+    { value: "PDT", label: "PDT — Partido Democrático Trabalhista" },
     { value: "NOVO", label: "NOVO" },
 ];
 
 export const SORT_OPTIONS = [
-    { value: "name_asc", label: "Name (A - Z)" },
-    { value: "name_desc", label: "Name (Z - A)" },
-    { value: "attendance_desc", label: "Highest Attendance" },
-    { value: "bills_desc", label: "Most Bills Proposed" },
-    { value: "expenses_asc", label: "Lowest Spending (CEAP)" },
-    { value: "expenses_desc", label: "Highest Spending (CEAP)" },
+    { value: "name_asc", label: "Nome (A – Z)" },
+    { value: "name_desc", label: "Nome (Z – A)" },
+    { value: "bills_desc", label: "Mais projetos de lei" },
+    { value: "expenses_desc", label: "Maior gasto CEAP" },
+    { value: "expenses_asc", label: "Menor gasto CEAP" },
 ];
 
-export const CONGRESSIONAL_STATS = [
-    {
-        id: "monitored-lawmakers",
-        title: "Monitored Lawmakers",
-        value: "594",
-        footer: "513 Deputies and 81 Senators",
-        trend: "+100% active",
-        highlightColor: "orange",
-    },
-    {
-        id: "total-expenses",
-        title: "Total Spending",
-        value: "R$ 29.2M",
-        footer: "Avg. R$ 49.1k per lawmaker",
-        trend: "-2.4% vs last month",
-        highlightColor: "red",
-    },
-    {
-        id: "average-attendance",
-        title: "Average Attendance",
-        value: "88.4%",
-        footer: "Deliberative floor sessions",
-        trend: "+1.8% attendance",
-        highlightColor: "green",
-    },
-    {
-        id: "bills-proposed",
-        title: "Proposed Bills",
-        value: "1,240",
-        footer: "Bills introduced this year",
-        trend: "84 approved in committees",
-        highlightColor: "blue",
-    },
-];
+export const CONGRESSIONAL_STATS = {
+    totalParliamentarians: 594,
+    deputiesCount: 513,
+    senatorsCount: 81,
+    totalExpensesAmount: 29200000,
+    totalExpensesFormatted: "R$ 29.200.000,00",
+    totalExpensesCount: 0,
+    totalBillsCount: 1240,
+};
 
 export function getLawmakerById(id) {
     const numId = Number(id);
