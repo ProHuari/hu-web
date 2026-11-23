@@ -10,7 +10,7 @@ import {
     RiCheckLine,
     RiDownloadLine,
 } from "react-icons/ri";
-import { lawmakersService } from "../../services/lawmakersService";
+import { lawmakersService } from "../../services/lawmakers-service";
 import { useApp } from "../../context/AppContext";
 import { useToast } from "../../context/useToast";
 import { exportExpensesToCsv } from "../../utils/csvExport";

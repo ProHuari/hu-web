@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ParliamentarianCard from '../parliamentarian-card';
 import { ParliamentarianCardSkeleton } from '../skeleton';
 import EmptyState from '../empty-state';
-import { lawmakersService } from '../../services/lawmakersService';
+import { lawmakersService } from '../../services/lawmakers-service';
 import './style.css';
 
 export default function ParliamentariansGrid({

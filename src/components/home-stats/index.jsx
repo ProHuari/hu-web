@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Card from '../card';
-import { lawmakersService } from '../../services/lawmakersService';
+import { lawmakersService } from '../../services/lawmakers-service';
 import { CONGRESSIONAL_STATS } from '../../data/lawmakers';
 import {
     RiTeamFill,

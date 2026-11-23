@@ -7,7 +7,7 @@ import LawmakerFilters from '../../components/lawmaker-filters';
 import ParliamentarianCard from '../../components/parliamentarian-card';
 import { ParliamentarianCardSkeleton } from '../../components/skeleton';
 import Pagination from '../../components/pagination';
-import { lawmakersService } from '../../services/lawmakersService';
+import { lawmakersService } from '../../services/lawmakers-service';
 import './style.css';
 
 const ITEMS_PER_PAGE = 6;
