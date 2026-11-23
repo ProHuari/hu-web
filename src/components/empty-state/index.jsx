@@ -5,8 +5,8 @@ import './style.css';
 
 export default function EmptyState({
     icon: Icon = RiErrorWarningLine,
-    title = 'No items found',
-    description = 'Try refining your search terms or clearing active filters.',
+    title = 'Nenhum registro encontrado',
+    description = 'Ajuste os termos de busca ou limpe os filtros aplicados.',
     actionText,
     actionLabel,
     onAction,
@@ -17,7 +17,7 @@ export default function EmptyState({
     return (
         <div className={`empty-state-card ${className}`}>
             <div className="empty-state-icon-wrapper">
-                <Icon size={44} />
+                <Icon size={40} />
             </div>
             <h3 className="empty-state-title">{title}</h3>
             {description && <p className="empty-state-desc">{description}</p>}

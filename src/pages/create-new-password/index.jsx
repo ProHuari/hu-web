@@ -6,7 +6,6 @@ import Button from "../../components/button";
 import { authService } from "../../services/auth-service";
 import {
     RiArrowRightLine,
-    RiShieldCheckLine,
     RiErrorWarningLine,
     RiCheckboxCircleLine,
 } from "react-icons/ri";
@@ -15,7 +14,7 @@ import "./style.css";
 export default function CreateNewPassword({ onNavigateToLogin }) {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const resetToken = searchParams.get("token") || "mock-token";
+    const resetToken = searchParams.get("token") || "";
 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,12 +26,17 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
         e.preventDefault();
 
         if (password.length < 8) {
-            setError("Password must contain at least 8 characters.");
+            setError("A senha deve ter no mínimo 8 caracteres.");
             return;
         }
 
         if (password !== confirmPassword) {
-            setError("Passwords do not match.");
+            setError("As senhas não coincidem.");
+            return;
+        }
+
+        if (!resetToken) {
+            setError("Token de redefinição ausente ou expirado. Solicite um novo link.");
             return;
         }
 
@@ -50,7 +54,7 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
                 }
             }, 1500);
         } catch (err) {
-            setError(err.message || "Failed to update password. Token may be expired.");
+            setError(err.message || "Não foi possível redefinir a senha. O link pode ter expirado.");
         } finally {
             setIsLoading(false);
         }
@@ -59,13 +63,9 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
     return (
         <div className="new-password-content">
             <header className="new-password-header">
-                <div className="login-security-pill">
-                    <RiShieldCheckLine size={15} aria-hidden="true" />
-                    <span>Password Security — Huari Platform</span>
-                </div>
-                <h1 className="text-h2-bold">Create New Password</h1>
+                <h1 className="text-h2-bold">Definir nova senha</h1>
                 <p className="text-p-regular">
-                    Choose a strong password containing at least 8 characters to secure your civic account.
+                    Escolha uma senha com pelo menos 8 caracteres para acessar sua conta.
                 </p>
             </header>
 
@@ -92,15 +92,15 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
                     }}
                 >
                     <RiCheckboxCircleLine size={20} aria-hidden="true" />
-                    <span>Password successfully updated! Redirecting to login...</span>
+                    <span>Senha atualizada com sucesso! Redirecionando para o login...</span>
                 </div>
             )}
 
             <form className="new-password-form" onSubmit={handleSubmit} noValidate>
                 <div className="new-password-fields">
                     <PasswordInput
-                        label="New Password"
-                        placeholder="Enter your new password (min. 8 characters)"
+                        label="Nova senha"
+                        placeholder="Mínimo de 8 caracteres"
                         value={password}
                         onChange={(e) => {
                             setPassword(e.target.value);
@@ -110,8 +110,8 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
                     />
 
                     <PasswordInput
-                        label="Confirm New Password"
-                        placeholder="Re-enter your new password"
+                        label="Confirmar nova senha"
+                        placeholder="Repita a nova senha"
                         value={confirmPassword}
                         onChange={(e) => {
                             setConfirmPassword(e.target.value);
@@ -122,7 +122,7 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
                 </div>
 
                 <Button
-                    title={isLoading ? "Updating..." : "Reset Password"}
+                    title={isLoading ? "Atualizando..." : "Salvar nova senha"}
                     icon={<RiArrowRightLine size={18} />}
                     identifier="btn-primary btn-radius-40 new-password-submit"
                     type="submit"
@@ -132,25 +132,25 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
 
             <div className="new-password-divider">
                 <span />
-                <p>OR</p>
+                <p>OU</p>
                 <span />
             </div>
 
             <p className="new-password-back text-p-small-regular">
-                Return to{" "}
+                Voltar para{" "}
                 <Link
                     to="/login"
                     className="new-password-link"
                     onClick={onNavigateToLogin}
                 >
-                    Sign In
+                    Entrar na conta
                 </Link>
             </p>
 
             <footer className="new-password-footer">
-                <a href="#privacy">Privacy Policy</a>
-                <a href="#terms">Terms of Service</a>
-                <a href="#methodology">Open Methodology</a>
+                <a href="#privacidade">Privacidade</a>
+                <a href="#termos">Termos</a>
+                <a href="#metodologia">Metodologia</a>
             </footer>
         </div>
     );

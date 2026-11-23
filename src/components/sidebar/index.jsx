@@ -21,15 +21,15 @@ import {
 import './style.css';
 
 const MENU_ITEMS = [
-    { label: 'Dashboard', path: '/dashboard', icon: RiHome4Line },
-    { label: 'Lawmakers', path: '/lawmakers', icon: RiGovernmentLine },
-    { label: 'Learn', path: '/learn', icon: RiBookOpenLine },
-    { label: 'Chat Huari', path: '/chat', icon: RiChatSmile3Line, badge: 'AI' },
+    { label: 'Início', path: '/dashboard', icon: RiHome4Line },
+    { label: 'Parlamentares', path: '/lawmakers', icon: RiGovernmentLine },
+    { label: 'Trilhas', path: '/learn', icon: RiBookOpenLine },
+    { label: 'Huari IA', path: '/chat', icon: RiChatSmile3Line },
 ];
 
 const ADMIN_ITEMS = [
-    { label: 'Manage Courses', path: '/admin/courses', icon: RiShieldStarLine },
-    { label: 'New Course', path: '/admin/courses/new', icon: RiAddCircleLine },
+    { label: 'Gerenciar trilhas', path: '/admin/courses', icon: RiShieldStarLine },
+    { label: 'Nova trilha', path: '/admin/courses/new', icon: RiAddCircleLine },
 ];
 
 export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
@@ -63,38 +63,34 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
             <aside
                 className={`sidebar ${isOpen ? 'sidebar-open' : 'sidebar-closed'} ${isMobileOpen ? 'sidebar-mobile-visible' : ''
                     }`}
-                aria-label="Main Navigation"
+                aria-label="Navegação principal"
             >
-                {/* Header Controls: Toggle Collapse (desktop) & Close Drawer (mobile) */}
                 <div className="sidebar-header-controls">
-                    {/* Mobile close button */}
                     <button
                         type="button"
                         className="sidebar-mobile-close-btn"
                         onClick={onCloseMobile}
-                        aria-label="Close navigation menu"
+                        aria-label="Fechar menu de navegação"
                     >
                         <RiCloseLine size={24} />
                     </button>
 
-                    {/* Desktop collapse toggle */}
                     <button
                         type="button"
                         className="sidebar-toggle"
                         onClick={() => setIsOpen((prev) => !prev)}
-                        aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+                        aria-label={isOpen ? 'Recolher menu lateral' : 'Expandir menu lateral'}
                         aria-expanded={isOpen}
                     >
                         {isOpen ? <RiArrowLeftSLine size={20} /> : <RiArrowRightSLine size={20} />}
                     </button>
                 </div>
 
-                {/* Brand / Logo */}
                 <NavLink
                     to="/dashboard"
                     className="sidebar-brand-link"
                     onClick={handleItemClick}
-                    title="Huari — Civic Intelligence"
+                    title="Huari — Transparência Cívica"
                 >
                     <div className="sidebar-brand">
                         <img src={logoHuari} alt="Huari Logo" className="sidebar-brand-img" />
@@ -102,23 +98,22 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
                             <div className="sidebar-brand-text">
                                 <h2 className="sidebar-brand-title">HUARI</h2>
                                 <p className="sidebar-brand-subtitle">
-                                    Transparency &amp; Citizenship
+                                    Dados Públicos &amp; Cidadania
                                 </p>
                             </div>
                         )}
                     </div>
                 </NavLink>
 
-                {/* User Profile Card */}
                 <NavLink
                     to="/profile"
                     className="sidebar-user-link"
                     onClick={handleItemClick}
-                    title={!isOpen ? user.name : undefined}
+                    title={!isOpen ? user?.name : undefined}
                 >
                     <div className="sidebar-user">
                         <div className="sidebar-user-avatar">
-                            {user.avatar ? (
+                            {user?.avatar ? (
                                 <img
                                     src={user.avatar}
                                     alt={user.name}
@@ -137,15 +132,15 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
                         {isOpen && (
                             <div className="sidebar-user-info">
                                 <div className="sidebar-user-name-row">
-                                    <strong className="sidebar-user-name" title={user.name}>
-                                        {user.name}
+                                    <strong className="sidebar-user-name" title={user?.name}>
+                                        {user?.name || 'Visitante'}
                                     </strong>
                                     {isAdmin && (
                                         <span className="sidebar-role-badge">Admin</span>
                                     )}
                                 </div>
-                                <span className="sidebar-user-email" title={user.email}>
-                                    {user.email}
+                                <span className="sidebar-user-email" title={user?.email}>
+                                    {user?.email || ''}
                                 </span>
                             </div>
                         )}
@@ -154,15 +149,14 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
 
                 <div className="sidebar-divider" />
 
-                {/* Navigation Links */}
-                <nav className="sidebar-navigation" aria-label="Primary Navigation">
+                <nav className="sidebar-navigation" aria-label="Menu principal">
                     {isOpen && (
                         <span className="sidebar-section-title">
-                            Main Menu
+                            Menu principal
                         </span>
                     )}
 
-                    {MENU_ITEMS.map(({ label, path, icon: Icon, badge }) => (
+                    {MENU_ITEMS.map(({ label, path, icon: Icon }) => (
                         <NavLink
                             key={label}
                             to={path}
@@ -183,9 +177,6 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
                                     )}
                                     <Icon className="sidebar-item-icon" size={20} />
                                     {isOpen && <span className="sidebar-item-label">{label}</span>}
-                                    {isOpen && badge && (
-                                        <span className="sidebar-badge">{badge}</span>
-                                    )}
                                 </>
                             )}
                         </NavLink>
@@ -195,7 +186,7 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
                         <>
                             {isOpen && (
                                 <span className="sidebar-section-title" style={{ marginTop: '12px' }}>
-                                    Admin Studio
+                                    Administração
                                 </span>
                             )}
                             {ADMIN_ITEMS.map(({ label, path, icon: Icon }) => (
@@ -228,7 +219,6 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
                     )}
                 </nav>
 
-                {/* Bottom Actions: Settings & Logout */}
                 <div className="sidebar-bottom">
                     <NavLink
                         to="/profile"
@@ -236,20 +226,20 @@ export default function SideBar({ isMobileOpen = false, onCloseMobile }) {
                             `sidebar-item ${isActive ? 'is-active' : ''}`
                         }
                         onClick={handleItemClick}
-                        title={!isOpen ? 'Settings' : undefined}
+                        title={!isOpen ? 'Configurações' : undefined}
                     >
                         <RiSettings3Line className="sidebar-item-icon" size={20} />
-                        {isOpen && <span className="sidebar-item-label">Settings</span>}
+                        {isOpen && <span className="sidebar-item-label">Configurações</span>}
                     </NavLink>
 
                     <button
                         type="button"
                         className="sidebar-item sidebar-logout-btn"
                         onClick={handleLogout}
-                        title={!isOpen ? 'Log Out' : undefined}
+                        title={!isOpen ? 'Sair' : undefined}
                     >
                         <RiShutDownLine className="sidebar-item-icon" size={20} />
-                        {isOpen && <span className="sidebar-item-label">Log Out</span>}
+                        {isOpen && <span className="sidebar-item-label">Sair</span>}
                     </button>
                 </div>
             </aside>

@@ -10,21 +10,29 @@ import {
 import { useApp } from "../../context/AppContext";
 import "./style.css";
 
+const ROLE_LABELS = {
+    ADMIN: "Administrador",
+    ADMINISTRATOR: "Administrador",
+    STUDENT: "Cidadão",
+};
+
 export default function UserProfileHeader({ user: propUser, onEditAvatar }) {
     const { user: contextUser } = useApp() || {};
     const user = propUser || contextUser;
 
     const initials = user?.name
         ? user.name
-            .split(" ")
-            .map((n) => n[0])
-            .slice(0, 2)
-            .join("")
-            .toUpperCase()
-        : "CA";
+              .split(" ")
+              .map((n) => n[0])
+              .slice(0, 2)
+              .join("")
+              .toUpperCase()
+        : "HU";
+
+    const roleLabel = ROLE_LABELS[String(user?.role || "").toUpperCase()] || "Cidadão";
 
     return (
-        <section className="user-profile-header-card" aria-label="User Profile Overview">
+        <section className="user-profile-header-card" aria-label="Resumo do perfil">
             <div className="user-profile-avatar-wrapper">
                 {user?.avatar ? (
                     <img
@@ -47,8 +55,8 @@ export default function UserProfileHeader({ user: propUser, onEditAvatar }) {
                     type="button"
                     className="user-avatar-edit-btn"
                     onClick={onEditAvatar}
-                    title="Change profile picture"
-                    aria-label="Change profile picture"
+                    title="Alterar foto de perfil"
+                    aria-label="Alterar foto de perfil"
                 >
                     <RiCameraLine size={16} />
                 </button>
@@ -56,33 +64,38 @@ export default function UserProfileHeader({ user: propUser, onEditAvatar }) {
 
             <div className="user-profile-info-block">
                 <div className="user-profile-name-row">
-                    <h1 className="user-profile-name">{user?.name || "Carlos Oliveira"}</h1>
+                    <h1 className="user-profile-name">{user?.name || "Conta Huari"}</h1>
                     <div className="user-profile-badges">
-                        <span className="user-role-badge">{user?.role || "Citizen Auditor"}</span>
-                        <span className="user-status-badge">
-                            <RiShieldCheckLine size={13} />
-                            Verified Account
-                        </span>
+                        <span className="user-role-badge">{roleLabel}</span>
+                        {user?.verified && (
+                            <span className="user-status-badge">
+                                <RiShieldCheckLine size={13} />
+                                Conta verificada
+                            </span>
+                        )}
                     </div>
                 </div>
 
                 <p className="user-profile-bio">
-                    {user?.bio ||
-                        "Citizen auditor passionate about public policy analysis, congressional fiscal oversight, and active civic participation."}
+                    {user?.bio || "Sem descrição cadastrada. Edite seus interesses cívicos abaixo."}
                 </p>
 
                 <div className="user-profile-meta-row">
-                    <span className="user-meta-item">
-                        <RiMailLine size={15} />
-                        {user?.email || "carlos.oliveira@huari.org"}
-                    </span>
-                    <span className="user-meta-item">
-                        <RiMapPinLine size={15} />
-                        {user?.state || "São Paulo, SP"}
-                    </span>
+                    {user?.email && (
+                        <span className="user-meta-item">
+                            <RiMailLine size={15} />
+                            {user.email}
+                        </span>
+                    )}
+                    {user?.state && (
+                        <span className="user-meta-item">
+                            <RiMapPinLine size={15} />
+                            {user.city ? `${user.city}, ${user.state}` : user.state}
+                        </span>
+                    )}
                     <span className="user-meta-item">
                         <RiCalendarCheckLine size={15} />
-                        Member since {user?.memberSince || "October 2026"}
+                        Membro desde {user?.memberSince || "2026"}
                     </span>
                 </div>
             </div>
@@ -97,7 +110,9 @@ UserProfileHeader.propTypes = {
         avatar: PropTypes.string,
         role: PropTypes.string,
         bio: PropTypes.string,
+        city: PropTypes.string,
         state: PropTypes.string,
+        verified: PropTypes.bool,
         memberSince: PropTypes.string,
     }),
     onEditAvatar: PropTypes.func,

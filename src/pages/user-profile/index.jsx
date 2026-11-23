@@ -17,7 +17,7 @@ export default function UserProfile() {
     const handleSaveUserData = (updatedData) => {
         if (updateUser) {
             updateUser(updatedData);
-            toast.success("Profile settings updated.");
+            toast.success("Dados do perfil atualizados.");
         }
     };
 
@@ -33,11 +33,11 @@ export default function UserProfile() {
             const result = await userService.uploadAvatar(file);
             if (result.avatarUrl && updateUser) {
                 updateUser({ avatar: result.avatarUrl });
-                toast.success("Profile picture updated.");
+                toast.success("Foto de perfil atualizada.");
             }
         } catch (err) {
-            console.error("Avatar upload failed", err);
-            toast.error("Could not upload profile picture. Please try again.");
+            console.error("Falha ao enviar foto", err);
+            toast.error("Não foi possível atualizar a foto de perfil.");
         }
     };
 
@@ -54,7 +54,7 @@ export default function UserProfile() {
 
             <Link to="/dashboard" className="user-profile-back-link">
                 <RiArrowLeftLine size={18} aria-hidden="true" />
-                <span>Back to Strategic Dashboard</span>
+                <span>Voltar ao início</span>
             </Link>
 
             <UserProfileHeader

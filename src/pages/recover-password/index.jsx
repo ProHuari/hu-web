@@ -1,17 +1,18 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputText from "../../components/input-text";
 import Button from "../../components/button";
 import { authService } from "../../services/auth-service";
 import {
     RiMailLine,
     RiArrowRightLine,
-    RiShieldCheckLine,
     RiCheckboxCircleLine,
     RiErrorWarningLine,
 } from "react-icons/ri";
 import "./style.css";
+
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
 export default function RecoverPassword({
     onNavigateToLogin,
@@ -28,7 +29,7 @@ export default function RecoverPassword({
         setError("");
 
         if (!email.trim() || !email.includes("@")) {
-            setError("Please enter a valid email address.");
+            setError("Informe um e-mail válido.");
             return;
         }
 
@@ -36,15 +37,17 @@ export default function RecoverPassword({
         try {
             await authService.requestPasswordReset(email);
             setIsSubmitted(true);
-            setTimeout(() => {
-                if (onNavigateToCreateNewPassword) {
-                    onNavigateToCreateNewPassword();
-                } else {
-                    navigate("/create-new-password?token=mock-reset-token-demo");
-                }
-            }, 1500);
+            if (USE_MOCKS) {
+                setTimeout(() => {
+                    if (onNavigateToCreateNewPassword) {
+                        onNavigateToCreateNewPassword();
+                    } else {
+                        navigate("/create-new-password?token=demo-reset-token");
+                    }
+                }, 1500);
+            }
         } catch (err) {
-            setError(err.message || "Failed to dispatch reset instructions.");
+            setError(err.message || "Não foi possível enviar as instruções de recuperação.");
         } finally {
             setIsLoading(false);
         }
@@ -53,13 +56,9 @@ export default function RecoverPassword({
     return (
         <div className="recover-password-content">
             <header className="recover-password-header">
-                <div className="login-security-pill">
-                    <RiShieldCheckLine size={15} aria-hidden="true" />
-                    <span>Account Recovery — Huari Civic Platform</span>
-                </div>
-                <h1 className="text-h2-bold">Reset Your Password</h1>
+                <h1 className="text-h2-bold">Recuperar senha</h1>
                 <p className="text-p-regular">
-                    Enter your registered email address. We will send you instructions to create a new password.
+                    Informe o e-mail cadastrado na plataforma para receber as instruções de redefinição.
                 </p>
             </header>
 
@@ -86,7 +85,9 @@ export default function RecoverPassword({
                     }}
                 >
                     <RiCheckboxCircleLine size={20} aria-hidden="true" />
-                    <span>Instructions sent! Redirecting to password reset...</span>
+                    <span>
+                        Se o e-mail estiver cadastrado, você receberá um link para criar uma nova senha.
+                    </span>
                 </div>
             )}
 
@@ -94,9 +95,9 @@ export default function RecoverPassword({
                 <div className="recover-password-fields">
                     <InputText
                         identifier="input-default"
-                        label="Registered Email Address"
+                        label="E-mail cadastrado"
                         type="email"
-                        placeholder="yourname@domain.com"
+                        placeholder="voce@exemplo.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         iconLeft={<RiMailLine />}
@@ -105,7 +106,7 @@ export default function RecoverPassword({
                 </div>
 
                 <Button
-                    title={isLoading ? "Sending..." : "Send Reset Link"}
+                    title={isLoading ? "Enviando..." : "Enviar instruções"}
                     icon={<RiArrowRightLine size={18} />}
                     identifier="btn-primary btn-radius-40 recover-password-submit"
                     type="submit"
@@ -115,25 +116,25 @@ export default function RecoverPassword({
 
             <div className="recover-password-divider">
                 <span />
-                <p>OR</p>
+                <p>OU</p>
                 <span />
             </div>
 
             <p className="recover-password-back text-p-small-regular">
-                Return to{" "}
+                Voltar para{" "}
                 <Link
                     to="/login"
                     className="recover-password-link"
                     onClick={onNavigateToLogin}
                 >
-                    Sign In
+                    Entrar na conta
                 </Link>
             </p>
 
             <footer className="recover-password-footer">
-                <a href="#privacy">Privacy Policy</a>
-                <a href="#terms">Terms of Service</a>
-                <a href="#methodology">Open Methodology</a>
+                <a href="#privacidade">Privacidade</a>
+                <a href="#termos">Termos</a>
+                <a href="#metodologia">Metodologia</a>
             </footer>
         </div>
     );

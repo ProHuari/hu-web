@@ -11,8 +11,8 @@ export default function WebsiteInformation({ backgroundImage }) {
             style={{
                 backgroundImage: `
                     linear-gradient(
-                        rgba(0, 0, 0, 0.55),
-                        rgba(0, 0, 0, 0.55)
+                        rgba(0, 0, 0, 0.58),
+                        rgba(0, 0, 0, 0.58)
                     ),
                     url(${backgroundImage})
                 `,
@@ -25,29 +25,7 @@ export default function WebsiteInformation({ backgroundImage }) {
                     <div className="brand-info">
                         <h2 className="text-h2-bold">Huari</h2>
                         <p className="text-p-regular">
-                            Civic Intelligence
-                        </p>
-                    </div>
-                </div>
-
-                <div className="trust-indicators">
-                    <div className="trust-indicator">
-                        <span
-                            className="status-indicator"
-                            aria-hidden="true"
-                        />
-                        <p className="text-p-small-regular">
-                            Official Open Data
-                        </p>
-                    </div>
-
-                    <div className="trust-indicator">
-                        <span
-                            className="status-indicator"
-                            aria-hidden="true"
-                        />
-                        <p className="text-p-small-regular">
-                            Real-Time Auditing
+                            Transparência &amp; Cidadania
                         </p>
                     </div>
                 </div>
@@ -55,48 +33,43 @@ export default function WebsiteInformation({ backgroundImage }) {
 
             <main className="hero-content">
                 <div className="hero-badge">
-                    <RiShieldKeyholeLine
-                        aria-hidden="true"
-                        size={16}
-                    />
-
+                    <RiShieldKeyholeLine aria-hidden="true" size={16} />
                     <p className="text-p-small-bold">
-                        Open-Source Democracy
+                        Controle social com dados abertos
                     </p>
                 </div>
 
                 <h1 className="text-h1-bold">
-                    Political transparency, oversight, and active citizenship.
+                    Acompanhe mandatos e contas públicas sem juridiquês.
                 </h1>
 
                 <p className="text-p-regular">
-                    Track public spending in real time, audit parliamentary contracts,
-                    and understand government decisions with open, accessible data.
+                    Consulte reembolsos da Cota Parlamentar, projetos de lei em tramitação e cursos práticos sobre como o orçamento público funciona.
                 </p>
             </main>
 
             <footer
                 className="hero-footer"
-                aria-label="Platform Key Metrics"
+                aria-label="Estrutura do Congresso Nacional"
             >
                 <div className="stat-item">
-                    <h2 className="text-h2-bold">R$ 4.2B</h2>
+                    <h2 className="text-h2-bold">513</h2>
                     <p className="text-p-small-regular">
-                        Monitored spending
+                        Deputados federais
                     </p>
                 </div>
 
                 <div className="stat-item stat-item--featured">
-                    <h2 className="text-h2-bold">594</h2>
+                    <h2 className="text-h2-bold">81</h2>
                     <p className="text-p-small-regular">
-                        Monitored lawmakers
+                        Senadores
                     </p>
                 </div>
 
                 <div className="stat-item">
                     <h2 className="text-h2-bold">27</h2>
                     <p className="text-p-small-regular">
-                        States covered
+                        Unidades federativas
                     </p>
                 </div>
             </footer>
@@ -105,5 +78,5 @@ export default function WebsiteInformation({ backgroundImage }) {
 }
 
 WebsiteInformation.propTypes = {
-    backgroundImage: PropTypes.string,
+    backgroundImage: PropTypes.string.isRequired,
 };

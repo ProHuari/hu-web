@@ -6,10 +6,10 @@ import './style.css';
 
 export default function ConfirmModal({
     isOpen,
-    title = 'Confirm action',
+    title = 'Confirmar ação',
     description,
-    confirmText = 'Confirm',
-    cancelText = 'Cancel',
+    confirmText = 'Confirmar',
+    cancelText = 'Cancelar',
     variant = 'danger',
     isLoading = false,
     onConfirm,
@@ -63,7 +63,7 @@ export default function ConfirmModal({
                                 className="huari-modal-close"
                                 onClick={onCancel}
                                 disabled={isLoading}
-                                aria-label="Close modal"
+                                aria-label="Fechar janela"
                             >
                                 <RiCloseLine size={20} />
                             </button>
@@ -90,7 +90,7 @@ export default function ConfirmModal({
                                 onClick={onConfirm}
                                 disabled={isLoading}
                             >
-                                {isLoading ? 'Processing...' : confirmText}
+                                {isLoading ? 'Processando...' : confirmText}
                             </button>
                         </div>
                     </motion.div>
@@ -106,9 +106,8 @@ ConfirmModal.propTypes = {
     description: PropTypes.string,
     confirmText: PropTypes.string,
     cancelText: PropTypes.string,
-    variant: PropTypes.oneOf(['danger', 'primary']),
+    variant: PropTypes.oneOf(['danger', 'warning', 'info']),
     isLoading: PropTypes.bool,
     onConfirm: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
 };
-

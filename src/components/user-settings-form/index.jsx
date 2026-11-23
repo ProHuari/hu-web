@@ -17,12 +17,14 @@ import {
 import { useApp } from "../../context/AppContext";
 import { UF_OPTIONS } from "../../data/lawmakers";
 import { userService } from "../../services/user-service";
+import { useToast } from "../../context/useToast";
 import PasswordInput from "../password-input";
 import Badge from "../badge";
 import Avatar from "../avatar";
 import "./style.css";
 
 export default function UserSettingsForm({ initialData = {}, onSave }) {
+    const toast = useToast();
     const {
         user = {},
         updateUser,
@@ -34,11 +36,11 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
 
     const [activeTab, setActiveTab] = useState("profile");
     const [savedSuccess, setSavedSuccess] = useState(false);
+    const [profileError, setProfileError] = useState("");
     const [passwordSaved, setPasswordSaved] = useState(false);
     const [passwordError, setPasswordError] = useState("");
     const [isSavingPassword, setIsSavingPassword] = useState(false);
 
-    // Bookmarked lawmakers list from backend
     const [savedLawmakers, setSavedLawmakers] = useState([]);
     const [bookmarksLoaded, setBookmarksLoaded] = useState(false);
 
@@ -46,14 +48,15 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
         if (activeTab === "bookmarks") {
             let isMounted = true;
 
-            userService.getBookmarkedLawmakers()
+            userService
+                .getBookmarkedLawmakers(bookmarkedLawmakerIds)
                 .then((lawmakersList) => {
                     if (isMounted && Array.isArray(lawmakersList)) {
                         setSavedLawmakers(lawmakersList);
                     }
                 })
                 .catch((err) => {
-                    console.error("Failed to load bookmarked lawmakers", err);
+                    console.error("Falha ao carregar parlamentares salvos", err);
                 })
                 .finally(() => {
                     if (isMounted) {
@@ -65,20 +68,19 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                 isMounted = false;
             };
         }
+        return undefined;
     }, [activeTab, bookmarkedLawmakerIds]);
 
     const isLoadingBookmarks = activeTab === "bookmarks" && !bookmarksLoaded;
 
-    // Form data state initialized from authenticated user
     const [formData, setFormData] = useState({
         name: user?.name || initialData?.name || "",
         email: user?.email || initialData?.email || "",
         phone: user?.phone || initialData?.phone || "",
-        state: user?.state || initialData?.state || "SP",
+        state: user?.state || initialData?.state || "DF",
         bio: user?.bio || initialData?.bio || "",
     });
 
-    // Password fields
     const [passwords, setPasswords] = useState({
         currentPassword: "",
         newPassword: "",
@@ -87,6 +89,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
 
     const handleInputChange = (field, value) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
+        setProfileError("");
     };
 
     const handlePasswordChange = (field, value) => {
@@ -96,6 +99,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+        setProfileError("");
         try {
             await userService.updateProfile(formData);
             if (updateUser) {
@@ -105,7 +109,10 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
             setSavedSuccess(true);
             setTimeout(() => setSavedSuccess(false), 2500);
         } catch (err) {
-            console.error("Failed to update profile", err);
+            console.error("Falha ao atualizar perfil", err);
+            const msg = err?.message || "Não foi possível salvar os dados agora.";
+            setProfileError(msg);
+            toast?.error?.(msg);
         }
     };
 
@@ -114,12 +121,12 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
         setPasswordError("");
 
         if (passwords.newPassword.length < 8) {
-            setPasswordError("New password must be at least 8 characters long.");
+            setPasswordError("A nova senha deve ter pelo menos 8 caracteres.");
             return;
         }
 
         if (passwords.newPassword !== passwords.confirmPassword) {
-            setPasswordError("New passwords do not match.");
+            setPasswordError("As senhas informadas não coincidem.");
             return;
         }
 
@@ -133,7 +140,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
             setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" });
             setTimeout(() => setPasswordSaved(false), 3000);
         } catch (err) {
-            setPasswordError(err.message || "Failed to update password.");
+            setPasswordError(err.message || "Não foi possível atualizar a senha.");
         } finally {
             setIsSavingPassword(false);
         }
@@ -146,11 +153,10 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
         setSavedLawmakers((prev) => prev.filter((l) => Number(l.id) !== Number(lawmakerId)));
     };
 
-    const displayBookmarkCount = Math.max(savedLawmakers.length, bookmarkedLawmakerIds.length);
+    const displayBookmarkCount = bookmarkedLawmakerIds.length || savedLawmakers.length;
 
     return (
-        <section className="user-settings-card" aria-label="Account and Preference Settings">
-            {/* Tab navigation */}
+        <section className="user-settings-card" aria-label="Configurações da conta">
             <div className="user-settings-tabs" role="tablist">
                 <button
                     type="button"
@@ -160,7 +166,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                     onClick={() => setActiveTab("profile")}
                 >
                     <RiUserLine size={18} aria-hidden="true" />
-                    <span>Personal Details</span>
+                    <span>Dados pessoais</span>
                 </button>
 
                 <button
@@ -171,7 +177,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                     onClick={() => setActiveTab("bookmarks")}
                 >
                     <RiBookmarkLine size={18} aria-hidden="true" />
-                    <span>Saved Lawmakers ({displayBookmarkCount})</span>
+                    <span>Parlamentares salvos ({displayBookmarkCount})</span>
                 </button>
 
                 <button
@@ -182,7 +188,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                     onClick={() => setActiveTab("notifications")}
                 >
                     <RiNotification3Line size={18} aria-hidden="true" />
-                    <span>Notifications &amp; Alerts</span>
+                    <span>Notificações</span>
                 </button>
 
                 <button
@@ -193,16 +199,22 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                     onClick={() => setActiveTab("security")}
                 >
                     <RiLockLine size={18} aria-hidden="true" />
-                    <span>Security &amp; Password</span>
+                    <span>Segurança e senha</span>
                 </button>
             </div>
 
-            {/* Tab: Personal Details */}
             {activeTab === "profile" && (
                 <form className="settings-form-panel" onSubmit={handleFormSubmit}>
+                    {profileError && (
+                        <div className="login-alert-error" role="alert" style={{ marginBottom: "16px" }}>
+                            <RiErrorWarningLine size={18} />
+                            <span>{profileError}</span>
+                        </div>
+                    )}
+
                     <div className="settings-form-grid">
                         <div className="form-field-group">
-                            <label className="field-label">Full Name</label>
+                            <label className="field-label">Nome completo</label>
                             <input
                                 type="text"
                                 className="field-input"
@@ -213,7 +225,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                         </div>
 
                         <div className="form-field-group">
-                            <label className="field-label">Registered Email</label>
+                            <label className="field-label">E-mail cadastrado</label>
                             <input
                                 type="email"
                                 className="field-input"
@@ -224,17 +236,18 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                         </div>
 
                         <div className="form-field-group">
-                            <label className="field-label">Phone / WhatsApp</label>
+                            <label className="field-label">Telefone / WhatsApp</label>
                             <input
                                 type="tel"
                                 className="field-input"
                                 value={formData.phone}
                                 onChange={(e) => handleInputChange("phone", e.target.value)}
+                                placeholder="(opcional)"
                             />
                         </div>
 
                         <div className="form-field-group">
-                            <label className="field-label">Primary State of Interest</label>
+                            <label className="field-label">Estado de acompanhamento</label>
                             <select
                                 className="field-select"
                                 value={formData.state}
@@ -250,39 +263,36 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                     </div>
 
                     <div className="form-field-group full-width">
-                        <label className="field-label">Bio / Civic Interests</label>
+                        <label className="field-label">Temas e interesses cívicos</label>
                         <textarea
                             className="field-textarea"
                             rows={3}
                             value={formData.bio}
                             onChange={(e) => handleInputChange("bio", e.target.value)}
+                            placeholder="Ex.: educação básica, orçamento municipal, controle de gastos públicos..."
                         />
-                        <span className="field-hint">
-                            Helps personalize suggested bills, voting alerts, and oversight reports.
-                        </span>
                     </div>
 
                     <div className="settings-form-footer">
                         {savedSuccess && (
                             <span className="save-success-msg">
                                 <RiCheckLine size={18} aria-hidden="true" />
-                                Information updated successfully!
+                                Informações atualizadas.
                             </span>
                         )}
                         <button type="submit" className="btn-save-settings">
                             <RiSave3Line size={18} aria-hidden="true" />
-                            <span>Save Changes</span>
+                            <span>Salvar alterações</span>
                         </button>
                     </div>
                 </form>
             )}
 
-            {/* Tab: Saved Lawmakers */}
             {activeTab === "bookmarks" && (
                 <div className="settings-saved-panel">
                     <div className="saved-panel-header">
-                        <h3>Followed Lawmakers</h3>
-                        <p>Receive weekly voting alerts and CEAP expense audit digests for these representatives.</p>
+                        <h3>Parlamentares acompanhados</h3>
+                        <p>Acesso rápido aos perfis salvos para consulta de despesas e proposições.</p>
                     </div>
 
                     {isLoadingBookmarks && savedLawmakers.length === 0 ? (
@@ -298,14 +308,14 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                             }}
                         >
                             <div className="loading-spinner" />
-                            <p style={{ color: "var(--color-text-muted)" }}>Loading saved lawmakers...</p>
+                            <p style={{ color: "var(--color-text-muted)" }}>Carregando parlamentares salvos...</p>
                         </div>
                     ) : savedLawmakers.length === 0 ? (
                         <div className="empty-bookmarks">
                             <RiBookmarkLine size={36} aria-hidden="true" />
-                            <p>You are not currently following any lawmakers.</p>
+                            <p>Você ainda não salvou nenhum parlamentar.</p>
                             <Link to="/lawmakers" className="btn-save-settings" style={{ textDecoration: "none" }}>
-                                Explore Lawmakers Directory
+                                Ver diretório de parlamentares
                             </Link>
                         </div>
                     ) : (
@@ -331,7 +341,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                                         <Link
                                             to={`/lawmakers/${lawmaker.id}`}
                                             className="btn-view-profile"
-                                            title="View Lawmaker Profile"
+                                            title="Ver mandato"
                                             style={{
                                                 display: "inline-flex",
                                                 alignItems: "center",
@@ -346,7 +356,7 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                                                 textDecoration: "none",
                                             }}
                                         >
-                                            <span>Profile</span>
+                                            <span>Ver perfil</span>
                                             <RiExternalLinkLine size={14} />
                                         </Link>
 
@@ -354,10 +364,10 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                                             type="button"
                                             className="btn-remove-bookmark"
                                             onClick={() => handleRemoveBookmark(lawmaker.id)}
-                                            title="Unfollow lawmaker"
+                                            title="Remover dos salvos"
                                         >
                                             <RiDeleteBinLine size={16} aria-hidden="true" />
-                                            <span>Remove</span>
+                                            <span>Remover</span>
                                         </button>
                                     </div>
                                 </div>
@@ -367,19 +377,18 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                 </div>
             )}
 
-            {/* Tab: Notifications */}
             {activeTab === "notifications" && (
                 <div className="settings-notifications-panel">
                     <div className="notification-row">
                         <div className="notification-text">
-                            <strong>Real-Time Floor Voting Alerts</strong>
-                            <p>Receive notifications when followed lawmakers cast roll-call votes.</p>
+                            <strong>Alertas de votações e projetos</strong>
+                            <p>Notificações quando houver novas proposições vinculadas aos mandatos acompanhados.</p>
                         </div>
                         <button
                             type="button"
                             className="toggle-btn"
                             onClick={() => toggleNotification?.("votingAlerts")}
-                            aria-label="Toggle voting alerts"
+                            aria-label="Alternar alertas de votações"
                         >
                             {notifications?.votingAlerts ? (
                                 <RiToggleFill size={36} className="toggle-active" />
@@ -391,14 +400,14 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
 
                     <div className="notification-row">
                         <div className="notification-text">
-                            <strong>Monthly Parliamentary Quota (CEAP) Audit</strong>
-                            <p>Receive an email summary when audited expense receipts are published.</p>
+                            <strong>Demonstrativo mensal da Cota Parlamentar</strong>
+                            <p>Avisos sobre novos registros de despesas da CEAP na base pública.</p>
                         </div>
                         <button
                             type="button"
                             className="toggle-btn"
                             onClick={() => toggleNotification?.("emailAlerts")}
-                            aria-label="Toggle email alerts"
+                            aria-label="Alternar avisos de despesas"
                         >
                             {notifications?.emailAlerts ? (
                                 <RiToggleFill size={36} className="toggle-active" />
@@ -410,14 +419,14 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
 
                     <div className="notification-row">
                         <div className="notification-text">
-                            <strong>Weekly Civic Academy Digest</strong>
-                            <p>Stay informed about new courses, infographics, and policy breakdowns.</p>
+                            <strong>Novas trilhas da Academia Cívica</strong>
+                            <p>Comunicados quando novos módulos e aulas estiverem disponíveis.</p>
                         </div>
                         <button
                             type="button"
                             className="toggle-btn"
                             onClick={() => toggleNotification?.("weeklyDigest")}
-                            aria-label="Toggle weekly digest"
+                            aria-label="Alternar novidades da academia"
                         >
                             {notifications?.weeklyDigest ? (
                                 <RiToggleFill size={36} className="toggle-active" />
@@ -429,7 +438,6 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                 </div>
             )}
 
-            {/* Tab: Security */}
             {activeTab === "security" && (
                 <form className="settings-security-panel" onSubmit={handlePasswordSubmit}>
                     {passwordError && (
@@ -440,26 +448,26 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                     )}
 
                     <PasswordInput
-                        label="Current Password"
+                        label="Senha atual"
                         value={passwords.currentPassword}
                         onChange={(e) => handlePasswordChange("currentPassword", e.target.value)}
-                        placeholder="Enter your current password"
+                        placeholder="Digite sua senha atual"
                         required
                     />
 
                     <PasswordInput
-                        label="New Password"
+                        label="Nova senha"
                         value={passwords.newPassword}
                         onChange={(e) => handlePasswordChange("newPassword", e.target.value)}
-                        placeholder="Minimum 8 characters"
+                        placeholder="Mínimo de 8 caracteres"
                         required
                     />
 
                     <PasswordInput
-                        label="Confirm New Password"
+                        label="Confirmar nova senha"
                         value={passwords.confirmPassword}
                         onChange={(e) => handlePasswordChange("confirmPassword", e.target.value)}
-                        placeholder="Confirm your new password"
+                        placeholder="Repita a nova senha"
                         required
                     />
 
@@ -467,12 +475,12 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                         {passwordSaved && (
                             <span className="save-success-msg">
                                 <RiCheckLine size={18} aria-hidden="true" />
-                                Password updated successfully!
+                                Senha atualizada.
                             </span>
                         )}
                         <button type="submit" className="btn-save-settings" disabled={isSavingPassword}>
                             <RiLockLine size={18} aria-hidden="true" />
-                            <span>{isSavingPassword ? "Updating..." : "Update Password"}</span>
+                            <span>{isSavingPassword ? "Atualizando..." : "Atualizar senha"}</span>
                         </button>
                     </div>
                 </form>

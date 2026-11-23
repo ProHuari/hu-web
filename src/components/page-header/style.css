@@ -1,27 +1,23 @@
 .page-header-container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     width: 100%;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border, #E5E7EB);
 }
 
-.page-header-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: var(--radius-pill, 999px);
-    background-color: var(--color-scale-primary-100, #FFF3ED);
-    border: 1px solid var(--color-scale-primary-200, #FFEAE0);
-    color: var(--color-scale-primary-600, #D4460E);
-    font-size: 0.76rem;
+.page-header-kicker {
+    color: var(--color-scale-primary-700, #AD3300);
+    font-size: 0.78rem;
     font-weight: 700;
-    width: fit-content;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .page-header-content-row {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 20px;
     flex-wrap: wrap;
@@ -33,7 +29,7 @@
 }
 
 .page-header-title {
-    font-size: clamp(1.6rem, 2.5vw, 2rem);
+    font-size: clamp(1.55rem, 2.5vw, 1.95rem);
     font-weight: 800;
     color: var(--color-text-primary, #111827);
     margin: 0 0 6px 0;
@@ -45,7 +41,7 @@
     font-size: 0.94rem;
     color: var(--color-text-muted, #6B7280);
     margin: 0;
-    max-width: 680px;
+    max-width: 660px;
     line-height: 1.55;
 }
 
@@ -54,4 +50,3 @@
     align-items: center;
     flex-shrink: 0;
 }
-

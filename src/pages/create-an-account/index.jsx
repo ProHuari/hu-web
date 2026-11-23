@@ -10,7 +10,6 @@ import { authService } from "../../services/auth-service";
 import {
     RiUserLine,
     RiMailLine,
-    RiShieldCheckLine,
     RiErrorWarningLine,
     RiCheckboxCircleLine,
     RiDoorOpenLine,
@@ -36,29 +35,29 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
         setError("");
 
         if (!name.trim() || name.trim().length < 3) {
-            setError("Please enter your full name.");
+            setError("Informe seu nome completo.");
             return;
         }
 
         if (!email.trim() || !email.includes("@")) {
-            setError("Please enter a valid email address.");
+            setError("Informe um endereço de e-mail válido.");
             return;
         }
 
         if (password.length < 8) {
-            setError("Password must contain at least 8 characters.");
+            setError("A senha deve conter no mínimo 8 caracteres.");
             return;
         }
 
         if (password !== confirmPassword) {
-            setError("Passwords do not match.");
+            setError("As senhas não coincidem.");
             return;
         }
 
         setIsLoading(true);
         try {
             const result = await authService.register({ name, email, password });
-            registerContext?.(result.user, result.token);
+            registerContext?.(result.user, result.token, result.refreshToken);
 
             if (onNavigateToHome) {
                 onNavigateToHome();
@@ -66,7 +65,7 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                 navigate("/dashboard");
             }
         } catch (err) {
-            setError(err.message || "Registration failed. Please try again.");
+            setError(err.message || "Não foi possível concluir o cadastro.");
         } finally {
             setIsLoading(false);
         }
@@ -83,10 +82,9 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
 
     return (
         <div className="create-account-content">
-            {/* Tab navigation */}
-            <nav className="login-tabs-navigation" aria-label="Toggle authentication tabs">
+            <nav className="login-tabs-navigation" aria-label="Alternar entre entrar e criar conta">
                 <Button
-                    title="Sign In"
+                    title="Entrar"
                     icon={<RiDoorOpenLine size={18} />}
                     identifier="btn-radius-40"
                     active={false}
@@ -98,7 +96,7 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                 />
 
                 <Button
-                    title="Create Account"
+                    title="Criar conta"
                     icon={<RiUserAddFill size={18} />}
                     identifier="btn-radius-40"
                     active={true}
@@ -106,19 +104,13 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                 />
             </nav>
 
-            {/* Header */}
             <header className="create-account-header">
-                <div className="login-security-pill">
-                    <RiShieldCheckLine size={15} aria-hidden="true" />
-                    <span>Secure Access — Huari Civic Platform</span>
-                </div>
-                <h1 className="login-title">Join Huari Democracy</h1>
+                <h1 className="login-title">Criar conta na Huari</h1>
                 <p className="create-account-subtitle">
-                    Create your free account to track parliamentary voting records, audit quotas, and enroll in civic courses.
+                    Cadastre-se gratuitamente para acompanhar parlamentares e registrar seu progresso nas aulas.
                 </p>
             </header>
 
-            {/* Error message */}
             {error && (
                 <div className="login-alert-error" role="alert">
                     <RiErrorWarningLine size={20} aria-hidden="true" />
@@ -126,14 +118,13 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                 </div>
             )}
 
-            {/* Form */}
             <form className="login-form" onSubmit={handleSubmit} noValidate>
                 <div className="login-form-fields">
                     <InputText
                         identifier="input-default"
-                        label="Full Name"
+                        label="Nome completo"
                         type="text"
-                        placeholder="e.g. Maria Silva"
+                        placeholder="Ex.: Maria Silva"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         iconLeft={<RiUserLine />}
@@ -142,9 +133,9 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
 
                     <InputText
                         identifier="input-default"
-                        label="Email Address"
+                        label="E-mail"
                         type="email"
-                        placeholder="yourname@domain.com"
+                        placeholder="voce@exemplo.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         iconLeft={<RiMailLine />}
@@ -152,16 +143,16 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                     />
 
                     <PasswordInput
-                        label="Password"
-                        placeholder="Create a strong password (min. 8 chars)"
+                        label="Senha"
+                        placeholder="Mínimo de 8 caracteres"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
 
                     <PasswordInput
-                        label="Confirm Password"
-                        placeholder="Confirm your password"
+                        label="Confirmar senha"
+                        placeholder="Repita sua senha"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
@@ -169,7 +160,7 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                 </div>
 
                 <Button
-                    title={isLoading ? "Creating Account..." : "Create Account"}
+                    title={isLoading ? "Criando conta..." : "Criar conta"}
                     icon={<RiCheckboxCircleLine size={19} />}
                     identifier="btn-primary btn-radius-40 btn-submit"
                     type="submit"
@@ -177,59 +168,55 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
                 />
             </form>
 
-            {/* Social logins */}
-            <div className="login-divider">
-                <span>or register with</span>
-            </div>
+            {USE_MOCKS && (
+                <>
+                    <div className="login-divider">
+                        <span>ou continue com</span>
+                    </div>
 
-            <div className="login-social-grid">
-                <button
-                    type="button"
-                    className="login-social-btn"
-                    onClick={handleSocialLogin}
-                    disabled={!USE_MOCKS}
-                    title={!USE_MOCKS ? "Social login available soon" : "Sign up with Google"}
-                    aria-label="Sign up with Google"
-                >
-                    <GoogleIcon size={20} />
-                    <span>Google</span>
-                </button>
+                    <div className="login-social-grid">
+                        <button
+                            type="button"
+                            className="login-social-btn"
+                            onClick={handleSocialLogin}
+                            aria-label="Cadastrar com Google"
+                        >
+                            <GoogleIcon size={20} />
+                            <span>Google</span>
+                        </button>
 
-                <button
-                    type="button"
-                    className="login-social-btn"
-                    onClick={handleSocialLogin}
-                    disabled={!USE_MOCKS}
-                    title={!USE_MOCKS ? "Social login available soon" : "Sign up with GitHub"}
-                    aria-label="Sign up with GitHub"
-                >
-                    <GithubIcon size={20} />
-                    <span>GitHub</span>
-                </button>
+                        <button
+                            type="button"
+                            className="login-social-btn"
+                            onClick={handleSocialLogin}
+                            aria-label="Cadastrar com GitHub"
+                        >
+                            <GithubIcon size={20} />
+                            <span>GitHub</span>
+                        </button>
 
-                <button
-                    type="button"
-                    className="login-social-btn"
-                    onClick={handleSocialLogin}
-                    disabled={!USE_MOCKS}
-                    title={!USE_MOCKS ? "Social login available soon" : "Sign up with Apple"}
-                    aria-label="Sign up with Apple"
-                >
-                    <AppleIcon size={20} />
-                    <span>Apple</span>
-                </button>
-            </div>
+                        <button
+                            type="button"
+                            className="login-social-btn"
+                            onClick={handleSocialLogin}
+                            aria-label="Cadastrar com Apple"
+                        >
+                            <AppleIcon size={20} />
+                            <span>Apple</span>
+                        </button>
+                    </div>
+                </>
+            )}
 
-            {/* Footer text */}
             <footer className="login-bottom-prompt">
                 <p>
-                    Already have an account?{" "}
+                    Já possui conta?{" "}
                     <Link
                         to="/login"
                         className="login-switch-link"
                         onClick={onNavigateToLogin}
                     >
-                        Sign in
+                        Entrar
                     </Link>
                 </p>
             </footer>

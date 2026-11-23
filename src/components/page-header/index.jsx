@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 export default function PageHeader({
-    badgeIcon: BadgeIcon,
     badgeText,
     badge,
     title,
@@ -11,16 +10,13 @@ export default function PageHeader({
     actions,
     className = '',
 }) {
-    const displayBadgeText = badgeText || badge;
+    const displayKicker = badgeText || badge;
     const displayRightSlot = rightSlot || actions;
 
     return (
         <header className={`page-header-container ${className}`}>
-            {displayBadgeText && (
-                <div className="page-header-badge">
-                    {BadgeIcon && <BadgeIcon size={16} />}
-                    <span>{displayBadgeText}</span>
-                </div>
+            {displayKicker && (
+                <span className="page-header-kicker">{displayKicker}</span>
             )}
 
             <div className="page-header-content-row">

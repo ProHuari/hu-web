@@ -44,22 +44,22 @@ export default function Login({
         setError("");
 
         if (!email.trim() || !email.includes("@")) {
-            setError("Please enter a valid email address.");
+            setError("Informe um e-mail válido.");
             return;
         }
 
         if (activeTab === "register" && password.length < 8) {
-            setError("Password must contain at least 8 characters.");
+            setError("A senha deve ter pelo menos 8 caracteres.");
             return;
         }
 
         if (activeTab === "login" && !password) {
-            setError("Please enter your password.");
+            setError("Digite sua senha para entrar.");
             return;
         }
 
         if (activeTab === "register" && name.trim().length < 3) {
-            setError("Please provide your full name.");
+            setError("Informe seu nome completo.");
             return;
         }
 
@@ -67,10 +67,10 @@ export default function Login({
         try {
             if (activeTab === "login") {
                 const result = await authService.login({ email, password, rememberMe });
-                login?.(result.user, result.token, rememberMe);
+                login?.(result.user, result.token, rememberMe, result.refreshToken);
             } else {
                 const result = await authService.register({ name, email, password });
-                login?.(result.user, result.token, rememberMe);
+                login?.(result.user, result.token, rememberMe, result.refreshToken);
             }
 
             if (onNavigateToHome) {
@@ -79,7 +79,7 @@ export default function Login({
                 navigate("/dashboard");
             }
         } catch (err) {
-            setError(err.message || "Authentication failed. Please verify your credentials.");
+            setError(err.message || "Falha ao autenticar. Confira seus dados.");
         } finally {
             setIsLoading(false);
         }
@@ -95,7 +95,7 @@ export default function Login({
 
     const handleGuestAccess = () => {
         loginAsGuest?.();
-        toast.info("Signed in as Guest Citizen.");
+        toast.info("Entrando em modo visitante.");
         if (onNavigateToHome) {
             onNavigateToHome();
         } else {
@@ -112,15 +112,15 @@ export default function Login({
                 password: "demo-admin-password",
                 rememberMe: true,
             });
-            login?.(result.user, result.token, true);
-            toast.success("Signed in as Administrator.");
+            login?.(result.user, result.token, true, result.refreshToken);
+            toast.success("Sessão administrativa iniciada.");
             if (onNavigateToHome) {
                 onNavigateToHome();
             } else {
                 navigate("/dashboard");
             }
         } catch (err) {
-            setError(err.message || "Demo admin sign-in failed.");
+            setError(err.message || "Não foi possível entrar no modo demonstração.");
         } finally {
             setIsLoading(false);
         }
@@ -138,13 +138,12 @@ export default function Login({
 
     return (
         <div className="login-auth-wrapper">
-            {/* Tab navigation */}
             <nav
                 className="login-tabs-navigation"
-                aria-label="Toggle between Sign In and Registration"
+                aria-label="Alternar entre entrar e criar conta"
             >
                 <Button
-                    title="Sign In"
+                    title="Entrar"
                     icon={<RiDoorOpenLine size={18} />}
                     identifier="btn-radius-40"
                     active={activeTab === "login"}
@@ -153,7 +152,7 @@ export default function Login({
                 />
 
                 <Button
-                    title="Create Account"
+                    title="Criar conta"
                     icon={<RiUserAddFill size={18} />}
                     identifier="btn-radius-40"
                     active={activeTab === "register"}
@@ -162,25 +161,19 @@ export default function Login({
                 />
             </nav>
 
-            {/* Header block */}
             <header className="login-header-block">
-                <div className="login-security-pill">
-                    <RiShieldCheckLine size={15} aria-hidden="true" />
-                    <span>Secure Access — Huari Civic Platform</span>
-                </div>
                 <h1 className="login-title">
                     {activeTab === "login"
-                        ? "Welcome back!"
-                        : "Create your free account"}
+                        ? "Entrar na Huari"
+                        : "Criar sua conta"}
                 </h1>
                 <p className="login-subtitle">
                     {activeTab === "login"
-                        ? "Enter your credentials to track lawmakers, floor votes, and civic courses."
-                        : "Join the civic community and audit public spending with data intelligence."}
+                        ? "Acesse sua conta para acompanhar parlamentares, notas da cota e progresso nas aulas."
+                        : "Crie seu cadastro gratuito para salvar parlamentares e registrar seu avanço nas trilhas."}
                 </p>
             </header>
 
-            {/* Error banner */}
             {error && (
                 <div className="login-alert-error" role="alert">
                     <RiErrorWarningLine size={20} aria-hidden="true" />
@@ -188,15 +181,14 @@ export default function Login({
                 </div>
             )}
 
-            {/* Form */}
             <form className="login-form" onSubmit={handleSubmit} noValidate>
                 <div className="login-form-fields">
                     {activeTab === "register" && (
                         <InputText
                             identifier="input-default"
-                            label="Full Name"
+                            label="Nome completo"
                             type="text"
-                            placeholder="e.g. Maria Silva"
+                            placeholder="Ex.: Maria Silva"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             iconLeft={<RiUserAddFill size={18} />}
@@ -206,9 +198,9 @@ export default function Login({
 
                     <InputText
                         identifier="input-default"
-                        label="Email Address"
+                        label="E-mail"
                         type="email"
-                        placeholder="yourname@domain.com"
+                        placeholder="voce@exemplo.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         iconLeft={<RiMailLine size={18} />}
@@ -216,7 +208,7 @@ export default function Login({
                     />
 
                     <PasswordInput
-                        label="Password"
+                        label="Senha"
                         labelAction={
                             activeTab === "login" ? (
                                 <Link
@@ -224,18 +216,17 @@ export default function Login({
                                     className="login-forgot-password"
                                     onClick={onNavigateToRecoverPassword}
                                 >
-                                    Forgot password?
+                                    Esqueci a senha
                                 </Link>
                             ) : null
                         }
-                        placeholder="Enter your password (min. 8 characters)"
+                        placeholder="Digite sua senha (mín. 8 caracteres)"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>
 
-                {/* Remember me */}
                 {activeTab === "login" && (
                     <div className="login-options-row">
                         <label className="login-remember-label">
@@ -245,20 +236,19 @@ export default function Login({
                                 onChange={(e) => setRememberMe(e.target.checked)}
                                 className="login-remember-checkbox"
                             />
-                            <span>Keep me signed in on this device</span>
+                            <span>Manter sessão conectada neste dispositivo</span>
                         </label>
                     </div>
                 )}
 
-                {/* Submit and Guest stack */}
                 <div className="login-actions-stack">
                     <Button
                         title={
                             isLoading
-                                ? "Authenticating..."
+                                ? "Autenticando..."
                                 : activeTab === "login"
-                                    ? "Sign In to Huari"
-                                    : "Create Huari Account"
+                                  ? "Entrar"
+                                  : "Criar conta"
                         }
                         icon={<RiCheckboxCircleLine size={19} />}
                         identifier="btn-primary btn-radius-40 btn-submit"
@@ -268,7 +258,7 @@ export default function Login({
 
                     {activeTab === "login" && (
                         <Button
-                            title="Continue as Guest"
+                            title="Explorar como visitante"
                             icon={<RiUserSharedLine size={18} />}
                             identifier="btn-visitor btn-radius-40"
                             type="button"
@@ -278,7 +268,7 @@ export default function Login({
 
                     {activeTab === "login" && USE_MOCKS && (
                         <Button
-                            title="Demo Admin Studio Access"
+                            title="Acesso demonstração (Admin)"
                             icon={<RiShieldCheckLine size={18} />}
                             identifier="btn-secondary btn-radius-40"
                             type="button"
@@ -289,72 +279,67 @@ export default function Login({
                 </div>
             </form>
 
-            {/* Social Divider */}
-            <div className="login-divider">
-                <span>or continue with</span>
-            </div>
+            {USE_MOCKS && (
+                <>
+                    <div className="login-divider">
+                        <span>ou entre com</span>
+                    </div>
 
-            {/* Social Logins */}
-            <div className="login-social-grid">
-                <button
-                    type="button"
-                    className="login-social-btn"
-                    onClick={handleSocialLogin}
-                    disabled={!USE_MOCKS}
-                    title={!USE_MOCKS ? "Social login available soon" : "Sign in with Google"}
-                    aria-label="Sign in with Google"
-                >
-                    <GoogleIcon size={20} />
-                    <span>Google</span>
-                </button>
+                    <div className="login-social-grid">
+                        <button
+                            type="button"
+                            className="login-social-btn"
+                            onClick={handleSocialLogin}
+                            aria-label="Entrar com Google"
+                        >
+                            <GoogleIcon size={20} />
+                            <span>Google</span>
+                        </button>
 
-                <button
-                    type="button"
-                    className="login-social-btn"
-                    onClick={handleSocialLogin}
-                    disabled={!USE_MOCKS}
-                    title={!USE_MOCKS ? "Social login available soon" : "Sign in with GitHub"}
-                    aria-label="Sign in with GitHub"
-                >
-                    <GithubIcon size={20} />
-                    <span>GitHub</span>
-                </button>
+                        <button
+                            type="button"
+                            className="login-social-btn"
+                            onClick={handleSocialLogin}
+                            aria-label="Entrar com GitHub"
+                        >
+                            <GithubIcon size={20} />
+                            <span>GitHub</span>
+                        </button>
 
-                <button
-                    type="button"
-                    className="login-social-btn"
-                    onClick={handleSocialLogin}
-                    disabled={!USE_MOCKS}
-                    title={!USE_MOCKS ? "Social login available soon" : "Sign in with Apple"}
-                    aria-label="Sign in with Apple"
-                >
-                    <AppleIcon size={20} />
-                    <span>Apple</span>
-                </button>
-            </div>
+                        <button
+                            type="button"
+                            className="login-social-btn"
+                            onClick={handleSocialLogin}
+                            aria-label="Entrar com Apple"
+                        >
+                            <AppleIcon size={20} />
+                            <span>Apple</span>
+                        </button>
+                    </div>
+                </>
+            )}
 
-            {/* Bottom prompt */}
             <footer className="login-bottom-prompt">
                 {activeTab === "login" ? (
                     <p>
-                        Don&apos;t have an account yet?{" "}
+                        Ainda não tem conta?{" "}
                         <button
                             type="button"
                             className="login-switch-link"
                             onClick={() => handleSelectTab("register")}
                         >
-                            Create an account
+                            Cadastre-se gratuitamente
                         </button>
                     </p>
                 ) : (
                     <p>
-                        Already registered?{" "}
+                        Já possui cadastro?{" "}
                         <button
                             type="button"
                             className="login-switch-link"
                             onClick={() => handleSelectTab("login")}
                         >
-                            Sign in
+                            Entrar na conta
                         </button>
                     </p>
                 )}

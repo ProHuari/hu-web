@@ -18,57 +18,57 @@ import {
 import './style.css';
 
 const NAVIGATION_LINKS = [
-    { label: 'Strategic Dashboard', path: '/dashboard' },
-    { label: 'Civic Academy & Courses', path: '/learn' },
-    { label: 'Lawmakers & Spending', path: '/lawmakers' },
-    { label: 'Virtual Civic AI Assistant', path: '/chat' },
+    { label: 'Início', path: '/dashboard' },
+    { label: 'Parlamentares e Gastos', path: '/lawmakers' },
+    { label: 'Trilhas de Ensino', path: '/learn' },
+    { label: 'Assistente Huari IA', path: '/chat' },
 ];
 
 const OFFICIAL_SOURCES = [
     {
-        label: 'Open Data — Chamber of Deputies',
+        label: 'Dados Abertos — Câmara dos Deputados',
         href: 'https://dadosabertos.camara.leg.br/',
     },
     {
-        label: 'Transparency Portal — Federal Senate',
+        label: 'Portal da Transparência — Senado Federal',
         href: 'https://www12.senado.leg.br/transparencia',
     },
     {
-        label: 'Federal Court of Accounts (TCU)',
+        label: 'Tribunal de Contas da União (TCU)',
         href: 'https://www.tcu.gov.br/',
     },
     {
-        label: 'Office of the Comptroller General (CGU)',
+        label: 'Controladoria-Geral da União (CGU)',
         href: 'https://www.gov.br/cgu/pt-br',
     },
 ];
 
 const TRANSPARENCY_LINKS = [
     {
-        label: 'Terms & Methodology',
-        href: '#terms',
+        label: 'Metodologia e Fontes',
+        href: '#metodologia',
         Icon: RiHammerLine,
     },
     {
-        label: 'Privacy & Data Protection',
-        href: '#privacy',
+        label: 'Privacidade e LGPD',
+        href: '#privacidade',
         Icon: RiShieldCheckLine,
     },
     {
-        label: 'Public API & Open Source',
+        label: 'Documentação da API',
         href: '#api',
         Icon: RiCodeBoxLine,
     },
     {
-        label: 'Ombudsman & Whistleblowing',
-        href: '#ombudsman',
+        label: 'Fale com a equipe',
+        href: 'mailto:contato@huari.org',
         Icon: RiMailLine,
     },
 ];
 
 export default function Footer() {
     return (
-        <footer className="footer" aria-label="Site Footer">
+        <footer className="footer" aria-label="Rodapé da plataforma">
             <div className="footer-content">
                 <section className="footer-brand">
                     <NavLink to="/dashboard" className="footer-logo">
@@ -82,13 +82,12 @@ export default function Footer() {
                     </NavLink>
 
                     <p className="footer-description">
-                        Independent civic platform dedicated to transforming public
-                        administration open data into accessible intelligence for civil society.
+                        Dados públicos da Câmara dos Deputados, Senado Federal e orçamento em linguagem direta para acompanhamento cidadão.
                     </p>
 
                     <nav
                         className="footer-social"
-                        aria-label="Social media links"
+                        aria-label="Redes sociais"
                     >
                         <a href="https://github.com/" target="_blank" rel="noreferrer" aria-label="GitHub">
                             <GithubIcon size={22} />
@@ -99,7 +98,7 @@ export default function Footer() {
                         <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
                             <LinkedinIcon size={22} />
                         </a>
-                        <a href="mailto:contact@huari.org" aria-label="Email">
+                        <a href="mailto:contato@huari.org" aria-label="E-mail">
                             <RiMailLine size={22} />
                         </a>
                         <a href="https://x.com/" target="_blank" rel="noreferrer" aria-label="X">
@@ -109,9 +108,9 @@ export default function Footer() {
                 </section>
 
                 <section className="footer-column">
-                    <h3 className="footer-column-heading">Navigation</h3>
+                    <h3 className="footer-column-heading">Navegação</h3>
 
-                    <nav className="footer-nav-list" aria-label="Footer navigation">
+                    <nav className="footer-nav-list" aria-label="Links do rodapé">
                         {NAVIGATION_LINKS.map(({ label, path }) => (
                             <div key={label} className="footer-nav-item">
                                 <NavLink to={path} className="footer-nav-link">
@@ -124,9 +123,9 @@ export default function Footer() {
                 </section>
 
                 <section className="footer-column">
-                    <h3 className="footer-column-heading">Official Sources</h3>
+                    <h3 className="footer-column-heading">Fontes Oficiais</h3>
 
-                    <nav className="footer-nav-list" aria-label="Official transparency sources">
+                    <nav className="footer-nav-list" aria-label="Fontes oficiais de dados abertos">
                         {OFFICIAL_SOURCES.map(({ label, href }) => (
                             <div key={label} className="footer-nav-item">
                                 <a
@@ -144,9 +143,9 @@ export default function Footer() {
                 </section>
 
                 <section className="footer-column">
-                    <h3 className="footer-column-heading">Transparency &amp; Ethics</h3>
+                    <h3 className="footer-column-heading">Transparência</h3>
 
-                    <nav className="footer-nav-list" aria-label="Transparency and legal links">
+                    <nav className="footer-nav-list" aria-label="Documentação e contato">
                         {TRANSPARENCY_LINKS.map(({ label, href, Icon }) => (
                             <div key={label} className="footer-nav-item">
                                 <a href={href} className="footer-nav-link">
@@ -160,7 +159,7 @@ export default function Footer() {
             </div>
 
             <div className="footer-bottom">
-                <p>© 2026 Huari — Civic Intelligence &amp; Political Transparency. All rights reserved.</p>
+                <p>© 2026 Huari — Transparência Legislativa e Educação Cívica.</p>
             </div>
         </footer>
     );
