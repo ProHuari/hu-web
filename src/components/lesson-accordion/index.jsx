@@ -74,7 +74,7 @@ export default function LessonAccordion({
 
                             <AnimatePresence initial={false}>
                                 {isOpen && (
-                                    <motion.ul
+                                    <motion.div
                                         className="module-lessons-list"
                                         initial={{ height: 0, opacity: 0 }}
                                         animate={{ height: 'auto', opacity: 1 }}
@@ -90,7 +90,7 @@ export default function LessonAccordion({
                                                 : Boolean(lesson.completed);
 
                                             return (
-                                                <li key={lesson.id}>
+                                                <div key={lesson.id} className="module-lesson-entry">
                                                     <NavLink
                                                         to={lessonUrl}
                                                         onClick={() => onSelectLesson?.(lesson)}
@@ -119,10 +119,10 @@ export default function LessonAccordion({
                                                             </span>
                                                         )}
                                                     </NavLink>
-                                                </li>
+                                                </div>
                                             );
                                         })}
-                                    </motion.ul>
+                                    </motion.div>
                                 )}
                             </AnimatePresence>
                         </div>

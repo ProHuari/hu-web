@@ -71,11 +71,11 @@ export default function SelectFilter({
             </button>
 
             {isOpen && (
-                <ul className="huari-select-options-list" role="listbox">
+                <div className="huari-select-options-list" role="listbox">
                     {options.map((option) => {
                         const isSelected = option.value === value;
                         return (
-                            <li
+                            <div
                                 key={option.value}
                                 className={`huari-select-option-item ${isSelected ? 'is-selected' : ''}`}
                                 role="option"
@@ -89,10 +89,10 @@ export default function SelectFilter({
                                         size={16}
                                     />
                                 )}
-                            </li>
+                            </div>
                         );
                     })}
-                </ul>
+                </div>
             )}
         </div>
     );

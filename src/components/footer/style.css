@@ -73,16 +73,15 @@
     font-size: 1rem;
 }
 
-.footer-column ul {
+.footer-nav-list {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
     margin: 0;
     padding: 0;
-    list-style: none;
 }
 
-.footer-column li a {
+.footer-nav-link {
     display: flex;
     align-items: flex-start;
     gap: 0.625rem;
@@ -92,11 +91,11 @@
     text-decoration: none;
 }
 
-.footer-column li a:hover span {
+.footer-nav-link:hover span {
     color: var(--color-scale-primary-700);
 }
 
-.footer-column li a span {
+.footer-nav-link span {
     transition: color 0.2s ease;
 }
 

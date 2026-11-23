@@ -111,24 +111,24 @@ export default function Footer() {
                 <section className="footer-column">
                     <h3 className="footer-column-heading">Navigation</h3>
 
-                    <ul className="footer-nav-list">
+                    <nav className="footer-nav-list" aria-label="Footer navigation">
                         {NAVIGATION_LINKS.map(({ label, path }) => (
-                            <li key={label}>
+                            <div key={label} className="footer-nav-item">
                                 <NavLink to={path} className="footer-nav-link">
                                     <RiArrowRightSLine className="footer-navigation-icon" size={18} />
                                     <span>{label}</span>
                                 </NavLink>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </nav>
                 </section>
 
                 <section className="footer-column">
                     <h3 className="footer-column-heading">Official Sources</h3>
 
-                    <ul className="footer-nav-list">
+                    <nav className="footer-nav-list" aria-label="Official transparency sources">
                         {OFFICIAL_SOURCES.map(({ label, href }) => (
-                            <li key={label}>
+                            <div key={label} className="footer-nav-item">
                                 <a
                                     href={href}
                                     target="_blank"
@@ -138,24 +138,24 @@ export default function Footer() {
                                     <RiLink className="footer-link-icon" size={17} />
                                     <span>{label}</span>
                                 </a>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </nav>
                 </section>
 
                 <section className="footer-column">
                     <h3 className="footer-column-heading">Transparency &amp; Ethics</h3>
 
-                    <ul className="footer-nav-list">
+                    <nav className="footer-nav-list" aria-label="Transparency and legal links">
                         {TRANSPARENCY_LINKS.map(({ label, href, Icon }) => (
-                            <li key={label}>
+                            <div key={label} className="footer-nav-item">
                                 <a href={href} className="footer-nav-link">
                                     <Icon className="footer-transparency-icon" size={17} />
                                     <span>{label}</span>
                                 </a>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </nav>
                 </section>
             </div>
 

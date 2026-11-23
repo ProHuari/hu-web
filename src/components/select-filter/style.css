@@ -96,7 +96,6 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     padding: 6px;
     margin: 0;
-    list-style: none;
     z-index: 50;
     box-sizing: border-box;
     animation: fadeInDropdown 0.15s ease-out;
