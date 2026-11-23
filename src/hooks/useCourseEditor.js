@@ -6,7 +6,7 @@ import {
     createEmptyModule,
     createEmptyLesson,
     validateCourseForSave,
-} from '../schemas/courseValidation';
+} from '../schemas/course-validation';
 
 function moveArrayItem(list, fromIndex, toIndex) {
     if (toIndex < 0 || toIndex >= list.length) return list;

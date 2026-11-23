@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FiPlus, FiTrash2, FiUploadCloud, FiEye } from 'react-icons/fi';
 import CourseCard from '../../course-card';
-import { AVAILABLE_CATEGORIES, COURSE_LEVELS } from '../../../schemas/courseValidation';
+import { AVAILABLE_CATEGORIES, COURSE_LEVELS } from '../../../schemas/course-validation';
 import './style.css';
 
 export default function CourseMetadataForm({
