@@ -16,7 +16,7 @@ import {
 } from "react-icons/ri";
 import { useApp } from "../../context/AppContext";
 import { UF_OPTIONS } from "../../data/lawmakers";
-import { userService } from "../../services/userService";
+import { userService } from "../../services/user-service";
 import PasswordInput from "../password-input";
 import Badge from "../badge";
 import Avatar from "../avatar";

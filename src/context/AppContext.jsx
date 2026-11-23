@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { AppContext } from './contextInstance';
 import { useApp } from './useApp';
-import { userService } from '../services/userService';
+import { userService } from '../services/user-service';
 import { coursesService } from '../services/courses-service';
 import { isAdminRole, normalizeRole } from '../utils/roles';
 

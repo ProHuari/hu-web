@@ -4,7 +4,7 @@ import { RiArrowLeftLine } from "react-icons/ri";
 import { PageTransition } from "../../components/motion/MotionPrimitives";
 import { useApp } from "../../context/AppContext";
 import { useToast } from "../../context/useToast";
-import { userService } from "../../services/userService";
+import { userService } from "../../services/user-service";
 import UserProfileHeader from "../../components/user-profile-header";
 import UserSettingsForm from "../../components/user-settings-form";
 import "./style.css";
