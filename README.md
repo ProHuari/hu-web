@@ -176,4 +176,5 @@ obs: código sendo alterado para adaptação de aliases
 
 <p align="center">
   Desenvolvido com dedicação pela equipe <strong>Huari</strong> © 2026.
+  version 1.0.0
 </p>
