@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiPlus, FiSearch, FiShield, FiBookOpen } from 'react-icons/fi';
 import { PageTransition } from '../../components/motion/MotionPrimitives';
@@ -8,7 +8,7 @@ import ConfirmModal from '../../components/confirm-modal';
 import { AdminTableSkeleton } from '../../components/skeleton';
 import AdminCourseTable from '../../components/admin/course-table';
 import { useAdminCourses } from '../../hooks/useAdminCourses';
-import { COURSE_CATEGORIES } from '../../data/courses';
+import { coursesService } from '../../services/courses-service';
 import './style.css';
 
 export default function AdminCoursesPage() {
@@ -28,8 +28,24 @@ export default function AdminCoursesPage() {
         removeCourse,
     } = useAdminCourses();
 
+    const [categories, setCategories] = useState(['Todas']);
     const [courseToDelete, setCourseToDelete] = useState(null);
     const [deleting, setDeleting] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+        coursesService
+            .getCategories()
+            .then((list) => {
+                if (active && Array.isArray(list) && list.length > 0) {
+                    setCategories(list);
+                }
+            })
+            .catch(() => {});
+        return () => {
+            active = false;
+        };
+    }, []);
 
     const stats = useMemo(() => {
         const published = courses.filter((c) => c.status === 'PUBLISHED').length;
@@ -56,11 +72,11 @@ export default function AdminCoursesPage() {
             <header className="admin-page-topbar">
                 <div>
                     <span className="admin-page-kicker">
-                        <FiShield size={13} /> Admin Studio
+                        <FiShield size={13} /> Administração
                     </span>
-                    <h1 className="admin-page-title">Manage Courses</h1>
+                    <h1 className="admin-page-title">Gerenciar Trilhas e Cursos</h1>
                     <p className="admin-page-subtitle">
-                        Create, organize, publish, and refine civic education tracks across Huari Academy.
+                        Crie, organize módulos e publique cursos gratuitos para a Academia Cívica.
                     </p>
                 </div>
 
@@ -70,51 +86,51 @@ export default function AdminCoursesPage() {
                         className="admin-icon-btn"
                         style={{ height: '40px', padding: '0 1rem' }}
                     >
-                        View Student Catalog
+                        Ver catálogo público
                     </Link>
                     <Button
                         type="button"
                         variant="primary"
                         onClick={() => navigate('/admin/courses/new')}
                     >
-                        <FiPlus size={16} /> New Course
+                        <FiPlus size={16} /> Nova trilha
                     </Button>
                 </div>
             </header>
 
-            <section className="admin-stats-strip" aria-label="Course catalog summary">
+            <section className="admin-stats-strip" aria-label="Resumo do catálogo">
                 <div className="admin-stat-tile">
-                    <span className="admin-stat-label">Visible Courses</span>
+                    <span className="admin-stat-label">Trilhas listadas</span>
                     <span className="admin-stat-value tabular-nums">{stats.total}</span>
                 </div>
                 <div className="admin-stat-tile">
-                    <span className="admin-stat-label">Published</span>
+                    <span className="admin-stat-label">Publicadas</span>
                     <span className="admin-stat-value tabular-nums" style={{ color: 'var(--color-scale-success-700, #047857)' }}>
                         {stats.published}
                     </span>
                 </div>
                 <div className="admin-stat-tile">
-                    <span className="admin-stat-label">Drafts</span>
+                    <span className="admin-stat-label">Rascunhos</span>
                     <span className="admin-stat-value tabular-nums" style={{ color: 'var(--color-scale-warning-700, #b45309)' }}>
                         {stats.drafts}
                     </span>
                 </div>
                 <div className="admin-stat-tile">
-                    <span className="admin-stat-label">Total Lessons</span>
+                    <span className="admin-stat-label">Total de aulas</span>
                     <span className="admin-stat-value tabular-nums">{stats.lessons}</span>
                 </div>
             </section>
 
-            <section className="admin-toolbar" aria-label="Filter courses">
+            <section className="admin-toolbar" aria-label="Filtrar cursos">
                 <div className="admin-search-box">
                     <FiSearch size={16} className="admin-search-icon" aria-hidden="true" />
                     <input
                         type="search"
                         className="admin-search-input"
-                        placeholder="Search by course title or instructor..."
+                        placeholder="Buscar por título ou instrutor..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        aria-label="Search courses"
+                        aria-label="Buscar trilhas"
                     />
                 </div>
 
@@ -123,22 +139,22 @@ export default function AdminCoursesPage() {
                         className="admin-filter-select"
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        aria-label="Filter by status"
+                        aria-label="Filtrar por status"
                     >
-                        <option value="ALL">All Statuses</option>
-                        <option value="PUBLISHED">Published Only</option>
-                        <option value="DRAFT">Drafts Only</option>
+                        <option value="ALL">Todos os status</option>
+                        <option value="PUBLISHED">Publicados</option>
+                        <option value="DRAFT">Rascunhos</option>
                     </select>
 
                     <select
                         className="admin-filter-select"
                         value={categoryFilter}
                         onChange={(e) => setCategoryFilter(e.target.value)}
-                        aria-label="Filter by category"
+                        aria-label="Filtrar por categoria"
                     >
-                        {COURSE_CATEGORIES.map((cat) => (
-                            <option key={cat} value={cat}>
-                                {cat === 'All' ? 'All Categories' : cat}
+                        {categories.map((cat) => (
+                            <option key={cat} value={cat === 'Todas' ? 'All' : cat}>
+                                {cat === 'All' || cat === 'Todas' ? 'Todas as categorias' : cat}
                             </option>
                         ))}
                     </select>
@@ -148,9 +164,9 @@ export default function AdminCoursesPage() {
             {error ? (
                 <EmptyState
                     icon={FiBookOpen}
-                    title="Could not load courses"
+                    title="Não foi possível carregar os cursos"
                     description={error}
-                    actionText="Try Again"
+                    actionText="Tentar novamente"
                     onAction={reload}
                 />
             ) : loading ? (
@@ -158,9 +174,9 @@ export default function AdminCoursesPage() {
             ) : courses.length === 0 ? (
                 <EmptyState
                     icon={FiBookOpen}
-                    title="No courses match your filters"
-                    description="Create a new civic track or clear your active search and status filters."
-                    actionText="Create First Course"
+                    title="Nenhuma trilha encontrada"
+                    description="Crie uma nova trilha ou limpe os filtros de busca aplicados."
+                    actionText="Criar primeira trilha"
                     onAction={() => navigate('/admin/courses/new')}
                 />
             ) : (
@@ -173,14 +189,14 @@ export default function AdminCoursesPage() {
 
             <ConfirmModal
                 isOpen={Boolean(courseToDelete)}
-                title="Delete course permanently?"
+                title="Excluir trilha permanentemente?"
                 description={
                     courseToDelete
-                        ? `This will permanently remove "${courseToDelete.title}" and all of its modules and lessons.`
+                        ? `Isso removerá "${courseToDelete.title}" e todos os seus módulos e aulas.`
                         : ''
                 }
-                confirmText="Delete Course"
-                cancelText="Cancel"
+                confirmText="Excluir trilha"
+                cancelText="Cancelar"
                 variant="danger"
                 isLoading={deleting}
                 onConfirm={handleConfirmDelete}
@@ -189,4 +205,3 @@ export default function AdminCoursesPage() {
         </PageTransition>
     );
 }
-

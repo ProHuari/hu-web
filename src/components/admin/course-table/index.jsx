@@ -18,11 +18,11 @@ export default function AdminCourseTable({ courses, onToggleStatus, onDeleteRequ
                 <table className="admin-courses-table">
                     <thead>
                         <tr>
-                            <th>Course</th>
-                            <th>Category</th>
-                            <th>Curriculum</th>
+                            <th>Curso</th>
+                            <th>Categoria</th>
+                            <th>Estrutura</th>
                             <th>Status</th>
-                            <th style={{ textAlign: 'right' }}>Actions</th>
+                            <th style={{ textAlign: 'right' }}>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,7 @@ export default function AdminCourseTable({ courses, onToggleStatus, onDeleteRequ
                                                 <div className="admin-course-title">{course.title}</div>
                                                 <div className="admin-course-meta">
                                                     <span>{course.level}</span>
-                                                    <span>—</span>
+                                                    <span>·</span>
                                                     <span>{course.duration}</span>
                                                 </div>
                                             </div>
@@ -59,8 +59,8 @@ export default function AdminCourseTable({ courses, onToggleStatus, onDeleteRequ
                                     </td>
                                     <td>{course.category}</td>
                                     <td className="tabular-nums">
-                                        {modulesCount} {modulesCount === 1 ? 'module' : 'modules'},{' '}
-                                        {lessonsCount} {lessonsCount === 1 ? 'lesson' : 'lessons'}
+                                        {modulesCount} {modulesCount === 1 ? 'módulo' : 'módulos'},{' '}
+                                        {lessonsCount} {lessonsCount === 1 ? 'aula' : 'aulas'}
                                     </td>
                                     <td>
                                         <span
@@ -71,7 +71,7 @@ export default function AdminCourseTable({ courses, onToggleStatus, onDeleteRequ
                                             }`}
                                         >
                                             <span className="admin-status-dot" aria-hidden="true" />
-                                            {isPublished ? 'Published' : 'Draft'}
+                                            {isPublished ? 'Publicado' : 'Rascunho'}
                                         </span>
                                     </td>
                                     <td>
@@ -79,27 +79,27 @@ export default function AdminCourseTable({ courses, onToggleStatus, onDeleteRequ
                                             <Link
                                                 to={`/admin/courses/${course.id}/edit`}
                                                 className="admin-icon-btn admin-icon-btn--edit"
-                                                title={`Edit ${course.title}`}
+                                                title={`Editar ${course.title}`}
                                             >
                                                 <FiEdit2 size={14} />
-                                                <span>Edit</span>
+                                                <span>Editar</span>
                                             </Link>
 
                                             <button
                                                 type="button"
                                                 className="admin-icon-btn"
                                                 onClick={() => onToggleStatus(course)}
-                                                title={isPublished ? 'Move to Draft' : 'Publish Course'}
+                                                title={isPublished ? 'Mover para rascunho' : 'Publicar curso'}
                                             >
                                                 {isPublished ? <FiArchive size={14} /> : <FiSend size={14} />}
-                                                <span>{isPublished ? 'Unpublish' : 'Publish'}</span>
+                                                <span>{isPublished ? 'Despublicar' : 'Publicar'}</span>
                                             </button>
 
                                             <Link
                                                 to={`/learn/${course.id}/overview`}
                                                 className="admin-icon-btn"
-                                                title="Preview Student View"
-                                                aria-label={`Preview ${course.title}`}
+                                                title="Visualizar como aluno"
+                                                aria-label={`Visualizar ${course.title}`}
                                             >
                                                 <FiEye size={14} />
                                             </Link>
@@ -108,8 +108,8 @@ export default function AdminCourseTable({ courses, onToggleStatus, onDeleteRequ
                                                 type="button"
                                                 className="admin-icon-btn admin-icon-btn--danger"
                                                 onClick={() => onDeleteRequest(course)}
-                                                title={`Delete ${course.title}`}
-                                                aria-label={`Delete ${course.title}`}
+                                                title={`Excluir ${course.title}`}
+                                                aria-label={`Excluir ${course.title}`}
                                             >
                                                 <FiTrash2 size={14} />
                                             </button>
@@ -130,4 +130,3 @@ AdminCourseTable.propTypes = {
     onToggleStatus: PropTypes.func.isRequired,
     onDeleteRequest: PropTypes.func.isRequired,
 };
-

@@ -34,7 +34,7 @@ export default function LessonEditorDrawer({
             ...(lesson.resources || []),
             {
                 id: `res-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
-                title: 'Supporting PDF Guide',
+                title: 'Material complementar em PDF',
                 url: '',
             },
         ];
@@ -61,7 +61,7 @@ export default function LessonEditorDrawer({
                         className="lesson-drawer-panel"
                         role="dialog"
                         aria-modal="true"
-                        aria-label={`Edit Lesson ${lessonIndex + 1}`}
+                        aria-label={`Editar Aula ${lessonIndex + 1}`}
                         initial={{ x: '100%' }}
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
@@ -79,15 +79,15 @@ export default function LessonEditorDrawer({
                                         color: 'var(--color-primary)',
                                     }}
                                 >
-                                    Module {moduleIndex + 1} — Lesson {lessonIndex + 1}
+                                    Módulo {moduleIndex + 1} · Aula {lessonIndex + 1}
                                 </span>
-                                <h3 className="lesson-drawer-title">Edit Lesson Content</h3>
+                                <h3 className="lesson-drawer-title">Conteúdo da aula</h3>
                             </div>
                             <button
                                 type="button"
                                 className="lesson-drawer-close"
                                 onClick={onClose}
-                                aria-label="Close lesson drawer"
+                                aria-label="Fechar painel da aula"
                             >
                                 <FiX size={18} />
                             </button>
@@ -96,7 +96,7 @@ export default function LessonEditorDrawer({
                         <div className="lesson-drawer-body">
                             <div className="admin-field-group">
                                 <label htmlFor="lesson-title-input" className="admin-field-label">
-                                    Lesson Title *
+                                    Título da aula *
                                 </label>
                                 <input
                                     id="lesson-title-input"
@@ -104,14 +104,14 @@ export default function LessonEditorDrawer({
                                     className="admin-field-input"
                                     value={lesson.title || ''}
                                     onChange={(e) => onChange({ title: e.target.value })}
-                                    placeholder="e.g. Anatomy of Municipal Procurement"
+                                    placeholder="Ex.: Como ler a Lei Orçamentária Anual"
                                 />
                             </div>
 
                             <div className="admin-field-row">
                                 <div className="admin-field-group">
                                     <label htmlFor="lesson-duration-input" className="admin-field-label">
-                                        Duration
+                                        Duração
                                     </label>
                                     <input
                                         id="lesson-duration-input"
@@ -119,13 +119,13 @@ export default function LessonEditorDrawer({
                                         className="admin-field-input"
                                         value={lesson.duration || ''}
                                         onChange={(e) => onChange({ duration: e.target.value })}
-                                        placeholder="e.g. 18 min"
+                                        placeholder="Ex.: 15 min"
                                     />
                                 </div>
 
                                 <div className="admin-field-group">
                                     <label htmlFor="lesson-video-input" className="admin-field-label">
-                                        Video URL (YouTube / MP4)
+                                        URL do vídeo (YouTube / MP4)
                                     </label>
                                     <input
                                         id="lesson-video-input"
@@ -140,20 +140,19 @@ export default function LessonEditorDrawer({
 
                             <div className="admin-field-group">
                                 <span className="admin-field-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                    <FiVideo size={14} /> Live Video Preview
+                                    <FiVideo size={14} /> Prévia do vídeo
                                 </span>
                                 <div className="lesson-drawer-preview">
                                     <VideoPlayer
                                         videoUrl={lesson.videoUrl}
-                                        title={lesson.title || 'Lesson Preview'}
-                                        duration={lesson.duration || '15 min'}
+                                        title={lesson.title || 'Prévia da aula'}
                                     />
                                 </div>
                             </div>
 
                             <div className="admin-field-group">
                                 <label htmlFor="lesson-summary-input" className="admin-field-label">
-                                    Lesson Summary & Takeaways
+                                    Resumo da aula
                                 </label>
                                 <textarea
                                     id="lesson-summary-input"
@@ -161,19 +160,19 @@ export default function LessonEditorDrawer({
                                     className="admin-field-textarea"
                                     value={lesson.summary || ''}
                                     onChange={(e) => onChange({ summary: e.target.value })}
-                                    placeholder="Describe key concepts covered in this lesson..."
+                                    placeholder="Descreva os conceitos e documentos abordados nesta aula..."
                                 />
                             </div>
 
                             <div className="admin-field-group">
-                                <label className="admin-field-label">External PDF & Study Materials</label>
+                                <label className="admin-field-label">Materiais complementares (PDF)</label>
                                 <div className="lesson-drawer-resources">
                                     {(lesson.resources || []).map((res, rIdx) => (
                                         <div key={res.id || rIdx} className="lesson-resource-item">
                                             <input
                                                 type="text"
                                                 className="admin-field-input"
-                                                placeholder="Label (e.g. Study Guide)"
+                                                placeholder="Título (ex.: Guia em PDF)"
                                                 value={res.title || ''}
                                                 onChange={(e) =>
                                                     handleResourceChange(rIdx, 'title', e.target.value)
@@ -182,7 +181,7 @@ export default function LessonEditorDrawer({
                                             <input
                                                 type="url"
                                                 className="admin-field-input"
-                                                placeholder="https://.../guide.pdf"
+                                                placeholder="https://.../material.pdf"
                                                 value={res.url || ''}
                                                 onChange={(e) =>
                                                     handleResourceChange(rIdx, 'url', e.target.value)
@@ -192,7 +191,7 @@ export default function LessonEditorDrawer({
                                                 type="button"
                                                 className="admin-remove-btn"
                                                 onClick={() => handleRemoveResource(rIdx)}
-                                                aria-label={`Remove material ${rIdx + 1}`}
+                                                aria-label={`Remover material ${rIdx + 1}`}
                                             >
                                                 <FiTrash2 size={15} />
                                             </button>
@@ -203,10 +202,10 @@ export default function LessonEditorDrawer({
                                         className="admin-add-inline-btn"
                                         onClick={handleAddResource}
                                     >
-                                        <FiPlus size={14} /> Add PDF Resource Link
+                                        <FiPlus size={14} /> Adicionar link de material
                                     </button>
                                     <span className="admin-field-hint">
-                                        <FiUploadCloud size={14} /> External PDF URLs active now; direct document upload ready for storage integration.
+                                        <FiUploadCloud size={14} /> Cole links externos http/https de apostilas ou guias de apoio.
                                     </span>
                                 </div>
                             </div>
@@ -214,10 +213,10 @@ export default function LessonEditorDrawer({
 
                         <div className="lesson-drawer-footer">
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>
-                                Changes sync automatically into your course draft.
+                                As alterações entram no rascunho da trilha automaticamente.
                             </span>
                             <Button type="button" variant="primary" onClick={onClose}>
-                                Done Editing
+                                Concluir edição
                             </Button>
                         </div>
                     </motion.aside>
@@ -234,4 +233,3 @@ LessonEditorDrawer.propTypes = {
     onClose: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
 };
-

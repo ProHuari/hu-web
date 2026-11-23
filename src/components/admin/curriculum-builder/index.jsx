@@ -38,13 +38,13 @@ export default function CurriculumBuilder({
         <div className="admin-curriculum-wrapper">
             <div className="admin-curriculum-header">
                 <div>
-                    <h2 className="admin-curriculum-title">Course Curriculum</h2>
+                    <h2 className="admin-curriculum-title">Grade Curricular</h2>
                     <p style={{ margin: '0.2rem 0 0', fontSize: '0.86rem', color: 'var(--text-tertiary)' }}>
-                        Organize modules, reorder with arrows, and click any lesson to edit video URL, summary, and PDFs.
+                        Organize os módulos e clique em qualquer aula para configurar vídeo, resumo e materiais.
                     </p>
                 </div>
                 <Button type="button" variant="secondary" onClick={onAddModule}>
-                    <FiPlus size={16} /> Add Module
+                    <FiPlus size={16} /> Adicionar módulo
                 </Button>
             </div>
 
@@ -65,21 +65,21 @@ export default function CurriculumBuilder({
                                 type="button"
                                 className="admin-module-toggle-btn"
                                 onClick={() => toggleCollapse(mod.id)}
-                                aria-label={isCollapsed ? 'Expand module' : 'Collapse module'}
+                                aria-label={isCollapsed ? 'Expandir módulo' : 'Recolher módulo'}
                                 aria-expanded={!isCollapsed}
                             >
                                 {isCollapsed ? <FiChevronRight size={17} /> : <FiChevronDown size={17} />}
                             </button>
 
-                            <span className="admin-module-badge">Module {mIdx + 1}</span>
+                            <span className="admin-module-badge">Módulo {mIdx + 1}</span>
 
                             <input
                                 type="text"
                                 className="admin-module-title-input"
                                 value={mod.title || ''}
                                 onChange={(e) => onUpdateModuleTitle(mIdx, e.target.value)}
-                                placeholder={`Module ${mIdx + 1} Title`}
-                                aria-label={`Module ${mIdx + 1} title`}
+                                placeholder={`Título do módulo ${mIdx + 1}`}
+                                aria-label={`Título do módulo ${mIdx + 1}`}
                             />
 
                             <div className="admin-reorder-group">
@@ -88,8 +88,8 @@ export default function CurriculumBuilder({
                                     className="admin-mini-btn"
                                     disabled={mIdx === 0}
                                     onClick={() => onMoveModule(mIdx, -1)}
-                                    title="Move module up"
-                                    aria-label={`Move module ${mIdx + 1} up`}
+                                    title="Mover módulo para cima"
+                                    aria-label={`Mover módulo ${mIdx + 1} para cima`}
                                 >
                                     <FiArrowUp size={14} />
                                 </button>
@@ -98,8 +98,8 @@ export default function CurriculumBuilder({
                                     className="admin-mini-btn"
                                     disabled={mIdx === modules.length - 1}
                                     onClick={() => onMoveModule(mIdx, 1)}
-                                    title="Move module down"
-                                    aria-label={`Move module ${mIdx + 1} down`}
+                                    title="Mover módulo para baixo"
+                                    aria-label={`Mover módulo ${mIdx + 1} para baixo`}
                                 >
                                     <FiArrowDown size={14} />
                                 </button>
@@ -108,8 +108,8 @@ export default function CurriculumBuilder({
                                     className="admin-mini-btn admin-mini-btn--danger"
                                     disabled={modules.length <= 1}
                                     onClick={() => onRemoveModule(mIdx)}
-                                    title={modules.length <= 1 ? 'Keep at least 1 module' : 'Remove module'}
-                                    aria-label={`Remove module ${mIdx + 1}`}
+                                    title={modules.length <= 1 ? 'Mantenha pelo menos 1 módulo' : 'Remover módulo'}
+                                    aria-label={`Remover módulo ${mIdx + 1}`}
                                 >
                                     <FiTrash2 size={14} />
                                 </button>
@@ -148,18 +148,18 @@ export default function CurriculumBuilder({
                                                         <span className="admin-lesson-index">{lIdx + 1}</span>
                                                         <div className="admin-lesson-info">
                                                             <span className="admin-lesson-name">
-                                                                {lesson.title || 'Untitled Lesson'}
+                                                                {lesson.title || 'Aula sem título'}
                                                             </span>
                                                             <span className="admin-lesson-sub">
                                                                 <span>{lesson.duration || '15 min'}</span>
-                                                                <span>—</span>
+                                                                <span>·</span>
                                                                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                                                                     <FiPlayCircle size={12} />
-                                                                    {lesson.videoUrl ? 'Video linked' : 'No video URL'}
+                                                                    {lesson.videoUrl ? 'Vídeo vinculado' : 'Sem vídeo'}
                                                                 </span>
                                                                 {pdfCount > 0 && (
                                                                     <>
-                                                                        <span>—</span>
+                                                                        <span>·</span>
                                                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                                                                             <FiFileText size={12} />
                                                                             {pdfCount} PDF
@@ -175,8 +175,8 @@ export default function CurriculumBuilder({
                                                             type="button"
                                                             className="admin-mini-btn"
                                                             onClick={() => onEditLesson(mIdx, lIdx)}
-                                                            title="Edit lesson content"
-                                                            aria-label={`Edit ${lesson.title}`}
+                                                            title="Editar conteúdo da aula"
+                                                            aria-label={`Editar ${lesson.title}`}
                                                         >
                                                             <FiEdit3 size={14} />
                                                         </button>
@@ -185,8 +185,8 @@ export default function CurriculumBuilder({
                                                             className="admin-mini-btn"
                                                             disabled={lIdx === 0}
                                                             onClick={() => onMoveLesson(mIdx, lIdx, -1)}
-                                                            title="Move lesson up"
-                                                            aria-label={`Move ${lesson.title} up`}
+                                                            title="Subir aula"
+                                                            aria-label={`Subir ${lesson.title}`}
                                                         >
                                                             <FiArrowUp size={14} />
                                                         </button>
@@ -195,8 +195,8 @@ export default function CurriculumBuilder({
                                                             className="admin-mini-btn"
                                                             disabled={lIdx === lessons.length - 1}
                                                             onClick={() => onMoveLesson(mIdx, lIdx, 1)}
-                                                            title="Move lesson down"
-                                                            aria-label={`Move ${lesson.title} down`}
+                                                            title="Descer aula"
+                                                            aria-label={`Descer ${lesson.title}`}
                                                         >
                                                             <FiArrowDown size={14} />
                                                         </button>
@@ -204,8 +204,8 @@ export default function CurriculumBuilder({
                                                             type="button"
                                                             className="admin-mini-btn admin-mini-btn--danger"
                                                             onClick={() => onRemoveLesson(mIdx, lIdx)}
-                                                            title="Remove lesson"
-                                                            aria-label={`Remove ${lesson.title}`}
+                                                            title="Remover aula"
+                                                            aria-label={`Remover ${lesson.title}`}
                                                         >
                                                             <FiTrash2 size={14} />
                                                         </button>
@@ -219,7 +219,7 @@ export default function CurriculumBuilder({
                                             className="admin-add-inline-btn admin-add-lesson-btn"
                                             onClick={() => onAddLesson(mIdx)}
                                         >
-                                            <FiPlus size={14} /> Add Lesson to Module {mIdx + 1}
+                                            <FiPlus size={14} /> Adicionar aula ao Módulo {mIdx + 1}
                                         </button>
                                     </div>
                                 </motion.div>
@@ -248,4 +248,3 @@ CurriculumBuilder.propTypes = {
     onRemoveLesson: PropTypes.func.isRequired,
     onMoveLesson: PropTypes.func.isRequired,
 };
-

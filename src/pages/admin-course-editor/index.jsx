@@ -81,9 +81,9 @@ export default function AdminCourseEditorPage() {
             <div className="admin-editor-page">
                 <EmptyState
                     icon={FiBookOpen}
-                    title="Course unavailable"
+                    title="Curso indisponível"
                     description={loadError}
-                    actionText="Back to Courses"
+                    actionText="Voltar para trilhas"
                     onAction={() => navigate('/admin/courses')}
                 />
             </div>
@@ -100,11 +100,11 @@ export default function AdminCourseEditorPage() {
             <header className="admin-editor-topbar">
                 <div className="admin-editor-topbar-left">
                     <button type="button" className="admin-back-btn" onClick={handleBack}>
-                        <FiArrowLeft size={15} /> Back
+                        <FiArrowLeft size={15} /> Voltar
                     </button>
                     <div>
                         <h1 className="admin-editor-heading">
-                            {isEditing ? course.title || 'Edit Course' : 'Create New Course'}
+                            {isEditing ? course.title || 'Editar curso' : 'Criar nova trilha'}
                         </h1>
                     </div>
                     <span
@@ -115,9 +115,9 @@ export default function AdminCourseEditorPage() {
                         }`}
                     >
                         <span className="admin-status-dot" aria-hidden="true" />
-                        {course.status === 'PUBLISHED' ? 'Published' : 'Draft'}
+                        {course.status === 'PUBLISHED' ? 'Publicado' : 'Rascunho'}
                     </span>
-                    {isDirty && <span className="admin-dirty-tag">Unsaved changes</span>}
+                    {isDirty && <span className="admin-dirty-tag">Alterações não salvas</span>}
                 </div>
 
                 <div className="admin-editor-actions">
@@ -127,7 +127,7 @@ export default function AdminCourseEditorPage() {
                             className="admin-icon-btn"
                             style={{ height: '38px', padding: '0 0.9rem' }}
                         >
-                            <FiEye size={14} /> Preview Student View
+                            <FiEye size={14} /> Visualizar como aluno
                         </Link>
                     )}
 
@@ -137,7 +137,7 @@ export default function AdminCourseEditorPage() {
                         disabled={saving}
                         onClick={() => handleSave('DRAFT')}
                     >
-                        <FiSave size={15} /> {saving ? 'Saving...' : 'Save Draft'}
+                        <FiSave size={15} /> {saving ? 'Salvando...' : 'Salvar rascunho'}
                     </Button>
 
                     <Button
@@ -146,12 +146,12 @@ export default function AdminCourseEditorPage() {
                         disabled={saving}
                         onClick={() => handleSave('PUBLISHED')}
                     >
-                        <FiSend size={15} /> {course.status === 'PUBLISHED' ? 'Save & Update' : 'Publish Course'}
+                        <FiSend size={15} /> {course.status === 'PUBLISHED' ? 'Salvar alterações' : 'Publicar trilha'}
                     </Button>
                 </div>
             </header>
 
-            <div className="admin-editor-tabs" role="tablist" aria-label="Course editor sections">
+            <div className="admin-editor-tabs" role="tablist" aria-label="Seções do editor">
                 <button
                     type="button"
                     role="tab"
@@ -168,7 +168,7 @@ export default function AdminCourseEditorPage() {
                             transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                         />
                     )}
-                    <FiSliders size={15} /> Course Details
+                    <FiSliders size={15} /> Informações do curso
                 </button>
 
                 <button
@@ -187,8 +187,8 @@ export default function AdminCourseEditorPage() {
                             transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                         />
                     )}
-                    <FiLayers size={15} /> Curriculum ({course.modules?.length || 0} modules,{' '}
-                    {totalLessons} lessons)
+                    <FiLayers size={15} /> Módulos e aulas ({course.modules?.length || 0} módulos,{' '}
+                    {totalLessons} aulas)
                 </button>
             </div>
 
@@ -233,10 +233,10 @@ export default function AdminCourseEditorPage() {
 
             <ConfirmModal
                 isOpen={confirmLeaveOpen}
-                title="Discard unsaved changes?"
-                description="You have edited fields in this course that have not been saved yet."
-                confirmText="Discard & Leave"
-                cancelText="Keep Editing"
+                title="Descartar alterações não salvas?"
+                description="Você modificou campos neste curso e ainda não salvou."
+                confirmText="Descartar e sair"
+                cancelText="Continuar editando"
                 variant="danger"
                 onConfirm={() => navigate('/admin/courses')}
                 onCancel={() => setConfirmLeaveOpen(false)}
@@ -244,4 +244,3 @@ export default function AdminCourseEditorPage() {
         </PageTransition>
     );
 }
-

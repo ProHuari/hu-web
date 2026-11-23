@@ -49,7 +49,7 @@ export function useCourseEditor(courseId) {
                 if (!active) return;
 
                 if (!found) {
-                    setLoadError('Course not found.');
+                    setLoadError('Curso não encontrado.');
                 } else {
                     const normalized = {
                         ...found,
@@ -65,7 +65,7 @@ export function useCourseEditor(courseId) {
                 }
             } catch (err) {
                 if (!active) return;
-                setLoadError(err.message || 'Failed to load course details.');
+                setLoadError(err.message || 'Não foi possível carregar os detalhes do curso.');
             } finally {
                 if (active) setLoading(false);
             }
@@ -220,7 +220,7 @@ export function useCourseEditor(courseId) {
 
             if (!isValid) {
                 const firstMsg = Object.values(errors)[0];
-                toast.error(firstMsg || 'Please fix the highlighted fields before saving.');
+                toast.error(firstMsg || 'Revise os campos destacados antes de salvar.');
                 return { success: false, savedCourse: null };
             }
 
@@ -239,12 +239,12 @@ export function useCourseEditor(courseId) {
 
                 toast.success(
                     targetStatus === 'PUBLISHED'
-                        ? `"${saved.title}" saved & published!`
-                        : `"${saved.title}" saved as draft.`
+                        ? `"${saved.title}" salvo e publicado.`
+                        : `"${saved.title}" salvo como rascunho.`
                 );
                 return { success: true, savedCourse: saved };
             } catch (err) {
-                toast.error(err.message || 'Could not save course.');
+                toast.error(err.message || 'Não foi possível salvar o curso.');
                 return { success: false, savedCourse: null };
             } finally {
                 setSaving(false);
