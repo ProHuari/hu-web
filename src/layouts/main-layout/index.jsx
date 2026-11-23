@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useLocation, NavLink } from 'react-router-dom';
 import SideBar from '../../components/sidebar';
 import Footer from '../../components/footer';
-import logoHuari from '../../assets/images/logoHuari.svg';
+import logoHuari from '../../assets/images/logo-huari.svg';
 import { useApp } from '../../context/AppContext';
 import { RiMenuLine, RiUser3Line } from 'react-icons/ri';
 import './style.css';

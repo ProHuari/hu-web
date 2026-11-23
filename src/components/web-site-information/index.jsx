@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { RiShieldKeyholeLine } from 'react-icons/ri';
-import logoHuari from '../../assets/images/logoHuari.svg';
+import logoHuari from '../../assets/images/logo-huari.svg';
 import './style.css';
 
 export default function WebsiteInformation({ backgroundImage }) {

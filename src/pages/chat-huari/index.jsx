@@ -15,7 +15,7 @@ import {
     RiThumbDownLine,
     RiInformationLine,
 } from "react-icons/ri";
-import logoHuari from "../../assets/images/logoHuari.svg";
+import logoHuari from "../../assets/images/logo-huari.svg";
 import { chatService } from "../../services/chat-service";
 import { useToast } from "../../context/useToast";
 import "./style.css";

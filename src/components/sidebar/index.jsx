@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { motion } from 'motion/react';
-import logoHuari from '../../assets/images/logoHuari.svg';
+import logoHuari from '../../assets/images/logo-huari.svg';
 import { useApp } from '../../context/AppContext';
 import {
     RiHome4Line,

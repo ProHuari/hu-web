@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import logoHuari from '../../assets/images/logoHuari.svg';
+import logoHuari from '../../assets/images/logo-huari.svg';
 import {
     GithubIcon,
     LinkedinIcon,
