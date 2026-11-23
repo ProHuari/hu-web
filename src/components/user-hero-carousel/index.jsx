@@ -17,7 +17,7 @@ const SLIDES = [
     {
         id: 'transparency',
         glowClass: '',
-        kicker: 'Informações de Hoje • Fiscalização Cidadã',
+        kicker: 'Informações de Hoje — Fiscalização Cidadã',
         title: 'Transparência política na ponta dos seus dedos',
         description:
             'Acompanhe despesas com a Cota Parlamentar (CEAP) em tempo real, veja a frequência em plenário e consulte o histórico de votações nominais de deputados e senadores.',
@@ -30,7 +30,7 @@ const SLIDES = [
     {
         id: 'courses',
         glowClass: 'user-hero-bg-glow--accent',
-        kicker: 'Destaque da Academia • Nova Trilha Disponível',
+        kicker: 'Destaque da Academia — Nova Trilha Disponível',
         title: 'Domine a Auditoria do Orçamento Municipal & Federal',
         description:
             'Trilhas 100% gratuitas e práticas desenvolvidas por especialistas para capacitar qualquer cidadão a auditar compras públicas, emendas e licitações na sua cidade.',
@@ -47,7 +47,7 @@ const SLIDES = [
     {
         id: 'ai',
         glowClass: 'user-hero-bg-glow--ai',
-        kicker: 'Dica de Uso • Huari Civic AI',
+        kicker: 'Dica de Uso — Huari Civic AI',
         title: 'Tire dúvidas e audite dados complexos com a Huari AI',
         description:
             'Converse em português simples e receba análises transparentes a partir de dados abertos oficiais da Câmara dos Deputados e do Senado.',

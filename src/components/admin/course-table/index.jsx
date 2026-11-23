@@ -51,7 +51,7 @@ export default function AdminCourseTable({ courses, onToggleStatus, onDeleteRequ
                                                 <div className="admin-course-title">{course.title}</div>
                                                 <div className="admin-course-meta">
                                                     <span>{course.level}</span>
-                                                    <span>•</span>
+                                                    <span>—</span>
                                                     <span>{course.duration}</span>
                                                 </div>
                                             </div>
@@ -59,7 +59,7 @@ export default function AdminCourseTable({ courses, onToggleStatus, onDeleteRequ
                                     </td>
                                     <td>{course.category}</td>
                                     <td className="tabular-nums">
-                                        {modulesCount} {modulesCount === 1 ? 'module' : 'modules'} •{' '}
+                                        {modulesCount} {modulesCount === 1 ? 'module' : 'modules'},{' '}
                                         {lessonsCount} {lessonsCount === 1 ? 'lesson' : 'lessons'}
                                     </td>
                                     <td>

@@ -187,7 +187,7 @@ export default function AdminCourseEditorPage() {
                             transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                         />
                     )}
-                    <FiLayers size={15} /> Curriculum ({course.modules?.length || 0} modules •{' '}
+                    <FiLayers size={15} /> Curriculum ({course.modules?.length || 0} modules,{' '}
                     {totalLessons} lessons)
                 </button>
             </div>

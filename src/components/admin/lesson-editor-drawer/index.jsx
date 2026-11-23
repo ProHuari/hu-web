@@ -79,7 +79,7 @@ export default function LessonEditorDrawer({
                                         color: 'var(--color-primary)',
                                     }}
                                 >
-                                    Module {moduleIndex + 1} • Lesson {lessonIndex + 1}
+                                    Module {moduleIndex + 1} — Lesson {lessonIndex + 1}
                                 </span>
                                 <h3 className="lesson-drawer-title">Edit Lesson Content</h3>
                             </div>

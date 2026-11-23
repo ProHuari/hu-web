@@ -85,7 +85,7 @@ export default function AdminDashboardView() {
                 <div className="admin-dash-header-left">
                     <span className="admin-dash-kicker">
                         <span className="admin-dash-status-dot" aria-hidden="true" />
-                        <RiShieldStarLine size={14} /> Huari Admin Studio • Gestão Cívica
+                        <RiShieldStarLine size={14} /> Huari Admin Studio — Gestão Cívica
                     </span>
                     <h1 className="admin-dash-title">Painel de Controle da Plataforma</h1>
                     <p className="admin-dash-subtitle">
@@ -214,7 +214,7 @@ export default function AdminDashboardView() {
                             className="admin-dash-kpi-badge admin-dash-kpi-badge--positive"
                             style={{ padding: '4px 10px' }}
                         >
-                            {systemHealth.aiApiStatus === 'OPERATIONAL' ? '● API Online' : 'Alerta'}
+                            {systemHealth.aiApiStatus === 'OPERATIONAL' ? 'API Online' : 'Alerta'}
                         </span>
                     </div>
 
@@ -342,11 +342,11 @@ export default function AdminDashboardView() {
                                         <span className="admin-course-rank-title">{course.title}</span>
                                         <div className="admin-course-rank-stats">
                                             <span>{course.category}</span>
-                                            <span>•</span>
+                                            <span>—</span>
                                             <span className="tabular-nums">
                                                 {course.enrolledStudents} alunos
                                             </span>
-                                            <span>•</span>
+                                            <span>—</span>
                                             <span className="tabular-nums">
                                                 {course.completionRate}% conclusão
                                             </span>

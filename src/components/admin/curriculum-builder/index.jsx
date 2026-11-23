@@ -152,14 +152,14 @@ export default function CurriculumBuilder({
                                                             </span>
                                                             <span className="admin-lesson-sub">
                                                                 <span>{lesson.duration || '15 min'}</span>
-                                                                <span>•</span>
+                                                                <span>—</span>
                                                                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                                                                     <FiPlayCircle size={12} />
                                                                     {lesson.videoUrl ? 'Video linked' : 'No video URL'}
                                                                 </span>
                                                                 {pdfCount > 0 && (
                                                                     <>
-                                                                        <span>•</span>
+                                                                        <span>—</span>
                                                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                                                                             <FiFileText size={12} />
                                                                             {pdfCount} PDF

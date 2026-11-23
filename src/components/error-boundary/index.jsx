@@ -81,7 +81,7 @@ export class HuariErrorBoundary extends React.Component {
                         </div>
 
                         <span className="huari-error-kicker">
-                            Sistema Cívico • Recuperação de Sessão
+                            Sistema Cívico — Recuperação de Sessão
                         </span>
 
                         <h1 className="huari-error-title">Algo inesperado aconteceu</h1>

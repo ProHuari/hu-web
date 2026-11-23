@@ -11,7 +11,7 @@ export default function NotFoundPage() {
     return (
         <PageTransition className="not-found-page">
             <div className="not-found-card">
-                <span className="not-found-code">404 • PAGE NOT FOUND</span>
+                <span className="not-found-code">404 — PAGE NOT FOUND</span>
                 <h1 className="not-found-title">This page is off the civic record</h1>
                 <p className="not-found-desc">
                     The route you requested does not exist or may have moved. Head back to your
