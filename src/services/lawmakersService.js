@@ -131,7 +131,7 @@ export const lawmakersService = {
                 let expensesList = [];
                 try {
                     const expRes = await apiClient(`/transparencia/despesas`, {
-                        params: { parliamentarianId: id },
+                        params: { 'parlamentar-id': id },
                     });
                     expensesList = expRes?.content ?? (Array.isArray(expRes) ? expRes : []);
                 } catch {
