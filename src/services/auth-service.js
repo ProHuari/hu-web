@@ -71,7 +71,7 @@ export const authService = {
         }
 
         const user = {
-            id: String(data.userId || 'usr-1'),
+            id: String(data.userId || ''),
             name:
                 data.name ||
                 email
@@ -81,9 +81,9 @@ export const authService = {
             email,
             role: normalizedRole,
             phone: data.phone || '',
-            state: data.state || 'DF',
-            city: data.city || 'Brasília',
-            bio: data.bio || 'Citizen auditor on the Huari platform.',
+            state: data.state || '',
+            city: data.city || '',
+            bio: data.bio || '',
             verified: true,
             memberSince: '2026',
             avatar: data.avatar || null,
@@ -102,10 +102,10 @@ export const authService = {
                 phone: '',
                 state: 'DF',
                 city: 'Brasília',
-                bio: 'New citizen auditor on the Huari platform.',
+                bio: 'Acompanhando dados públicos e orçamento na plataforma Huari.',
                 role: 'STUDENT',
                 verified: false,
-                memberSince: 'November 2026',
+                memberSince: '2026',
                 avatar: null,
             };
             const mockToken = `mock-jwt-token-${Date.now()}`;
@@ -126,7 +126,7 @@ export const authService = {
     async requestPasswordReset(email) {
         if (USE_MOCKS) {
             await new Promise((resolve) => setTimeout(resolve, 450));
-            return { success: true, message: 'Reset instructions dispatched.' };
+            return { success: true, message: 'Instruções enviadas para o seu e-mail.' };
         }
 
         return apiClient('/auth/forgot-password', {
@@ -138,7 +138,7 @@ export const authService = {
     async resetPassword({ token, newPassword }) {
         if (USE_MOCKS) {
             await new Promise((resolve) => setTimeout(resolve, 500));
-            return { success: true, message: 'Password successfully updated.' };
+            return { success: true, message: 'Senha atualizada com sucesso.' };
         }
 
         return apiClient('/auth/reset-password', {

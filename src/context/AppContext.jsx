@@ -12,32 +12,32 @@ const INITIAL_USER = {
     id: 'usr-1',
     name: 'Carlos Oliveira',
     email: 'carlos.oliveira@huari.org',
-    phone: '(11) 98765-4321',
+    phone: '',
     state: 'SP',
     city: 'São Paulo',
-    bio: 'Interested in public policy, congressional fiscal transparency, and tracking legislative proposals.',
+    bio: 'Acompanhando políticas públicas, transparência fiscal no Congresso e projetos de lei.',
     role: 'STUDENT',
     verified: true,
-    memberSince: 'October 2026',
+    memberSince: '2026',
     avatar: null,
 };
 
 const GUEST_USER = {
     id: 'usr-guest',
-    name: 'Guest Auditor',
-    email: 'guest@huari.org',
+    name: 'Visitante Cidadão',
+    email: 'visitante@huari.org',
     phone: '',
     state: 'DF',
     city: 'Brasília',
-    bio: 'Exploring congressional open data and civic courses as a guest.',
+    bio: 'Explorando dados abertos parlamentares e trilhas de formação cívica.',
     role: 'STUDENT',
     verified: false,
-    memberSince: 'Today',
+    memberSince: 'Hoje',
     avatar: null,
     isGuest: true,
 };
 
-const INITIAL_BOOKMARKS = [1, 2, 3];
+const INITIAL_BOOKMARKS = USE_MOCKS ? [1, 2, 3] : [];
 
 const INITIAL_NOTIFICATIONS = {
     emailAlerts: true,
@@ -46,7 +46,9 @@ const INITIAL_NOTIFICATIONS = {
     foiaUpdates: true,
 };
 
-const INITIAL_COMPLETED_LESSONS = ['intro-to-politics:lesson-1', 'intro-to-politics:lesson-2'];
+const INITIAL_COMPLETED_LESSONS = USE_MOCKS
+    ? ['intro-to-politics:lesson-1', 'intro-to-politics:lesson-2']
+    : [];
 
 function readStoredUser() {
     try {
@@ -118,12 +120,12 @@ export function AppProvider({ children }) {
                             setNotifications((prev) => ({ ...prev, ...profile.notifications }));
                         }
                         if (Array.isArray(profile.completedLessons)) {
-                            setCompletedLessonIds(profile.completedLessons);
+                            setCompletedLessonIds(profile.completedLessons.map(String));
                         }
                     }
                 })
                 .catch((err) => {
-                    console.error('Failed to sync initial session with GET /usuarios/me', err);
+                    console.error('Falha ao sincronizar sessão inicial com GET /usuarios/me', err);
                 });
         }
     }, [token]);
@@ -153,8 +155,9 @@ export function AppProvider({ children }) {
     const login = useCallback((userData, authToken, rememberMe = true, refreshToken = null) => {
         const baseUser = userData || INITIAL_USER;
         const targetUser = { ...baseUser, role: normalizeRole(baseUser.role) };
-        const targetToken = authToken || `mock-jwt-token-${Date.now()}`;
-        const targetRefreshToken = refreshToken || (targetToken ? `mock-refresh-token-${Date.now()}` : null);
+        const targetToken = authToken || (USE_MOCKS ? `mock-jwt-token-${Date.now()}` : null);
+        const targetRefreshToken =
+            refreshToken || (USE_MOCKS && targetToken ? `mock-refresh-token-${Date.now()}` : null);
         setUser(targetUser);
         setToken(targetToken);
 
@@ -167,7 +170,9 @@ export function AppProvider({ children }) {
         otherStorage.removeItem('huari_user_role');
 
         try {
-            storage.setItem('huari_token', targetToken);
+            if (targetToken) {
+                storage.setItem('huari_token', targetToken);
+            }
             if (targetRefreshToken) {
                 storage.setItem('huari_refresh_token', targetRefreshToken);
             }
@@ -227,7 +232,7 @@ export function AppProvider({ children }) {
 
             if (!USE_MOCKS && token && token !== 'guest-session-token') {
                 userService.toggleBookmark(numId, isCurrentlyBookmarked).catch((err) => {
-                    console.error('Failed to sync bookmark with backend', err);
+                    console.error('Falha ao atualizar parlamentar salvo', err);
                 });
             }
         },
@@ -248,9 +253,10 @@ export function AppProvider({ children }) {
                 } catch (e) {
                     console.error('Failed to save notifications', e);
                 }
+
                 if (!USE_MOCKS && token && token !== 'guest-session-token') {
                     userService.updateNotifications(updated).catch((err) => {
-                        console.error('Failed to sync notifications with backend', err);
+                        console.error('Falha ao salvar notificações', err);
                     });
                 }
                 return updated;
@@ -259,48 +265,59 @@ export function AppProvider({ children }) {
         [token]
     );
 
-    const toggleLessonCompleted = useCallback(
-        (courseId, lessonId) => {
-            if (!courseId) return;
-            const compoundKey = lessonId ? `${courseId}:${lessonId}` : courseId;
-            const targetCourseId = lessonId ? courseId : null;
-            const targetLessonId = lessonId || courseId;
-
-            setCompletedLessonIds((prev) => {
-                const isCompleted = prev.includes(compoundKey) || (lessonId && prev.includes(lessonId));
-                const next = isCompleted
-                    ? prev.filter((id) => id !== compoundKey && id !== lessonId)
-                    : [...prev, compoundKey];
-
-                try {
-                    localStorage.setItem('huari_completed_lessons', JSON.stringify(next));
-                } catch (e) {
-                    console.error('Failed to store completed lessons', e);
-                }
-                return next;
-            });
-
-            if (!USE_MOCKS && token && token !== 'guest-session-token' && targetCourseId && targetLessonId) {
-                coursesService.toggleLesson(targetCourseId, targetLessonId).catch((err) => {
-                    console.error('Failed to sync lesson completion with backend', err);
-                });
-            }
-        },
-        [token]
-    );
-
     const isLessonCompleted = useCallback(
         (courseId, lessonId) => {
             if (!lessonId) {
+                const target = String(courseId);
                 return (
-                    completedLessonIds.includes(courseId) ||
-                    completedLessonIds.some((k) => k.endsWith(`:${courseId}`))
+                    completedLessonIds.includes(target) ||
+                    completedLessonIds.some((k) => String(k).endsWith(`:${target}`))
                 );
             }
-            const compoundKey = `${courseId}:${lessonId}`;
-            return completedLessonIds.includes(compoundKey) || completedLessonIds.includes(lessonId);
+            const lessonKey = String(lessonId);
+            const compoundKey = `${courseId}:${lessonKey}`;
+            return completedLessonIds.includes(compoundKey) || completedLessonIds.includes(lessonKey);
         },
         [completedLessonIds]
+    );
+
+    const toggleLessonCompleted = useCallback(
+        (courseId, lessonId) => {
+            if (!courseId) return;
+            const lessonKey = String(lessonId || courseId);
+            const compoundKey = lessonId ? `${courseId}:${lessonKey}` : lessonKey;
+            const targetCourseId = lessonId ? courseId : null;
+            const targetLessonId = lessonId || courseId;
+            const wasCompleted =
+                completedLessonIds.includes(compoundKey) || completedLessonIds.includes(lessonKey);
+            const nextCompleted = !wasCompleted;
+
+            const updateLocalState = (enable) => {
+                setCompletedLessonIds((prev) => {
+                    const next = enable
+                        ? [...new Set([...prev, compoundKey, lessonKey])]
+                        : prev.filter((id) => String(id) !== compoundKey && String(id) !== lessonKey);
+                    try {
+                        localStorage.setItem('huari_completed_lessons', JSON.stringify(next));
+                    } catch (e) {
+                        console.error('Failed to store completed lessons', e);
+                    }
+                    return next;
+                });
+            };
+
+            updateLocalState(nextCompleted);
+
+            if (!USE_MOCKS && token && token !== 'guest-session-token' && targetCourseId && targetLessonId) {
+                coursesService
+                    .toggleLesson(targetCourseId, targetLessonId, nextCompleted)
+                    .catch((err) => {
+                        console.error('Falha ao persistir progresso da aula no backend', err);
+                        updateLocalState(wasCompleted);
+                    });
+            }
+        },
+        [completedLessonIds, token]
     );
 
     const getCourseProgress = useCallback(

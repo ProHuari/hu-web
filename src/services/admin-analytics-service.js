@@ -1,112 +1,171 @@
 /**
  * Admin Analytics Service for Huari Platform.
- * Provides aggregated platform KPIs, AI usage analytics, and course engagement metrics.
- * Designed with a structured mock schema that easily hooks into future backend telemetry endpoints.
+ * Aggregates real metrics directly from Spring Boot MySQL endpoints:
+ * /cursos, /transparencia/resumo, /transparencia/integracoes/status,
+ * /usuarios, /matriculas, and /historico-ia.
  */
 
+import { apiClient } from './api';
 import { coursesService } from './courses-service';
 
-export const INITIAL_ADMIN_METRICS = {
-    overview: {
-        totalUsers: 2840,
-        usersGrowth: '+14.2%',
-        activeLearners: 1420,
-        learnersGrowth: '+8.6%',
-        totalAiPrompts: 14920,
-        aiPromptsGrowth: '+26.8%',
-        publishedCoursesCount: 8,
-        draftCoursesCount: 3,
-    },
-    aiMetrics: {
-        totalPrompts: 14920,
-        avgResponseTime: '1.18s',
-        modelSatisfaction: '98.6%',
-        activeSessionsToday: 342,
-        tokensProcessed: '18.4M',
-        topTopics: [
-            { id: 1, topic: 'Auditoria de Cota Parlamentar (CEAP)', count: 4820, percentage: 32 },
-            { id: 2, topic: 'Tramitação da Reforma Tributária (PECs)', count: 3240, percentage: 22 },
-            { id: 3, topic: 'Presença e Votações em Plenário', count: 2680, percentage: 18 },
-            { id: 4, topic: 'Destinação de Emendas Individuais', count: 2150, percentage: 14 },
-            { id: 5, topic: 'Processo Orçamentário Municipal (LOA/LDO)', count: 2030, percentage: 14 },
-        ],
-        dailyPromptVolume: [
-            { day: 'Seg', count: 1840 },
-            { day: 'Ter', count: 2210 },
-            { day: 'Qua', count: 2480 },
-            { day: 'Qui', count: 2650 },
-            { day: 'Sex', count: 2310 },
-            { day: 'Sáb', count: 1680 },
-            { day: 'Dom', count: 1750 },
-        ],
-    },
-    courseEngagement: {
-        activeLearners: 1420,
-        completionRate: '68.4%',
-        totalCertificatesIssued: 412,
-        avgTimePerTrack: '2h 15m',
-        topCourses: [
-            {
-                id: 'orcamento-municipal',
-                title: 'Orçamento Municipal e Fiscalização Cidadã',
-                category: 'Budget & Auditing',
-                enrolledStudents: 684,
-                completionRate: 74,
-                status: 'PUBLISHED',
-            },
-            {
-                id: 'processo-legislativo',
-                title: 'Anatomia do Processo Legislativo Brasileiro',
-                category: 'Legislative',
-                enrolledStudents: 512,
-                completionRate: 69,
-                status: 'PUBLISHED',
-            },
-            {
-                id: 'auditoria-ceap',
-                title: 'Auditoria Cidadã de Cota Parlamentar (CEAP)',
-                category: 'Civic Action',
-                enrolledStudents: 430,
-                completionRate: 62,
-                status: 'PUBLISHED',
-            },
-        ],
-    },
-    systemHealth: {
-        aiApiStatus: 'OPERATIONAL',
-        aiLatencyMs: 142,
-        databaseUptime: '99.98%',
-        lastDataSync: 'Hoje, há 12 minutos',
-    },
-};
+const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+});
+
+function buildDailyVolume(historyItems = []) {
+    const dayLabels = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    const today = new Date();
+    const buckets = [];
+
+    for (let offset = 6; offset >= 0; offset--) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - offset);
+        const isoDate = date.toISOString().slice(0, 10);
+        buckets.push({
+            isoDate,
+            day: dayLabels[date.getDay()],
+            count: 0,
+        });
+    }
+
+    const indexByDate = new Map(buckets.map((b, idx) => [b.isoDate, idx]));
+    historyItems.forEach((item) => {
+        const dateStr = item?.createdAt ? String(item.createdAt).slice(0, 10) : null;
+        if (dateStr && indexByDate.has(dateStr)) {
+            buckets[indexByDate.get(dateStr)].count += 1;
+        }
+    });
+
+    return buckets;
+}
+
+function buildTopTopics(historyItems = []) {
+    if (!Array.isArray(historyItems) || historyItems.length === 0) {
+        return [];
+    }
+
+    const total = historyItems.length;
+    return historyItems.slice(0, 5).map((item, idx) => ({
+        id: item.id || idx + 1,
+        topic: item.question || 'Consulta cívica registrada',
+        createdAt: item.createdAt || null,
+        count: 1,
+        percentage: Math.max(10, Math.round(100 / Math.min(total, 5))),
+    }));
+}
 
 export const adminAnalyticsService = {
-    /**
-     * Fetch complete dashboard analytics combining real course store stats and platform telemetry.
-     */
     async getDashboardMetrics() {
-        // Simulate realistic network roundtrip for skeleton demonstration
-        await new Promise((resolve) => setTimeout(resolve, 260));
+        const [
+            coursesRes,
+            transparencyRes,
+            integrationsRes,
+            usersRes,
+            enrollmentsRes,
+            aiHistoryRes,
+        ] = await Promise.allSettled([
+            coursesService.getAdminCourses(),
+            apiClient('/transparencia/resumo'),
+            apiClient('/transparencia/integracoes/status'),
+            apiClient('/usuarios', { params: { page: 0, size: 100 } }),
+            apiClient('/matriculas', { params: { page: 0, size: 200 } }),
+            apiClient('/historico-ia', { params: { page: 0, size: 100 } }),
+        ]);
 
-        let publishedCount = INITIAL_ADMIN_METRICS.overview.publishedCoursesCount;
-        let draftCount = INITIAL_ADMIN_METRICS.overview.draftCoursesCount;
+        const adminCourses = coursesRes.status === 'fulfilled' && Array.isArray(coursesRes.value)
+            ? coursesRes.value
+            : [];
+        const publishedCoursesCount = adminCourses.filter((c) => c.status !== 'DRAFT').length;
+        const draftCoursesCount = adminCourses.filter((c) => c.status === 'DRAFT').length;
+        const totalLessonsCount = adminCourses.reduce(
+            (sum, c) => sum + (c.lessonsCount || 0),
+            0
+        );
 
-        try {
-            const adminCourses = await coursesService.getAdminCourses();
-            if (Array.isArray(adminCourses) && adminCourses.length > 0) {
-                publishedCount = adminCourses.filter((c) => c.status === 'PUBLISHED').length;
-                draftCount = adminCourses.filter((c) => c.status !== 'PUBLISHED').length;
+        const transparency = transparencyRes.status === 'fulfilled' ? transparencyRes.value || {} : {};
+        const integrationsData = integrationsRes.status === 'fulfilled' ? integrationsRes.value || {} : {};
+        const integrationItems = Array.isArray(integrationsData.items) ? integrationsData.items : [];
+
+        const usersPage = usersRes.status === 'fulfilled' ? usersRes.value : null;
+        const usersList = usersPage?.content ?? (Array.isArray(usersPage) ? usersPage : []);
+        const totalUsers = Number(usersPage?.page?.totalElements ?? usersPage?.totalElements ?? usersList.length);
+
+        const enrollmentsPage = enrollmentsRes.status === 'fulfilled' ? enrollmentsRes.value : null;
+        const enrollmentsList = enrollmentsPage?.content ?? (Array.isArray(enrollmentsPage) ? enrollmentsPage : []);
+        const totalEnrollments = Number(
+            enrollmentsPage?.page?.totalElements ?? enrollmentsPage?.totalElements ?? enrollmentsList.length
+        );
+        const completedEnrollments = enrollmentsList.filter((e) => e?.status === 'COMPLETED').length;
+        const completionRate = totalEnrollments > 0
+            ? `${Math.round((completedEnrollments / totalEnrollments) * 100)}%`
+            : '0%';
+
+        const enrollmentCountByCourse = enrollmentsList.reduce((acc, enr) => {
+            const cId = enr?.courseId ?? enr?.course?.id;
+            if (cId != null) {
+                acc[cId] = (acc[cId] || 0) + 1;
             }
-        } catch (err) {
-            console.warn('Could not read courses store for admin overview stats', err);
-        }
+            return acc;
+        }, {});
+
+        const topCourses = adminCourses
+            .map((course) => {
+                const enrolled = enrollmentCountByCourse[course.id] || 0;
+                return {
+                    id: course.id,
+                    title: course.title,
+                    category: course.category,
+                    lessonsCount: course.lessonsCount || 0,
+                    enrolledStudents: enrolled,
+                    status: course.status || 'PUBLISHED',
+                };
+            })
+            .sort((a, b) => b.enrolledStudents - a.enrolledStudents)
+            .slice(0, 5);
+
+        const aiPage = aiHistoryRes.status === 'fulfilled' ? aiHistoryRes.value : null;
+        const aiItems = aiPage?.content ?? (Array.isArray(aiPage) ? aiPage : []);
+        const totalAiPrompts = Number(aiPage?.page?.totalElements ?? aiPage?.totalElements ?? aiItems.length);
+
+        const geminiIntegration = integrationItems.find((i) => i.id === 'gemini');
+        const geminiOnline = geminiIntegration?.status === 'ONLINE';
 
         return {
-            ...INITIAL_ADMIN_METRICS,
             overview: {
-                ...INITIAL_ADMIN_METRICS.overview,
-                publishedCoursesCount: publishedCount,
-                draftCoursesCount: draftCount,
+                totalUsers,
+                totalEnrollments,
+                totalAiPrompts,
+                publishedCoursesCount,
+                draftCoursesCount,
+                totalLessonsCount,
+                totalParliamentarians: Number(transparency.totalParliamentarians || 0),
+                deputiesCount: Number(transparency.deputiesCount || 0),
+                senatorsCount: Number(transparency.senatorsCount || 0),
+                totalBillsCount: Number(transparency.totalBillsCount || 0),
+                totalExpensesAmount: Number(transparency.totalExpensesAmount || 0),
+                totalExpensesFormatted: currencyFormatter.format(Number(transparency.totalExpensesAmount || 0)),
+            },
+            aiMetrics: {
+                totalPrompts: totalAiPrompts,
+                recentCount: aiItems.length,
+                geminiConfigured: geminiOnline,
+                modeLabel: integrationsData.geminiMode || (geminiOnline ? 'Gemini ativo' : 'Modo contingência'),
+                recentTopics: buildTopTopics(aiItems),
+                dailyPromptVolume: buildDailyVolume(aiItems),
+            },
+            courseEngagement: {
+                totalEnrollments,
+                completionRate,
+                completedEnrollments,
+                topCourses,
+            },
+            integrations: integrationItems,
+            systemHealth: {
+                aiApiStatus: geminiOnline ? 'OPERATIONAL' : 'FALLBACK',
+                aiStatusLabel: integrationsData.geminiMode || 'Conectado',
+                integrationsCount: integrationItems.length,
+                checkedAt: integrationsData.timestamp || new Date().toISOString(),
             },
         };
     },

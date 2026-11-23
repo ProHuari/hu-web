@@ -152,35 +152,35 @@ export async function apiClient(endpoint, options = {}) {
         const response = await fetch(url, config);
 
         if (response.status === 401) {
-            // 1. Credentials error on login endpoint: do not refresh, forward message
+            // 1. Erro de credenciais no login: não tenta refresh, repassa a mensagem
             if (endpoint.includes('/auth/login')) {
                 const data = await response.json().catch(() => null);
-                const message = data?.message || 'Incorrect email or password.';
+                const message = data?.message || 'E-mail ou senha incorretos.';
                 throw new ApiError(message, 401, data);
             }
 
-            // 1b. If the current session is a guest or unauthenticated, do not treat 401 as expired session and do not redirect
+            // 1b. Sessão visitante ou anônima: não redireciona para login
             const isGuestSession =
                 localStorage.getItem('huari_token') === 'guest-session-token' ||
                 sessionStorage.getItem('huari_token') === 'guest-session-token';
             if (isGuestSession || !token) {
                 const data = await response.json().catch(() => null);
-                throw new ApiError(data?.message || 'Unauthorized', 401, data);
+                throw new ApiError(data?.message || 'Não autorizado.', 401, data);
             }
 
-            // 2. Failure during refresh itself or already retried: terminate session
+            // 2. Falha no refresh ou nova tentativa falhou: encerra sessão
             if (endpoint.includes('/auth/refresh') || _retry) {
                 clearAuthSession();
                 redirectToLogin();
-                throw new ApiError('Session expired. Please log in again.', 401);
+                throw new ApiError('Sessão expirada. Entre novamente para continuar.', 401);
             }
 
-            // 3. Check for available refresh token
+            // 3. Verifica token de renovação disponível
             const currentRefreshToken = getRefreshToken();
             if (!currentRefreshToken) {
                 clearAuthSession();
                 redirectToLogin();
-                throw new ApiError('Session expired. Please log in again.', 401);
+                throw new ApiError('Sessão expirada. Entre novamente para continuar.', 401);
             }
 
             // 4. If refresh is already in progress, enqueue this request
