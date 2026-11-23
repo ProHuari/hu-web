@@ -1,10 +1,10 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import WebsiteInformation from '../../components/web-site-information';
-import bgLogin from '../../assets/images/HuariEducationalLibrary.jpg';
-import bgRegister from '../../assets/images/HuariEducationLibrary2.jpg';
-import bgRecover from '../../assets/images/HuariEducationLibrary3.jpg';
-import bgReset from '../../assets/images/HuariEducationLibrary4.jpg';
+import bgLogin from '../../assets/images/huari-educational-library.jpg';
+import bgRegister from '../../assets/images/huari-education-library-2.jpg';
+import bgRecover from '../../assets/images/huari-education-library-3.jpg';
+import bgReset from '../../assets/images/huari-education-library-4.jpg';
 import './style.css';
 
 export default function AuthLayout() {
