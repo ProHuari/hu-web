@@ -530,3 +530,62 @@
         padding: 0.45rem 0.5rem;
     }
 }
+
+.analysis-empty-note {
+    margin: 0;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.analysis-bill-actions {
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.btn-explain-bill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid var(--color-scale-primary-200, #fad1c0);
+    border-radius: var(--radius-sm, 8px);
+    background-color: var(--color-scale-primary-50, #fff6f2);
+    color: var(--color-scale-primary-700, #ad3300);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-explain-bill:hover:not(:disabled) {
+    background-color: var(--color-scale-primary-100, #ffede8);
+}
+
+.btn-explain-bill:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+
+.analysis-bill-explanation {
+    margin-top: 0.85rem;
+    padding: 0.9rem 1rem;
+    border-left: 3px solid var(--color-scale-primary-600, #d4460e);
+    background-color: var(--color-neutral-50, #f8f9fb);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--color-text-primary, #111827);
+}
+
+.analysis-bill-explanation p {
+    margin: 0;
+}
+
+.analysis-bill-impact {
+    margin-top: 0.5rem !important;
+    color: var(--color-text-secondary, #4b5563);
+}
+

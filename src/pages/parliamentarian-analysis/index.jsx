@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
     RiWallet3Line,
-    RiBarChartBoxLine,
+    RiFileList3Line,
     RiSparklingLine,
     RiArrowLeftLine,
     RiAddLine,
@@ -11,6 +11,7 @@ import {
     RiDownloadLine,
 } from "react-icons/ri";
 import { lawmakersService } from "../../services/lawmakers-service";
+import { chatService } from "../../services/chat-service";
 import { useApp } from "../../context/AppContext";
 import { useToast } from "../../context/useToast";
 import { exportExpensesToCsv } from "../../utils/csv-export";
@@ -28,40 +29,46 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
     const [fetchedLawmaker, setFetchedLawmaker] = useState(null);
     const [loading, setLoading] = useState(!propLawmaker);
     const [notFound, setNotFound] = useState(false);
-    const [selectedQuotaYear, setSelectedQuotaYear] = useState("Quota 2026");
+    const [selectedQuotaYear, setSelectedQuotaYear] = useState("");
+    const [billExplanations, setBillExplanations] = useState({});
+    const [explainingBillId, setExplainingBillId] = useState(null);
 
     const lawmaker = propLawmaker || fetchedLawmaker;
 
     useEffect(() => {
         if (propLawmaker || !id) {
-            return;
+            return undefined;
         }
 
         let isMounted = true;
 
-        lawmakersService.getLawmakerById(id)
-            .then((data) => {
-                if (isMounted) {
-                    if (data) {
-                        setFetchedLawmaker(data);
-                        setNotFound(false);
-                    } else {
-                        setFetchedLawmaker(null);
-                        setNotFound(true);
-                    }
+        async function loadLawmaker() {
+            setLoading(true);
+            try {
+                const data = await lawmakersService.getLawmakerById(id);
+                if (!isMounted) return;
+                if (data) {
+                    setFetchedLawmaker(data);
+                    const years = Object.keys(data.expensesByYear || {});
+                    setSelectedQuotaYear(years[0] || "");
+                    setNotFound(false);
+                } else {
+                    setFetchedLawmaker(null);
+                    setNotFound(true);
                 }
-            })
-            .catch((err) => {
-                console.error("Failed to load lawmaker details", err);
+            } catch (err) {
+                console.error("Falha ao carregar detalhes do parlamentar", err);
                 if (isMounted) {
                     setNotFound(true);
                 }
-            })
-            .finally(() => {
+            } finally {
                 if (isMounted) {
                     setLoading(false);
                 }
-            });
+            }
+        }
+
+        loadLawmaker();
 
         return () => {
             isMounted = false;
@@ -75,7 +82,7 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
             <div className="analysis-page-container">
                 <Link to="/lawmakers" className="analysis-back-link">
                     <RiArrowLeftLine size={18} aria-hidden="true" />
-                    <span>Back to Lawmakers Directory</span>
+                    <span>Voltar para parlamentares</span>
                 </Link>
                 <div
                     className="analysis-loading-state"
@@ -90,7 +97,7 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
                 >
                     <div className="loading-spinner" />
                     <p style={{ color: "var(--color-text-muted)" }}>
-                        Loading congressional mandate records...
+                        Carregando dados do mandato...
                     </p>
                 </div>
             </div>
@@ -102,12 +109,12 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
             <div className="analysis-page-container">
                 <Link to="/lawmakers" className="analysis-back-link">
                     <RiArrowLeftLine size={18} aria-hidden="true" />
-                    <span>Back to Lawmakers Directory</span>
+                    <span>Voltar para parlamentares</span>
                 </Link>
                 <EmptyState
-                    title="Lawmaker Not Found"
-                    description="We could not find a congressional mandate corresponding to this ID. The record may have expired or is unavailable."
-                    actionText="Back to Lawmakers Directory"
+                    title="Parlamentar não encontrado"
+                    description="Não encontramos nenhum mandato correspondente a este identificador."
+                    actionText="Ver diretório completo"
                     onAction={() => navigate("/lawmakers")}
                 />
             </div>
@@ -115,54 +122,100 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
     }
 
     const isBookmarked = bookmarkedLawmakerIds.includes(Number(lawmaker.id));
+    const availableYears = Object.keys(lawmaker.expensesByYear || lawmaker.quotaExpenses || {});
+    const activeYear =
+        selectedQuotaYear && availableYears.includes(selectedQuotaYear)
+            ? selectedQuotaYear
+            : availableYears[0] || "";
 
-    // Support both expensesByYear and quotaExpenses schemas
-    const rawExpenses =
-        lawmaker.expensesByYear?.[selectedQuotaYear] ||
-        lawmaker.quotaExpenses?.[selectedQuotaYear.replace("Quota ", "")] ||
-        [];
+    const rawCategoryExpenses = activeYear
+        ? lawmaker.expensesByYear?.[activeYear] || lawmaker.quotaExpenses?.[activeYear] || []
+        : [];
 
-    const expenses = rawExpenses.map((expense) => ({
-        category: expense.title || expense.category || "General Mandate Expense",
-        amount: expense.amount || "R$ 0",
+    const expenses = rawCategoryExpenses.map((expense) => ({
+        category: expense.title || expense.category || "Despesa de mandato",
+        amount: expense.amount || "R$ 0,00",
         percentage: expense.percentage || 0,
         tone: (expense.tone || "medium").replace(/^tone-/, ""),
     }));
 
+    const bills = Array.isArray(lawmaker.bills) ? lawmaker.bills : [];
+
     const handleAskAi = () => {
         navigate("/chat", {
             state: {
-                initialPrompt: `Can you analyze ${lawmaker.name}'s voting and CEAP spending records in Congress?`,
+                initialPrompt: `Explique o histórico de despesas CEAP e projetos de ${lawmaker.name} (${lawmaker.party}/${lawmaker.state}).`,
             },
         });
     };
 
+    const handleExplainBill = async (bill) => {
+        const key = bill.id || bill.code;
+        if (billExplanations[key]) {
+            setBillExplanations((prev) => {
+                const next = { ...prev };
+                delete next[key];
+                return next;
+            });
+            return;
+        }
+
+        setExplainingBillId(key);
+        try {
+            const res = await chatService.explainBill({
+                billCode: bill.code,
+                summary: bill.summary,
+                title: `${lawmaker.name} — ${bill.title}`,
+            });
+            setBillExplanations((prev) => ({
+                ...prev,
+                [key]: res,
+            }));
+        } catch (err) {
+            toast?.error?.(err?.message || "Não foi possível gerar a explicação deste projeto agora.");
+        } finally {
+            setExplainingBillId(null);
+        }
+    };
+
     const handleExportCsv = () => {
+        const detailedForYear = Array.isArray(lawmaker.expenseRecords)
+            ? lawmaker.expenseRecords.filter((rec) => !activeYear || rec.yearKey === activeYear)
+            : [];
+        const rowsToExport =
+            detailedForYear.length > 0
+                ? detailedForYear.map((rec) => ({
+                      date: rec.date,
+                      category: rec.category,
+                      supplier: rec.supplier,
+                      amount: rec.amountFormatted,
+                      percentage: rec.percentage,
+                  }))
+                : rawCategoryExpenses;
+
         const success = exportExpensesToCsv({
-            expenses: rawExpenses,
+            expenses: rowsToExport,
             lawmakerName: lawmaker?.name,
-            year: selectedQuotaYear,
+            year: activeYear || String(new Date().getFullYear()),
         });
 
         if (success) {
-            toast?.success?.("Demonstrativo de gastos exportado com sucesso!");
+            toast?.success?.("Demonstrativo de despesas exportado em CSV.");
         } else {
-            toast?.info?.("Não há dados de despesas disponíveis para exportação neste ano.");
+            toast?.info?.("Não há lançamentos de despesas disponíveis para exportar.");
         }
     };
 
     return (
         <div className="analysis-page-container">
-            {/* Top Navigation */}
             <Link to="/lawmakers" className="analysis-back-link">
                 <RiArrowLeftLine size={18} aria-hidden="true" />
-                <span>Back to Lawmakers Directory</span>
+                <span>Voltar para parlamentares</span>
             </Link>
 
-            {/* Profile Header Card */}
             <section
                 className="analysis-profile-card"
-                aria-label="Lawmaker Profile Header"
+                aria-label="Perfil do parlamentar"
             >
                 <Avatar
                     name={lawmaker.name}
@@ -181,12 +234,9 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
                         </div>
                     </div>
 
-                    <p className="analysis-profile-role">{lawmaker.position || lawmaker.role}</p>
-
-                    <div className="analysis-status-row">
-                        <span className="status-dot-green" aria-hidden="true" />
-                        <span className="status-label">In Office (57th Legislature)</span>
-                    </div>
+                    <p className="analysis-profile-role">
+                        {lawmaker.position || lawmaker.role} · {lawmaker.chamberLabel || "Congresso Nacional"}
+                    </p>
                 </div>
 
                 <button
@@ -194,61 +244,67 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
                     className={`btn-follow-toggle ${isBookmarked ? "is-following" : ""}`}
                     onClick={() => toggleBookmark(lawmaker.id)}
                     aria-pressed={isBookmarked}
-                    aria-label={isBookmarked ? `Unfollow ${lawmaker.name}` : `Follow ${lawmaker.name}`}
+                    aria-label={isBookmarked ? `Remover ${lawmaker.name} dos salvos` : `Salvar ${lawmaker.name}`}
                 >
                     {isBookmarked ? (
                         <>
                             <RiCheckLine size={18} aria-hidden="true" />
-                            <span>Following</span>
+                            <span>Acompanhando</span>
                         </>
                     ) : (
                         <>
                             <RiAddLine size={18} aria-hidden="true" />
-                            <span>Follow</span>
+                            <span>Acompanhar</span>
                         </>
                     )}
                 </button>
             </section>
 
-            {/* Metrics Grid */}
             <section
                 className="analysis-metrics-grid"
-                aria-label="Key Mandate Metrics"
+                aria-label="Resumo do mandato"
             >
                 <article className="analysis-metric-card">
-                    <span className="metric-card-header">FLOOR ATTENDANCE</span>
+                    <span className="metric-card-header">Casa legislativa</span>
                     <strong className="metric-card-value highlight-orange">
-                        {lawmaker.attendance}
+                        {lawmaker.chamber === "FEDERAL_SENATE" ? "Senado" : "Câmara"}
                     </strong>
-                    <p className="metric-card-subtext">{lawmaker.sessionsCount || "Roll-call deliberative sessions"}</p>
+                    <p className="metric-card-subtext">
+                        {lawmaker.externalId ? `Registro oficial nº ${lawmaker.externalId}` : "Mandato em exercício"}
+                    </p>
                 </article>
 
                 <article className="analysis-metric-card">
-                    <span className="metric-card-header">ANNUAL CEAP SPENDING</span>
-                    <strong className="metric-card-value">
-                        {lawmaker.expensesYearly || lawmaker.expenses}
+                    <span className="metric-card-header">Despesas CEAP registradas</span>
+                    <strong className="metric-card-value tabular-nums">
+                        {lawmaker.totalExpensesFormatted || lawmaker.expenses || "R$ 0,00"}
                     </strong>
-                    <p className="metric-card-subtext">{lawmaker.expensesContext || "Within state quota average"}</p>
+                    <p className="metric-card-subtext">
+                        {lawmaker.expensesCount > 0
+                            ? `${lawmaker.expensesCount} lançamentos contabilizados na base`
+                            : "Nenhum lançamento registrado até o momento"}
+                    </p>
                 </article>
 
                 <article className="analysis-metric-card">
-                    <span className="metric-card-header">BILLS PROPOSED</span>
-                    <strong className="metric-card-value">{lawmaker.projects}</strong>
-                    <p className="metric-card-subtext">Authored propositions in review</p>
+                    <span className="metric-card-header">Projetos de Lei de autoria</span>
+                    <strong className="metric-card-value tabular-nums">
+                        {lawmaker.billsCount ?? bills.length}
+                    </strong>
+                    <p className="metric-card-subtext">Proposições cadastradas no sistema</p>
                 </article>
             </section>
 
-            {/* CEAP Quota Spending Section */}
             <section
                 className="analysis-section-card"
-                aria-label="Parliamentary Quota Expenses (CEAP)"
+                aria-label="Prestação de contas da Cota Parlamentar (CEAP)"
             >
                 <header className="analysis-section-header">
                     <div className="analysis-section-title-group">
                         <div className="section-icon-box">
                             <RiWallet3Line size={22} aria-hidden="true" />
                         </div>
-                        <h2>Top Quota Expenses (CEAP)</h2>
+                        <h2>Prestação de Contas (CEAP)</h2>
                     </div>
 
                     <div className="analysis-section-actions">
@@ -256,100 +312,144 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
                             type="button"
                             className="btn-export-csv"
                             onClick={handleExportCsv}
-                            title="Exportar demonstrativo de gastos em CSV"
+                            title="Exportar demonstrativo de despesas em CSV"
                             aria-label="Exportar gastos em CSV"
+                            disabled={expenses.length === 0}
                         >
                             <RiDownloadLine size={16} aria-hidden="true" />
-                            <span>Exportar Gastos (CSV)</span>
+                            <span>Exportar CSV</span>
                         </button>
 
-                        <select
-                            className="analysis-quota-select"
-                            value={selectedQuotaYear}
-                            onChange={(e) => setSelectedQuotaYear(e.target.value)}
-                            aria-label="Select parliamentary quota fiscal year"
-                        >
-                            <option value="Quota 2026">Quota 2026</option>
-                            <option value="Quota 2025">Quota 2025</option>
-                        </select>
+                        {availableYears.length > 0 && (
+                            <select
+                                className="analysis-quota-select"
+                                value={activeYear}
+                                onChange={(e) => setSelectedQuotaYear(e.target.value)}
+                                aria-label="Selecionar ano das despesas CEAP"
+                            >
+                                {availableYears.map((yr) => (
+                                    <option key={yr} value={yr}>
+                                        {yr}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
                     </div>
                 </header>
 
-                <div className="analysis-expenses-list">
-                    {expenses.map((expense) => (
-                        <div className="analysis-expense-item" key={expense.category}>
-                            <div className="analysis-expense-top">
-                                <span className="expense-item-title">{expense.category}</span>
-                                <strong className="expense-item-amount">{expense.amount}</strong>
-                            </div>
+                {expenses.length === 0 ? (
+                    <p className="analysis-empty-note">
+                        Ainda não há notas fiscais ou reembolsos da CEAP registrados para este mandato na base atual.
+                    </p>
+                ) : (
+                    <div className="analysis-expenses-list">
+                        {expenses.map((expense) => (
+                            <div className="analysis-expense-item" key={expense.category}>
+                                <div className="analysis-expense-top">
+                                    <span className="expense-item-title">{expense.category}</span>
+                                    <strong className="expense-item-amount tabular-nums">{expense.amount}</strong>
+                                </div>
 
-                            <div
-                                className="analysis-progress-bar-bg"
-                                role="progressbar"
-                                aria-label={expense.category}
-                                aria-valuenow={expense.percentage}
-                                aria-valuemin={0}
-                                aria-valuemax={100}
-                            >
                                 <div
-                                    className={`analysis-progress-bar-fill tone-${expense.tone || "medium"}`}
-                                    style={{ width: `${expense.percentage}%` }}
-                                />
+                                    className="analysis-progress-bar-bg"
+                                    role="progressbar"
+                                    aria-label={expense.category}
+                                    aria-valuenow={expense.percentage}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                >
+                                    <div
+                                        className={`analysis-progress-bar-fill tone-${expense.tone || "medium"}`}
+                                        style={{ width: `${expense.percentage}%` }}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </section>
 
-            {/* Key Floor Votes */}
             <section
                 className="analysis-section-card"
-                aria-label="Key Floor Votes & Positions"
+                aria-label="Projetos de Lei vinculados ao parlamentar"
             >
                 <header className="analysis-section-header">
                     <div className="analysis-section-title-group">
                         <div className="section-icon-box">
-                            <RiBarChartBoxLine size={22} aria-hidden="true" />
+                            <RiFileList3Line size={22} aria-hidden="true" />
                         </div>
-                        <h2>Key Roll-Call Floor Votes</h2>
+                        <h2>Projetos de Lei de Autoria</h2>
                     </div>
-
-                    <span className="analysis-civic-tag">Civic Audit Record</span>
                 </header>
 
-                <div className="analysis-votes-list">
-                    {lawmaker.votes?.map((vote) => (
-                        <article className="analysis-vote-item" key={vote.title}>
-                            <div className="analysis-vote-top">
-                                <h3 className="vote-item-title">{vote.title}</h3>
-                                <span
-                                    className={`vote-item-badge ${vote.status === "vote-positive"
-                                            ? "vote-positive"
-                                            : "vote-negative"
-                                        }`}
-                                >
-                                    {vote.position}
-                                </span>
-                            </div>
-                            <p className="vote-item-desc">{vote.description}</p>
-                        </article>
-                    ))}
-                </div>
+                {bills.length === 0 ? (
+                    <p className="analysis-empty-note">
+                        Nenhum projeto de lei vinculado diretamente a este mandato no banco até o momento.
+                    </p>
+                ) : (
+                    <div className="analysis-votes-list">
+                        {bills.map((bill) => {
+                            const billKey = bill.id || bill.code;
+                            const explanation = billExplanations[billKey];
+                            const isExplaining = explainingBillId === billKey;
+
+                            return (
+                                <article className="analysis-vote-item" key={billKey}>
+                                    <div className="analysis-vote-top">
+                                        <h3 className="vote-item-title">
+                                            {bill.code} — {bill.title}
+                                        </h3>
+                                        <span className="analysis-civic-tag">{bill.status}</span>
+                                    </div>
+                                    <p className="vote-item-desc">{bill.summary}</p>
+
+                                    <div className="analysis-bill-actions">
+                                        <button
+                                            type="button"
+                                            className="btn-explain-bill"
+                                            onClick={() => handleExplainBill(bill)}
+                                            disabled={isExplaining}
+                                        >
+                                            <RiSparklingLine size={15} aria-hidden="true" />
+                                            <span>
+                                                {isExplaining
+                                                    ? "Traduzindo ementa..."
+                                                    : explanation
+                                                      ? "Ocultar explicação"
+                                                      : "Explicar em linguagem simples"}
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    {explanation && (
+                                        <div className="analysis-bill-explanation">
+                                            <p>{explanation.simplifiedExplanation}</p>
+                                            {explanation.practicalImpacts && (
+                                                <p className="analysis-bill-impact">
+                                                    <strong>Impacto prático:</strong> {explanation.practicalImpacts}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+                                </article>
+                            );
+                        })}
+                    </div>
+                )}
             </section>
 
-            {/* Civic AI Assistant Banner */}
             <section
                 className="analysis-ai-civic-banner"
-                aria-label="Civic AI Query Assistant"
+                aria-label="Assistente Huari IA"
             >
                 <div className="ai-banner-icon-wrapper">
-                    <RiSparklingLine size={32} aria-hidden="true" />
+                    <RiSparklingLine size={28} aria-hidden="true" />
                 </div>
 
                 <div className="ai-banner-content">
-                    <h2>Have questions about this lawmaker&apos;s record?</h2>
+                    <h2>Quer aprofundar a análise deste mandato?</h2>
                     <p>
-                        Our Civic AI examines legislative voting histories, CEAP vouchers, and sponsored bills to answer questions in impartial, accessible language.
+                        Pergunte à Huari IA sobre regras da Cota Parlamentar, projetos de lei ou acompanhamento legislativo.
                     </p>
                 </div>
 
@@ -358,7 +458,7 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
                     className="btn-ask-ai"
                     onClick={handleAskAi}
                 >
-                    Ask Civic AI
+                    Perguntar à Huari IA
                 </button>
             </section>
         </div>

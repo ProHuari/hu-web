@@ -12,19 +12,24 @@ import './style.css';
 
 const ITEMS_PER_PAGE = 6;
 
+const INITIAL_FILTERS = {
+    search: '',
+    chamber: '',
+    state: '',
+    party: '',
+    sort: 'name_asc',
+};
+
 export default function LawmakersPage() {
     const navigate = useNavigate();
 
-    const [filters, setFilters] = useState({
-        search: '',
-        state: '',
-        party: '',
-        sort: 'name_asc',
-    });
+    const [filters, setFilters] = useState(INITIAL_FILTERS);
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [data, setData] = useState([]);
     const [totalElements, setTotalElements] = useState(0);
+    const [reloadTick, setReloadTick] = useState(0);
 
     const handleFilterChange = useCallback((field, value) => {
         setFilters((prev) => ({ ...prev, [field]: value }));
@@ -32,7 +37,7 @@ export default function LawmakersPage() {
     }, []);
 
     const handleResetFilters = useCallback(() => {
-        setFilters({ search: '', state: '', party: '', sort: 'name_asc' });
+        setFilters(INITIAL_FILTERS);
         setCurrentPage(1);
     }, []);
 
@@ -41,6 +46,7 @@ export default function LawmakersPage() {
 
         async function fetchLawmakers() {
             setLoading(true);
+            setError(null);
             try {
                 const result = await lawmakersService.getLawmakers(filters, {
                     page: currentPage,
@@ -51,7 +57,12 @@ export default function LawmakersPage() {
                     setTotalElements(result.totalElements || 0);
                 }
             } catch (err) {
-                console.error('Failed to load lawmakers', err);
+                console.error('Falha ao carregar parlamentares', err);
+                if (!isCancelled) {
+                    setError(err?.message || 'Não foi possível consultar a lista de parlamentares.');
+                    setData([]);
+                    setTotalElements(0);
+                }
             } finally {
                 if (!isCancelled) {
                     setLoading(false);
@@ -64,20 +75,22 @@ export default function LawmakersPage() {
         return () => {
             isCancelled = true;
         };
-    }, [filters, currentPage]);
+    }, [filters, currentPage, reloadTick]);
 
     const totalPages = Math.ceil(totalElements / ITEMS_PER_PAGE);
 
     return (
         <div className="lawmakers-page-container">
             <PageHeader
-                badgeText="Civic Oversight Platform"
-                title="National Congress Directory"
-                description="Monitor floor attendance, legislative propositions, and parliamentary quota (CEAP) expenses for federal deputies and senators."
+                badgeText="Congresso Nacional"
+                title="Diretório de Parlamentares"
+                description="Consulte mandatos da Câmara dos Deputados e do Senado Federal, acompanhe despesas registradas na CEAP e projetos de lei."
                 rightSlot={
                     <div className="congress-stat-chip">
                         <RiGovernmentLine size={20} aria-hidden="true" />
-                        <span>594 Monitored Mandates</span>
+                        <span>
+                            {totalElements} {totalElements === 1 ? 'mandato listado' : 'mandatos listados'}
+                        </span>
                     </div>
                 }
             />
@@ -89,18 +102,25 @@ export default function LawmakersPage() {
                 totalResults={totalElements}
             />
 
-            <section className="lawmakers-grid-section" aria-label="Lawmakers Directory List">
+            <section className="lawmakers-grid-section" aria-label="Lista de parlamentares">
                 {loading ? (
-                    <div className="lawmakers-cards-grid" role="status" aria-label="Loading lawmakers data">
+                    <div className="lawmakers-cards-grid" role="status" aria-label="Carregando parlamentares">
                         {Array.from({ length: ITEMS_PER_PAGE }).map((_, idx) => (
                             <ParliamentarianCardSkeleton key={idx} />
                         ))}
                     </div>
+                ) : error ? (
+                    <EmptyState
+                        title="Erro ao consultar parlamentares"
+                        description={error}
+                        actionText="Tentar novamente"
+                        onAction={() => setReloadTick((prev) => prev + 1)}
+                    />
                 ) : data.length === 0 ? (
                     <EmptyState
-                        title="No lawmakers found"
-                        description="Try adjusting your search criteria or clearing active filters."
-                        actionText="Clear Filters"
+                        title="Nenhum parlamentar encontrado"
+                        description="Tente alterar os termos da busca ou limpar os filtros aplicados."
+                        actionText="Limpar filtros"
                         onAction={handleResetFilters}
                     />
                 ) : (
