@@ -17,7 +17,7 @@ import {
     RiDatabase2Line,
     RiAlertLine,
 } from 'react-icons/ri';
-import { adminAnalyticsService } from '../../../services/adminAnalyticsService';
+import { adminAnalyticsService } from '../../../services/admin-analytics-service';
 import { SkeletonBlock } from '../../skeleton';
 import './style.css';
 
