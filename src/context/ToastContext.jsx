@@ -8,7 +8,7 @@ import {
     RiAlertFill,
     RiCloseLine,
 } from 'react-icons/ri';
-import { ToastContext } from './toastInstance';
+import { ToastContext } from './toast-instance';
 import '../components/toast/style.css';
 
 const TOAST_ICONS = {
