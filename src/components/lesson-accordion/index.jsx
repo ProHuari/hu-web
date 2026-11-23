@@ -11,9 +11,6 @@ import {
 import { useApp } from '../../context/AppContext';
 import './style.css';
 
-/**
- * LessonAccordion - Course syllabus sidebar with auto-expanded active module and smooth spring animations.
- */
 export default function LessonAccordion({
     modules = [],
     currentCourseId,
@@ -26,7 +23,7 @@ export default function LessonAccordion({
     const activeModuleIndex = useMemo(
         () =>
             modules.findIndex((mod) =>
-                (mod.lessons || []).some((l) => l.id === currentLessonId)
+                (mod.lessons || []).some((l) => String(l.id) === String(currentLessonId))
             ),
         [modules, currentLessonId]
     );
@@ -44,10 +41,12 @@ export default function LessonAccordion({
     };
 
     return (
-        <aside className="huari-lesson-accordion" aria-label="Course curriculum">
+        <aside className="huari-lesson-accordion" aria-label="Conteúdo da trilha">
             <div className="accordion-header-title">
-                <h3>Course Curriculum</h3>
-                <span className="accordion-modules-count">{modules.length} Modules</span>
+                <h3>Conteúdo da trilha</h3>
+                <span className="accordion-modules-count">
+                    {modules.length} {modules.length === 1 ? 'módulo' : 'módulos'}
+                </span>
             </div>
 
             <div className="accordion-modules-list">
@@ -63,7 +62,7 @@ export default function LessonAccordion({
                                 aria-expanded={isOpen}
                             >
                                 <div className="module-title-wrapper">
-                                    <span className="module-index-badge">Module {modIdx + 1}</span>
+                                    <span className="module-index-badge">Módulo {modIdx + 1}</span>
                                     <strong className="module-title">{moduleItem.title}</strong>
                                 </div>
                                 <RiArrowDownSLine
@@ -83,7 +82,7 @@ export default function LessonAccordion({
                                         style={{ overflow: 'hidden' }}
                                     >
                                         {(moduleItem.lessons || []).map((lesson) => {
-                                            const isCurrent = lesson.id === currentLessonId;
+                                            const isCurrent = String(lesson.id) === String(currentLessonId);
                                             const lessonUrl = `/learn/${currentCourseId}/${lesson.id}`;
                                             const completed = isLessonCompleted
                                                 ? isLessonCompleted(currentCourseId, lesson.id)
@@ -101,7 +100,7 @@ export default function LessonAccordion({
                                                                 <RiCheckboxCircleFill
                                                                     className="lesson-check-done"
                                                                     size={18}
-                                                                    title="Completed Lesson"
+                                                                    title="Aula concluída"
                                                                 />
                                                             ) : (
                                                                 <RiPlayCircleLine

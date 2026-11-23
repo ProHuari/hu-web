@@ -7,8 +7,6 @@ import {
     RiTimeLine,
     RiGraduationCapLine,
     RiPlayCircleLine,
-    RiFileTextLine,
-    RiQuestionnaireLine,
     RiCheckboxCircleLine,
     RiCheckboxCircleFill,
     RiUserLine,
@@ -48,7 +46,7 @@ export default function LessonOverview() {
                 }
             })
             .catch((err) => {
-                console.error('Failed to load course details', err);
+                console.error('Falha ao carregar detalhes da trilha', err);
                 if (isMounted) {
                     setNotFound(true);
                 }
@@ -69,7 +67,7 @@ export default function LessonOverview() {
             <div className="lesson-overview-page-container">
                 <Link to="/learn" className="overview-back-link">
                     <RiArrowLeftLine size={18} aria-hidden="true" />
-                    <span>Back to Course Catalog</span>
+                    <span>Voltar para as trilhas</span>
                 </Link>
                 <CourseOverviewSkeleton />
             </div>
@@ -81,12 +79,12 @@ export default function LessonOverview() {
             <div className="lesson-overview-page-container">
                 <Link to="/learn" className="overview-back-link">
                     <RiArrowLeftLine size={18} aria-hidden="true" />
-                    <span>Back to Course Catalog</span>
+                    <span>Voltar para as trilhas</span>
                 </Link>
                 <EmptyState
-                    title="Course Track Not Found"
-                    description="We could not find the requested civic track. It may have been relocated or updated."
-                    actionText="Browse Courses"
+                    title="Trilha não encontrada"
+                    description="Não encontramos o curso solicitado. Ele pode ter sido removido ou atualizado."
+                    actionText="Ir para o catálogo"
                     onAction={() => navigate('/learn')}
                 />
             </div>
@@ -104,8 +102,8 @@ export default function LessonOverview() {
         isLessonCompleted ? !isLessonCompleted(course.id, lesson.id) : !lesson.completed
     );
     const targetLesson = nextUncompleted || lessons[0] || {
-        id: 'lesson-1',
-        title: 'Course Introduction',
+        id: '1',
+        title: 'Introdução ao curso',
         duration: '15 min',
     };
     const totalLessons = lessons.length;
@@ -116,34 +114,31 @@ export default function LessonOverview() {
             <div className="overview-topbar">
                 <Link to="/learn" className="overview-back-link">
                     <RiArrowLeftLine size={18} aria-hidden="true" />
-                    <span>Back to Course Catalog</span>
+                    <span>Voltar para as trilhas</span>
                 </Link>
 
                 {isAdmin && (
                     <div className="overview-admin-controls">
                         <span className="overview-admin-status">
-                            {course.status === 'PUBLISHED' ? 'Published Track' : 'Draft Preview'}
+                            {course.status === 'DRAFT' ? 'Rascunho' : 'Publicada'}
                         </span>
                         <Link
                             to={`/admin/courses/${course.id}/edit`}
                             className="overview-admin-edit-btn"
                         >
                             <RiEditLine size={16} aria-hidden="true" />
-                            <span>Edit Course</span>
+                            <span>Editar trilha</span>
                         </Link>
                     </div>
                 )}
             </div>
 
-            {/* Hero banner */}
-            <section className="overview-hero" aria-label="Course Track Overview">
+            <section className="overview-hero" aria-label="Apresentação da trilha">
                 <div className="overview-hero-content">
                     <div className="overview-badges">
                         <span>{course.category}</span>
                         <span>{course.level}</span>
                     </div>
-
-                    <span className="overview-eyebrow">HUARI CIVIC ACADEMY</span>
 
                     <h1>{course.title}</h1>
 
@@ -157,7 +152,7 @@ export default function LessonOverview() {
 
                         <span className="tabular-nums">
                             <RiBookOpenLine size={17} aria-hidden="true" />
-                            {totalLessons} {totalLessons === 1 ? 'lesson' : 'lessons'} in track
+                            {totalLessons} {totalLessons === 1 ? 'aula' : 'aulas'}
                         </span>
 
                         <span>
@@ -178,10 +173,10 @@ export default function LessonOverview() {
                     >
                         <span>
                             {progress > 0 && progress < 100
-                                ? 'Continue Learning Track'
+                                ? 'Continuar trilha'
                                 : progress === 100
-                                  ? 'Review Track Lessons'
-                                  : 'Start Learning Track'}
+                                  ? 'Rever aulas'
+                                  : 'Iniciar trilha'}
                         </span>
                         <RiArrowRightLine size={19} aria-hidden="true" />
                     </NavLink>
@@ -209,21 +204,16 @@ export default function LessonOverview() {
                 </div>
             </section>
 
-            {/* Learning objectives */}
             {course.objectives && course.objectives.length > 0 && (
-                <section className="overview-section" aria-label="Learning Objectives">
+                <section className="overview-section" aria-label="Objetivos de aprendizagem">
                     <div className="overview-section-heading">
-                        <span className="overview-section-label">ABOUT THIS TRACK</span>
-                        <h2>What will you master?</h2>
-                        <p>
-                            Key competencies and oversight skills acquired throughout this curriculum.
-                        </p>
+                        <h2>O que você vai aprender nesta trilha</h2>
                     </div>
 
-                    <div className="overview-objectives-grid">
+                    <div className="overview-objectives-list">
                         {course.objectives.map((objective, index) => (
-                            <div className="overview-objective-card" key={index}>
-                                <RiCheckboxCircleLine size={22} aria-hidden="true" />
+                            <div className="overview-objective-row" key={index}>
+                                <RiCheckboxCircleLine size={19} aria-hidden="true" />
                                 <span>{objective}</span>
                             </div>
                         ))}
@@ -231,111 +221,73 @@ export default function LessonOverview() {
                 </section>
             )}
 
-            {/* Learning methodology */}
-            <section className="overview-section" aria-label="Course Methodology">
+            <section className="overview-section overview-curriculum" aria-label="Conteúdo programático">
                 <div className="overview-section-heading">
-                    <span className="overview-section-label">METHODOLOGY</span>
-                    <h2>How you will learn</h2>
+                    <h2>Módulos e aulas</h2>
                     <p>
-                        Multi-format pedagogy designed for accessible, self-paced civic mastery.
+                        Escolha qualquer aula abaixo para abrir o vídeo e acompanhar seu progresso.
                     </p>
                 </div>
 
-                <div className="overview-formats-grid">
-                    <article className="overview-format-card">
-                        <div className="overview-format-icon" aria-hidden="true">
-                            <RiPlayCircleLine size={25} />
-                        </div>
-                        <h3>Video Masterclasses</h3>
-                        <p>
-                            Concise, high-definition video walkthroughs explaining constitutional mechanisms.
-                        </p>
-                    </article>
+                {(!course.modules || course.modules.length === 0) ? (
+                    <EmptyState
+                        title="Nenhum módulo publicado ainda"
+                        description="O conteúdo desta trilha está sendo organizado e aparecerá aqui em breve."
+                    />
+                ) : (
+                    <div className="overview-modules-list">
+                        {course.modules.map((module, index) => (
+                            <article className="overview-module-card" key={module.id || index}>
+                                <div className="overview-module-header">
+                                    <div>
+                                        <span>Módulo {index + 1}</span>
+                                        <h3>{module.title}</h3>
+                                    </div>
 
-                    <article className="overview-format-card">
-                        <div className="overview-format-icon" aria-hidden="true">
-                            <RiFileTextLine size={25} />
-                        </div>
-                        <h3>Supporting Guides</h3>
-                        <p>
-                            Curated infographics, legislation references, and open data schema downloads.
-                        </p>
-                    </article>
-
-                    <article className="overview-format-card">
-                        <div className="overview-format-icon" aria-hidden="true">
-                            <RiQuestionnaireLine size={25} />
-                        </div>
-                        <h3>Practical Case Audits</h3>
-                        <p>
-                            Real-world exercises analyzing actual congressional expense claims and floor votes.
-                        </p>
-                    </article>
-                </div>
-            </section>
-
-            {/* Curriculum syllabus */}
-            <section className="overview-section overview-curriculum" aria-label="Curriculum Modules">
-                <div className="overview-section-heading">
-                    <span className="overview-section-label">CURRICULUM SYLLABUS</span>
-                    <h2>Course Modules &amp; Lessons</h2>
-                    <p>
-                        Structured progression through topics. Click any lesson to begin studying.
-                    </p>
-                </div>
-
-                <div className="overview-modules-list">
-                    {course.modules?.map((module, index) => (
-                        <article className="overview-module-card" key={module.id || index}>
-                            <div className="overview-module-header">
-                                <div>
-                                    <span>MODULE {index + 1}</span>
-                                    <h3>{module.title}</h3>
+                                    <span className="overview-module-count tabular-nums">
+                                        {(module.lessons || []).length}{' '}
+                                        {(module.lessons || []).length === 1 ? 'aula' : 'aulas'}
+                                    </span>
                                 </div>
 
-                                <span className="overview-module-count tabular-nums">
-                                    {(module.lessons || []).length} lessons
-                                </span>
-                            </div>
+                                <div className="overview-module-lessons">
+                                    {(module.lessons || []).map((lesson) => {
+                                        const done = isLessonCompleted
+                                            ? isLessonCompleted(course.id, lesson.id)
+                                            : Boolean(lesson.completed);
 
-                            <div className="overview-module-lessons">
-                                {(module.lessons || []).map((lesson) => {
-                                    const done = isLessonCompleted
-                                        ? isLessonCompleted(course.id, lesson.id)
-                                        : Boolean(lesson.completed);
-
-                                    return (
-                                        <NavLink
-                                            to={`/learn/${course.id}/${lesson.id}`}
-                                            className="overview-lesson-item"
-                                            key={lesson.id}
-                                        >
-                                            {done ? (
-                                                <RiCheckboxCircleFill
-                                                    size={19}
-                                                    style={{ color: '#16a34a' }}
-                                                    aria-label="Completed"
-                                                />
-                                            ) : (
-                                                <RiPlayCircleLine size={19} aria-hidden="true" />
-                                            )}
-                                            <span>{lesson.title}</span>
-                                            <small className="tabular-nums">{lesson.duration}</small>
-                                        </NavLink>
-                                    );
-                                })}
-                            </div>
-                        </article>
-                    ))}
-                </div>
+                                        return (
+                                            <NavLink
+                                                to={`/learn/${course.id}/${lesson.id}`}
+                                                className="overview-lesson-item"
+                                                key={lesson.id}
+                                            >
+                                                {done ? (
+                                                    <RiCheckboxCircleFill
+                                                        size={19}
+                                                        style={{ color: '#16a34a' }}
+                                                        aria-label="Concluída"
+                                                    />
+                                                ) : (
+                                                    <RiPlayCircleLine size={19} aria-hidden="true" />
+                                                )}
+                                                <span>{lesson.title}</span>
+                                                <small className="tabular-nums">{lesson.duration}</small>
+                                            </NavLink>
+                                        );
+                                    })}
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                )}
             </section>
 
-            {/* Bottom Call to Action */}
             <section className="overview-bottom-cta">
                 <div>
-                    <h2>Ready to start your civic journey?</h2>
+                    <h2>Pronto para começar os estudos?</h2>
                     <p>
-                        Access lesson materials, video walkthroughs, and practical tools completely free.
+                        Acompanhe todas as aulas gratuitamente e salve seu progresso na conta.
                     </p>
                 </div>
 
@@ -343,7 +295,7 @@ export default function LessonOverview() {
                     to={`/learn/${course.id}/${targetLesson.id}`}
                     className="overview-start-button"
                 >
-                    <span>{progress > 0 ? 'Continue Learning' : 'Begin Lesson 1'}</span>
+                    <span>{progress > 0 ? 'Continuar de onde parou' : 'Abrir primeira aula'}</span>
                     <RiArrowRightLine size={19} aria-hidden="true" />
                 </NavLink>
             </section>

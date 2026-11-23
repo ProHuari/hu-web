@@ -11,23 +11,15 @@ import { useApp } from '../../context/AppContext';
 import { coursesService } from '../../services/courses-service';
 import './style.css';
 
-/**
- * LearnCatalog - Civic Academy Learning Portal (/learn)
- * Elevated course catalog with animated category pills, skeletons, and contextual admin shortcuts.
- */
 export default function LearnCatalog() {
     const { isAdmin = false } = useApp() || {};
     const [courses, setCourses] = useState([]);
-    const [categories, setCategories] = useState([
-        'All',
-        'Beginners',
-        'Legislative',
-        'Budget & Auditing',
-        'Civic Action',
-    ]);
-    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [categories, setCategories] = useState(['Todas']);
+    const [selectedCategory, setSelectedCategory] = useState('Todas');
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(null);
+    const [reloadTick, setReloadTick] = useState(0);
 
     useEffect(() => {
         let isMounted = true;
@@ -47,7 +39,10 @@ export default function LearnCatalog() {
                 }
             })
             .catch((err) => {
-                console.error('Failed to load courses from service', err);
+                console.error('Falha ao carregar trilhas de ensino', err);
+                if (isMounted) {
+                    setLoadError(err?.message || 'Não foi possível carregar o catálogo de trilhas.');
+                }
             })
             .finally(() => {
                 if (isMounted) {
@@ -58,15 +53,18 @@ export default function LearnCatalog() {
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [reloadTick]);
 
     const filteredCourses = useMemo(() => {
         return courses.filter((course) => {
             const matchesCategory =
-                selectedCategory === 'All' || course.category === selectedCategory;
+                selectedCategory === 'Todas' ||
+                selectedCategory === 'All' ||
+                course.category === selectedCategory;
+            const query = searchQuery.toLowerCase();
             const matchesSearch =
-                (course.title && course.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                (course.description && course.description.toLowerCase().includes(searchQuery.toLowerCase()));
+                (course.title && course.title.toLowerCase().includes(query)) ||
+                (course.description && course.description.toLowerCase().includes(query));
             return matchesCategory && matchesSearch;
         });
     }, [courses, selectedCategory, searchQuery]);
@@ -74,45 +72,44 @@ export default function LearnCatalog() {
     return (
         <PageTransition className="learn-page-container">
             <PageHeader
-                badgeText="Huari Civic Academy"
-                title="Citizen Education & Oversight Tracks"
-                description="Free, non-partisan, and structured learning tracks designed to empower citizens to understand, audit, and navigate government institutions."
+                badgeText="Academia Cívica"
+                title="Trilhas de Formação Cidadã"
+                description="Aulas objetivas e gratuitas sobre orçamento público, processo legislativo e ferramentas de acompanhamento de mandatos."
             />
 
             {isAdmin && (
-                <div className="learn-admin-bar" role="region" aria-label="Administrator course shortcuts">
+                <div className="learn-admin-bar" role="region" aria-label="Atalhos de administração de cursos">
                     <div className="learn-admin-bar-label">
                         <RiShieldStarLine size={16} aria-hidden="true" />
-                        <span>Admin Quick Actions</span>
+                        <span>Gestão do catálogo</span>
                     </div>
                     <div className="learn-admin-bar-actions">
                         <Link to="/admin/courses" className="learn-admin-secondary-link">
                             <RiSettings4Line size={15} aria-hidden="true" />
-                            <span>Manage All Courses</span>
+                            <span>Gerenciar cursos</span>
                         </Link>
                         <Link to="/admin/courses/new" className="learn-admin-primary-link">
                             <RiAddLine size={16} aria-hidden="true" />
-                            <span>New Course</span>
+                            <span>Novo curso</span>
                         </Link>
                     </div>
                 </div>
             )}
 
-            {/* Filter and Search Bar */}
             <div className="learn-filters-bar">
                 <div className="learn-search-box">
                     <RiSearchLine className="learn-search-icon" size={18} aria-hidden="true" />
                     <input
                         type="text"
                         className="learn-search-input"
-                        placeholder="Search civic tracks, modules, or topics..."
+                        placeholder="Buscar trilhas, temas ou módulos..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        aria-label="Search civic tracks"
+                        aria-label="Buscar trilhas de ensino"
                     />
                 </div>
 
-                <div className="learn-category-pills" role="tablist" aria-label="Course Categories">
+                <div className="learn-category-pills" role="tablist" aria-label="Categorias de ensino">
                     {categories.map((cat) => {
                         const isActive = selectedCategory === cat;
                         return (
@@ -138,21 +135,31 @@ export default function LearnCatalog() {
                 </div>
             </div>
 
-            {/* Courses Grid */}
-            <section className="learn-courses-grid-section" aria-label="Course Tracks Catalog">
+            <section className="learn-courses-grid-section" aria-label="Catálogo de trilhas">
                 {loading ? (
-                    <div className="learn-courses-grid" role="status" aria-label="Loading civic tracks">
+                    <div className="learn-courses-grid" role="status" aria-label="Carregando trilhas de ensino">
                         {Array.from({ length: 6 }).map((_, idx) => (
                             <CourseCardSkeleton key={idx} />
                         ))}
                     </div>
+                ) : loadError ? (
+                    <EmptyState
+                        title="Não foi possível carregar as trilhas"
+                        description={loadError}
+                        actionText="Tentar novamente"
+                        onAction={() => {
+                            setLoading(true);
+                            setLoadError(null);
+                            setReloadTick((prev) => prev + 1);
+                        }}
+                    />
                 ) : filteredCourses.length === 0 ? (
                     <EmptyState
-                        title="No learning tracks found"
-                        description="Try searching with a different term or select 'All' to browse every course."
-                        actionText="View All Tracks"
+                        title="Nenhuma trilha encontrada"
+                        description="Tente buscar por outro termo ou selecione 'Todas' para ver o catálogo completo."
+                        actionText="Ver todas as trilhas"
                         onAction={() => {
-                            setSelectedCategory('All');
+                            setSelectedCategory('Todas');
                             setSearchQuery('');
                         }}
                     />

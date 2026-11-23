@@ -12,20 +12,17 @@ import { useApp } from '../../context/AppContext';
 import ProgressBar from '../progress-bar';
 import './style.css';
 
-/**
- * CourseCard - Civic Academy course preview card with live progress & contextual admin edit shortcut.
- */
 export default function CourseCard({ course, isPreview = false }) {
     const { isAdmin = false, getCourseProgress } = useApp() || {};
     const {
         id,
         title,
         description,
-        category = 'General',
-        level = 'Beginner',
-        duration = '2h 30m',
+        category = 'Geral',
+        level = 'Introdutório',
+        duration = 'Livre',
         progress = 0,
-        lessonsCount = 6,
+        lessonsCount = 0,
         image,
     } = course;
 
@@ -51,11 +48,11 @@ export default function CourseCard({ course, isPreview = false }) {
                         <NavLink
                             to={editUrl}
                             className="course-admin-edit-pill"
-                            title={`Edit "${title}"`}
-                            aria-label={`Edit course ${title}`}
+                            title={`Editar "${title}"`}
+                            aria-label={`Editar trilha ${title}`}
                         >
                             <RiEditLine size={13} aria-hidden="true" />
-                            <span>Edit</span>
+                            <span>Editar</span>
                         </NavLink>
                     )}
                 </div>
@@ -69,7 +66,7 @@ export default function CourseCard({ course, isPreview = false }) {
                     </span>
                     <span className="course-meta-tag">
                         <RiBookOpenLine size={14} aria-hidden="true" />
-                        {lessonsCount} {lessonsCount === 1 ? 'lesson' : 'lessons'}
+                        {lessonsCount} {lessonsCount === 1 ? 'aula' : 'aulas'}
                     </span>
                 </div>
 
@@ -82,12 +79,12 @@ export default function CourseCard({ course, isPreview = false }) {
 
                 {isPreview ? (
                     <span className="course-start-btn" aria-hidden="true">
-                        <span>Start Track</span>
+                        <span>Iniciar trilha</span>
                         <RiArrowRightLine size={16} />
                     </span>
                 ) : (
                     <NavLink to={courseUrl} className="course-start-btn">
-                        <span>{liveProgress > 0 ? 'Continue Course' : 'Start Track'}</span>
+                        <span>{liveProgress > 0 ? 'Continuar trilha' : 'Iniciar trilha'}</span>
                         <RiArrowRightLine size={16} aria-hidden="true" />
                     </NavLink>
                 )}
@@ -108,6 +105,5 @@ CourseCard.propTypes = {
         progress: PropTypes.number,
         lessonsCount: PropTypes.number,
         image: PropTypes.string,
-        modules: PropTypes.array,
     }).isRequired,
 };

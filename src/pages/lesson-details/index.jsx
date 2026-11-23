@@ -18,9 +18,6 @@ import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/useToast';
 import './style.css';
 
-/**
- * LessonPage - Interactive video player and syllabus screen (/learn/:courseId/:lessonId)
- */
 export default function LessonPage() {
     const { courseId, lessonId } = useParams();
     const navigate = useNavigate();
@@ -48,7 +45,7 @@ export default function LessonPage() {
                 }
             })
             .catch((err) => {
-                console.error('Failed to load lesson course', err);
+                console.error('Falha ao carregar aula', err);
                 if (isMounted) {
                     setNotFound(true);
                 }
@@ -70,7 +67,7 @@ export default function LessonPage() {
                 <div className="lesson-nav-top-bar">
                     <Link to="/learn" className="lesson-back-btn">
                         <RiArrowLeftLine size={18} aria-hidden="true" />
-                        <span>Back to Course Catalog</span>
+                        <span>Voltar para as trilhas</span>
                     </Link>
                 </div>
                 <CourseOverviewSkeleton />
@@ -84,13 +81,13 @@ export default function LessonPage() {
                 <div className="lesson-nav-top-bar">
                     <Link to="/learn" className="lesson-back-btn">
                         <RiArrowLeftLine size={18} aria-hidden="true" />
-                        <span>Back to Course Catalog</span>
+                        <span>Voltar para as trilhas</span>
                     </Link>
                 </div>
                 <EmptyState
-                    title="Lesson Not Found"
-                    description="We could not locate this lesson or course module. Please verify the URL or return to the course catalog."
-                    actionText="Browse Courses"
+                    title="Aula não encontrada"
+                    description="Não localizamos esta aula ou módulo no momento. Volte ao catálogo para escolher outra trilha."
+                    actionText="Ir para o catálogo"
                     onAction={() => navigate('/learn')}
                 />
             </div>
@@ -108,7 +105,7 @@ export default function LessonPage() {
                 ? isLessonCompleted(course.id, l.id)
                 : Boolean(l.completed);
             if (completed) completedLessonsCount += 1;
-            if (l.id === lessonId) activeLesson = l;
+            if (String(l.id) === String(lessonId)) activeLesson = l;
         });
     });
 
@@ -125,8 +122,8 @@ export default function LessonPage() {
             toggleLessonCompleted(course.id, activeLesson.id);
             toast.success(
                 isCurrentCompleted
-                    ? 'Lesson marked as incomplete.'
-                    : 'Lesson completed! Progress updated.'
+                    ? 'Aula marcada como pendente.'
+                    : 'Aula concluída e progresso atualizado.'
             );
         }
     };
@@ -135,12 +132,12 @@ export default function LessonPage() {
         try {
             if (navigator.clipboard) {
                 await navigator.clipboard.writeText(window.location.href);
-                toast.success('Lesson link copied to clipboard!');
+                toast.success('Link da aula copiado.');
             } else {
-                toast.info('Copy the address from your browser bar to share.');
+                toast.info('Copie o endereço pela barra do navegador para compartilhar.');
             }
         } catch {
-            toast.error('Unable to copy link automatically.');
+            toast.error('Não foi possível copiar o link.');
         }
     };
 
@@ -153,12 +150,11 @@ export default function LessonPage() {
 
     return (
         <PageTransition className="lesson-page-container">
-            {/* Top Navigation Bar */}
             <div className="lesson-nav-top-bar">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                     <Link to={`/learn/${course.id}/overview`} className="lesson-back-btn">
                         <RiArrowLeftLine size={18} aria-hidden="true" />
-                        <span>Back to Course Overview</span>
+                        <span>Voltar à trilha</span>
                     </Link>
 
                     {isAdmin && (
@@ -167,13 +163,13 @@ export default function LessonPage() {
                             className="lesson-admin-edit-link"
                         >
                             <RiEditLine size={15} aria-hidden="true" />
-                            <span>Edit Course</span>
+                            <span>Editar trilha</span>
                         </Link>
                     )}
                 </div>
 
                 <div className="lesson-progress-chip">
-                    <span>Track Progress:</span>
+                    <span>Progresso:</span>
                     <div className="chip-progress-bar">
                         <ProgressBar progress={overallProgress} showLabel={false} height="6px" />
                     </div>
@@ -181,12 +177,11 @@ export default function LessonPage() {
                 </div>
             </div>
 
-            {/* Split Content: Video & Overview + Syllabus Accordion */}
             <div className="lesson-content-split">
-                <section className="lesson-primary-col" aria-label="Lesson Video and Notes">
+                <section className="lesson-primary-col" aria-label="Vídeo e anotações da aula">
                     <VideoPlayer
                         key={activeLesson?.id}
-                        title={activeLesson?.title || 'Lesson Video'}
+                        title={activeLesson?.title || 'Vídeo da aula'}
                         videoUrl={activeLesson?.videoUrl}
                         thumbnail={course.image || undefined}
                         autoPlay={false}
@@ -197,7 +192,7 @@ export default function LessonPage() {
                             <div>
                                 <span className="lesson-course-name">{course.title}</span>
                                 <h1 className="lesson-main-title">{activeLesson?.title}</h1>
-                                <p className="lesson-instructor">Instructor: {course.instructor}</p>
+                                <p className="lesson-instructor">Instrutor: {course.instructor}</p>
                             </div>
 
                             <button
@@ -207,20 +202,20 @@ export default function LessonPage() {
                                 aria-pressed={isCurrentCompleted}
                             >
                                 <RiCheckboxCircleFill size={18} aria-hidden="true" />
-                                <span>{isCurrentCompleted ? 'Completed' : 'Mark as Completed'}</span>
+                                <span>{isCurrentCompleted ? 'Aula concluída' : 'Marcar como concluída'}</span>
                             </button>
                         </div>
 
                         <div className="lesson-summary-box">
-                            <h3>Lesson Summary &amp; Key Takeaways</h3>
+                            <h3>Resumo da aula</h3>
                             <p>
                                 {activeLesson?.summary ||
-                                    'Follow along with the video masterclass above to review the constitutional and statutory foundations covered in this lesson.'}
+                                    'Assista ao vídeo acima para acompanhar os conceitos práticos abordados nesta aula.'}
                             </p>
                         </div>
 
                         <div className="lesson-resources-row">
-                            {lessonResources.length > 0 ? (
+                            {lessonResources.length > 0 &&
                                 lessonResources.map((res) => (
                                     <a
                                         key={res.id || res.url}
@@ -231,21 +226,9 @@ export default function LessonPage() {
                                         style={{ textDecoration: 'none' }}
                                     >
                                         <RiDownloadLine size={16} aria-hidden="true" />
-                                        <span>{res.title || 'PDF Study Guide'}</span>
+                                        <span>{res.title || 'Material complementar'}</span>
                                     </a>
-                                ))
-                            ) : (
-                                <button
-                                    type="button"
-                                    className="btn-resource"
-                                    onClick={() =>
-                                        toast.info('No external PDF guide attached to this lesson yet.')
-                                    }
-                                >
-                                    <RiDownloadLine size={16} aria-hidden="true" />
-                                    <span>PDF Study Guide</span>
-                                </button>
-                            )}
+                                ))}
 
                             <button
                                 type="button"
@@ -253,13 +236,13 @@ export default function LessonPage() {
                                 onClick={handleCopyShareLink}
                             >
                                 <RiShareForwardLine size={16} aria-hidden="true" />
-                                <span>Share Lesson</span>
+                                <span>Compartilhar aula</span>
                             </button>
                         </div>
                     </div>
                 </section>
 
-                <section className="lesson-sidebar-col" aria-label="Course Syllabus Sidebar">
+                <section className="lesson-sidebar-col" aria-label="Conteúdo da trilha">
                     <LessonAccordion
                         modules={course.modules || []}
                         currentCourseId={course.id}

@@ -249,69 +249,33 @@
 }
 
 /* Objetivos */
-.overview-objectives-grid {
+.overview-objectives-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+    border-top: 1px solid var(--color-border, #e5e7eb);
 }
 
-.overview-objective-card {
+.overview-objective-row {
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    padding: 1.15rem;
-    border: 1px solid var(--color-border, #e5e7eb);
-    border-radius: var(--radius-md, 12px);
-    background-color: var(--color-surface, #ffffff);
+    padding: 1rem 1.25rem 1rem 0;
+    border-bottom: 1px solid var(--color-border, #e5e7eb);
     color: var(--color-text-primary, #111827);
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     line-height: 1.5;
 }
 
-.overview-objective-card svg {
+.overview-objective-row svg {
     flex-shrink: 0;
-    color: var(--color-scale-primary-500, #f15a24);
-    margin-top: 0.1rem;
+    color: var(--color-scale-primary-600, #d4460e);
+    margin-top: 0.15rem;
 }
 
-/* Formatos de aprendizagem */
-.overview-formats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
-}
-
-.overview-format-card {
-    padding: 1.5rem;
-    border: 1px solid var(--color-border, #e5e7eb);
-    border-radius: var(--radius-md, 12px);
-    background-color: var(--color-surface, #ffffff);
-}
-
-.overview-format-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    margin-bottom: 1rem;
-    border-radius: var(--radius-sm, 8px);
-    background-color: #fff0e9;
-    color: #e6531d;
-}
-
-.overview-format-card h3 {
-    margin: 0 0 0.5rem;
-    color: var(--color-text-primary, #111827);
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.overview-format-card p {
-    margin: 0;
-    color: var(--color-text-secondary, #4b5563);
-    font-size: 0.85rem;
-    line-height: 1.5;
+@media (max-width: 720px) {
+    .overview-objectives-list {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Course syllabus */

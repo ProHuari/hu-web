@@ -4,12 +4,9 @@ import { motion } from 'motion/react';
 import { RiPlayCircleFill, RiFilmLine } from 'react-icons/ri';
 import './style.css';
 
-/**
- * VideoPlayer - Responsive 16:9 video player supporting YouTube embeds and HTML5 video.
- */
 export default function VideoPlayer({
     videoUrl,
-    title = 'Lesson Video',
+    title = 'Vídeo da aula',
     thumbnail,
     autoPlay = false,
 }) {
@@ -46,7 +43,7 @@ export default function VideoPlayer({
                         controls
                         autoPlay
                     >
-                        Your browser does not support HTML5 video playback.
+                        Seu navegador não suporta reprodução de vídeo HTML5.
                     </video>
                 ) : (
                     <div
@@ -61,7 +58,7 @@ export default function VideoPlayer({
                                 onClick={() => setPlayingUrl(videoUrl)}
                                 whileHover={{ scale: 1.08 }}
                                 whileTap={{ scale: 0.94 }}
-                                aria-label={`Watch lesson: ${title}`}
+                                aria-label={`Assistir à aula: ${title}`}
                             >
                                 <RiPlayCircleFill size={68} />
                             </motion.button>
@@ -77,14 +74,14 @@ export default function VideoPlayer({
                             >
                                 <RiFilmLine size={40} style={{ opacity: 0.85, marginBottom: '0.4rem' }} />
                                 <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 600 }}>
-                                    No video URL attached to this lesson yet
+                                    Esta aula ainda não possui vídeo anexado
                                 </p>
                             </div>
                         )}
                         <div className="huari-video-meta">
                             <span className="huari-video-badge">
                                 <RiFilmLine size={14} />
-                                Huari Civic Academy
+                                Academia Cívica Huari
                             </span>
                             <h3 className="huari-video-title">{title}</h3>
                         </div>
