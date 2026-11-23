@@ -13,7 +13,7 @@ import {
 import { lawmakersService } from "../../services/lawmakers-service";
 import { useApp } from "../../context/AppContext";
 import { useToast } from "../../context/useToast";
-import { exportExpensesToCsv } from "../../utils/csvExport";
+import { exportExpensesToCsv } from "../../utils/csv-export";
 import Avatar from "../../components/avatar";
 import Badge from "../../components/badge";
 import EmptyState from "../../components/empty-state";
