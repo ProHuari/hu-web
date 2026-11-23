@@ -166,7 +166,7 @@ export default function Login({
             <header className="login-header-block">
                 <div className="login-security-pill">
                     <RiShieldCheckLine size={15} aria-hidden="true" />
-                    <span>Secure Access • Huari Civic Platform</span>
+                    <span>Secure Access — Huari Civic Platform</span>
                 </div>
                 <h1 className="login-title">
                     {activeTab === "login"

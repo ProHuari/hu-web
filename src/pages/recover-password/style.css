@@ -130,11 +130,6 @@
     white-space: nowrap;
 }
 
-.recover-password-footer a::before {
-    content: "•";
-    margin-right: 8px;
-}
-
 .recover-password-footer a:hover {
     color: var(--color-scale-primary-700);
 }

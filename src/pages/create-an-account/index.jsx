@@ -110,7 +110,7 @@ export default function CreateAnAccount({ onNavigateToLogin, onNavigateToHome })
             <header className="create-account-header">
                 <div className="login-security-pill">
                     <RiShieldCheckLine size={15} aria-hidden="true" />
-                    <span>Secure Access • Huari Civic Platform</span>
+                    <span>Secure Access — Huari Civic Platform</span>
                 </div>
                 <h1 className="login-title">Join Huari Democracy</h1>
                 <p className="create-account-subtitle">

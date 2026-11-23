@@ -55,7 +55,7 @@ export default function RecoverPassword({
             <header className="recover-password-header">
                 <div className="login-security-pill">
                     <RiShieldCheckLine size={15} aria-hidden="true" />
-                    <span>Account Recovery • Huari Civic Platform</span>
+                    <span>Account Recovery — Huari Civic Platform</span>
                 </div>
                 <h1 className="text-h2-bold">Reset Your Password</h1>
                 <p className="text-p-regular">

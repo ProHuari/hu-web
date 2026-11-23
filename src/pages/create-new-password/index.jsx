@@ -61,7 +61,7 @@ export default function CreateNewPassword({ onNavigateToLogin }) {
             <header className="new-password-header">
                 <div className="login-security-pill">
                     <RiShieldCheckLine size={15} aria-hidden="true" />
-                    <span>Password Security • Huari Platform</span>
+                    <span>Password Security — Huari Platform</span>
                 </div>
                 <h1 className="text-h2-bold">Create New Password</h1>
                 <p className="text-p-regular">

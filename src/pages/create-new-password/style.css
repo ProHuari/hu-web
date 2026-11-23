@@ -129,11 +129,6 @@
     font-size: 0.85rem;
 }
 
-.new-password-footer a::before {
-    content: "•";
-    margin-right: 8px;
-}
-
 .new-password-footer a:hover {
     color: var(--color-scale-primary-700);
 }
