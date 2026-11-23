@@ -36,7 +36,16 @@ export default function ParliamentarianCard({
     const cardAttendance = lawmaker?.attendance ?? attendance ?? '0%';
     const cardProjects = lawmaker?.projects ?? projects ?? '0';
     const cardExpenses = lawmaker?.expenses ?? expenses ?? 'R$ 0';
-    const cardAvatar = lawmaker?.avatar ?? avatar ?? null;
+    const rawAvatar =
+        lawmaker?.avatar ??
+        lawmaker?.photoUrl ??
+        lawmaker?.urlFoto ??
+        avatar ??
+        null;
+    const cardAvatar =
+        typeof rawAvatar === 'string' && rawAvatar.trim() !== ''
+            ? rawAvatar.trim()
+            : '/images/default-avatar.png';
 
     const bookmarked = cardId ? isBookmarked?.(cardId) : false;
 

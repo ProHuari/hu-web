@@ -166,7 +166,8 @@ export default function ParliamentarianAnalysis({ lawmaker: propLawmaker }) {
             >
                 <Avatar
                     name={lawmaker.name}
-                    src={lawmaker.avatar}
+                    src={lawmaker.avatar || "/images/default-avatar.png"}
+                    fallbackSrc="/images/default-avatar.png"
                     size="xl"
                 />
 

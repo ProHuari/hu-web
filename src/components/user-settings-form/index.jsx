@@ -314,7 +314,12 @@ export default function UserSettingsForm({ initialData = {}, onSave }) {
                                 <div key={lawmaker.id} className="saved-lawmaker-item">
                                     <div className="saved-lawmaker-info">
                                         <div className="saved-lawmaker-name">
-                                            <Avatar name={lawmaker.name} size="sm" />
+                                            <Avatar
+                                                name={lawmaker.name}
+                                                src={lawmaker.avatar || "/images/default-avatar.png"}
+                                                fallbackSrc="/images/default-avatar.png"
+                                                size="sm"
+                                            />
                                             <strong>{lawmaker.name}</strong>
                                             <Badge variant="party">{lawmaker.party}</Badge>
                                             <Badge variant="state">{lawmaker.state}</Badge>
