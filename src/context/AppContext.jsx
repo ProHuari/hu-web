@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { AppContext } from './contextInstance';
+import { AppContext } from './context-instance';
 import { useApp } from './useApp';
 import { userService } from '../services/user-service';
 import { coursesService } from '../services/courses-service';
