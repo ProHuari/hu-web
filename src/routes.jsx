@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import AuthLayout from './layouts/auth-layout';
-import MainLayout from './layouts/MainLayout';
+import MainLayout from './layouts/main-layout';
 import ProtectedRoute from './components/protected-route';
 import RoleRoute from './components/role-route';
 import { PageLoader } from './components/skeleton';
