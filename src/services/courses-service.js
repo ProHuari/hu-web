@@ -1,7 +1,7 @@
 /**
  * Courses Service for Huari Civic Academy.
- * Connects to Spring Boot /cursos endpoints with nested JSON payloads
- * and localStorage-backed mock persistence when VITE_USE_MOCKS=true.
+ * Connects to Spring Boot /cursos, /modulos, /aulas, /categorias, /autores,
+ * /matriculas, and /progresso-aulas endpoints without falling back to static mocks in prod.
  */
 
 import { apiClient } from './api';
@@ -11,42 +11,69 @@ const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 const MOCK_STORAGE_KEY = 'huari_courses_v1';
 
 function slugify(text) {
-    return String(text || 'course')
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '') || `course-${Date.now()}`;
+    return (
+        String(text || 'curso')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '') || `curso-${Date.now()}`
+    );
+}
+
+function parseDurationMinutes(value) {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+        return Math.max(0, Math.round(value));
+    }
+    const match = String(value || '').match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : 15;
+}
+
+function formatTotalDuration(totalMinutes) {
+    if (!totalMinutes || totalMinutes <= 0) return 'Livre';
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    if (hours > 0 && mins > 0) return `${hours}h ${mins}min`;
+    if (hours > 0) return `${hours}h`;
+    return `${mins} min`;
 }
 
 function normalizeLesson(lesson, index) {
+    const durationInMinutes = parseDurationMinutes(
+        lesson?.durationInMinutes ?? lesson?.duration
+    );
     const resources = Array.isArray(lesson?.resources)
         ? lesson.resources.map((res, rIdx) => ({
             id: res.id || `res-${Date.now()}-${rIdx}`,
-            title: res.title || 'Supporting PDF Guide',
+            title: res.title || 'Material complementar',
             url: res.url || res.fileUrl || '',
         }))
         : lesson?.pdfUrl
-            ? [{ id: `res-${lesson.id || index}`, title: 'PDF Study Guide', url: lesson.pdfUrl }]
+            ? [{ id: `res-${lesson.id || index}`, title: 'Guia de estudo em PDF', url: lesson.pdfUrl }]
             : [];
 
     return {
-        id: lesson?.id || `lesson-${index + 1}-${Date.now()}`,
-        title: lesson?.title || `Lesson ${index + 1}`,
-        duration: lesson?.duration || '15 min',
+        id: lesson?.id ?? `lesson-${index + 1}-${Date.now()}`,
+        title: lesson?.title || `Aula ${index + 1}`,
+        durationInMinutes,
+        duration: lesson?.duration || `${durationInMinutes} min`,
+        position: lesson?.position || index + 1,
         completed: Boolean(lesson?.completed),
         videoUrl: lesson?.videoUrl || '',
-        summary: lesson?.summary || '',
+        summary: lesson?.summary || lesson?.description || '',
         resources,
     };
 }
 
 function normalizeModule(mod, index) {
     const rawLessons = Array.isArray(mod?.lessons) ? mod.lessons : [];
+    const sortedLessons = [...rawLessons].sort((a, b) => (a?.position || 0) - (b?.position || 0));
     return {
-        id: mod?.id || `mod-${index + 1}-${Date.now()}`,
-        title: mod?.title || `Module ${index + 1}`,
-        lessons: rawLessons.map((lesson, lIdx) => normalizeLesson(lesson, lIdx)),
+        id: mod?.id ?? `mod-${index + 1}-${Date.now()}`,
+        title: mod?.title || `Módulo ${index + 1}`,
+        description: mod?.description || '',
+        position: mod?.position || index + 1,
+        lessons: sortedLessons.map((lesson, lIdx) => normalizeLesson(lesson, lIdx)),
     };
 }
 
@@ -54,29 +81,51 @@ export function normalizeCourse(item) {
     if (!item) return null;
 
     const rawModules = Array.isArray(item.modules) ? item.modules : [];
-    const normalizedModules = rawModules.map((mod, idx) => normalizeModule(mod, idx));
+    const sortedModules = [...rawModules].sort((a, b) => (a?.position || 0) - (b?.position || 0));
+    const normalizedModules = sortedModules.map((mod, idx) => normalizeModule(mod, idx));
     const computedLessonsCount = normalizedModules.reduce(
         (acc, mod) => acc + (mod.lessons?.length || 0),
+        0
+    );
+    const computedMinutes = normalizedModules.reduce(
+        (acc, mod) =>
+            acc + mod.lessons.reduce((lAcc, l) => lAcc + (l.durationInMinutes || 0), 0),
         0
     );
 
     const categoryName =
         typeof item.category === 'object'
-            ? item.category?.name || 'General'
-            : item.category || 'General';
+            ? item.category?.name || 'Geral'
+            : item.category || 'Geral';
+
+    const categoryId =
+        typeof item.category === 'object'
+            ? item.category?.id ?? null
+            : item.categoryId ?? null;
+
+    const authorId =
+        typeof item.author === 'object'
+            ? item.author?.id ?? null
+            : item.authorId ?? null;
 
     return {
         ...item,
         id: item.id || slugify(item.title),
-        title: item.title || 'Untitled Course',
+        title: item.title || 'Trilha sem título',
         description: item.description || '',
         category: categoryName,
-        level: item.level || 'Beginner',
-        duration: item.duration || '2h 00m',
+        categoryId,
+        authorId,
+        level: item.level || 'Introdutório',
+        duration: item.duration || formatTotalDuration(computedMinutes),
         status: item.status || 'PUBLISHED',
         progress: typeof item.progress === 'number' ? item.progress : 0,
         lessonsCount: computedLessonsCount > 0 ? computedLessonsCount : item.lessonsCount || 0,
-        instructor: item.author?.channelName || item.instructor || 'Huari Civic Academy',
+        instructor:
+            item.author?.channelName ||
+            item.author?.name ||
+            item.instructor ||
+            'Academia Cívica Huari',
         image: item.image || item.thumbnailUrl || item.coverUrl || null,
         objectives: Array.isArray(item.objectives) ? item.objectives.filter(Boolean) : [],
         modules: normalizedModules,
@@ -117,18 +166,133 @@ function writeMockStore(courses) {
 
 function applyCourseFilters(list, filters = {}) {
     const { category = 'All', search = '', status = 'ALL' } = filters;
+    const normalizedCat = category === 'Todas' || category === 'All' ? 'All' : category;
     const lowerSearch = search.trim().toLowerCase();
 
     return list.filter((course) => {
-        const matchesCategory = category === 'All' || course.category === category;
+        const matchesCategory = normalizedCat === 'All' || course.category === normalizedCat;
         const matchesStatus = status === 'ALL' || course.status === status;
         const matchesSearch = !lowerSearch
             ? true
             : course.title.toLowerCase().includes(lowerSearch) ||
-            course.description.toLowerCase().includes(lowerSearch) ||
-            course.instructor.toLowerCase().includes(lowerSearch);
+              course.description.toLowerCase().includes(lowerSearch) ||
+              course.instructor.toLowerCase().includes(lowerSearch);
         return matchesCategory && matchesStatus && matchesSearch;
     });
+}
+
+async function resolveCategoryId(payload) {
+    if (typeof payload.categoryId === 'number' && payload.categoryId > 0) {
+        return payload.categoryId;
+    }
+
+    const desiredName = String(payload.category || 'Educação Cívica').trim();
+    const res = await apiClient('/categorias', { params: { page: 0, size: 100 } });
+    const list = res?.content ?? (Array.isArray(res) ? res : []);
+    const matched = list.find(
+        (c) => String(c.name || '').trim().toLowerCase() === desiredName.toLowerCase()
+    );
+    if (matched?.id) return matched.id;
+    if (list.length > 0 && !payload.category) return list[0].id;
+
+    try {
+        const created = await apiClient('/categorias', {
+            method: 'POST',
+            body: { name: desiredName },
+        });
+        if (created?.id) return created.id;
+    } catch {
+        if (list.length > 0) return list[0].id;
+    }
+    return 1;
+}
+
+async function resolveAuthorId(payload) {
+    if (typeof payload.authorId === 'number' && payload.authorId > 0) {
+        return payload.authorId;
+    }
+
+    const desiredName = String(payload.instructor || 'Academia Cívica Huari').trim();
+    const res = await apiClient('/autores', { params: { page: 0, size: 100 } });
+    const list = res?.content ?? (Array.isArray(res) ? res : []);
+    const matched = list.find(
+        (a) =>
+            String(a.channelName || '').trim().toLowerCase() === desiredName.toLowerCase() ||
+            String(a.name || '').trim().toLowerCase() === desiredName.toLowerCase()
+    );
+    if (matched?.id) return matched.id;
+    if (list.length > 0) return list[0].id;
+
+    const created = await apiClient('/autores', {
+        method: 'POST',
+        body: { name: desiredName, channelName: desiredName },
+    });
+    return created?.id || 1;
+}
+
+function buildLessonVideoUrl(lesson, courseId, modIndex, lessonIndex) {
+    const candidate = String(lesson?.videoUrl || '').trim();
+    if (/^https?:\/\/.+/i.test(candidate)) {
+        return candidate;
+    }
+    return `https://www.youtube.com/watch?v=huari-${courseId}-${modIndex + 1}-${lessonIndex + 1}-${Date.now().toString(36)}`;
+}
+
+async function persistCurriculumForCourse(courseId, modules = []) {
+    if (!Array.isArray(modules) || modules.length === 0) {
+        return [];
+    }
+
+    const savedModules = [];
+    for (let mIdx = 0; mIdx < modules.length; mIdx += 1) {
+        const mod = modules[mIdx];
+        const modPayload = {
+            title: String(mod.title || `Módulo ${mIdx + 1}`).trim(),
+            description: String(mod.description || '').trim() || undefined,
+            position: mIdx + 1,
+            courseId: Number(courseId),
+        };
+
+        const numericModId = /^\d+$/.test(String(mod.id)) ? Number(mod.id) : null;
+        const savedMod = await apiClient(
+            numericModId ? `/modulos/${numericModId}` : '/modulos',
+            {
+                method: numericModId ? 'PUT' : 'POST',
+                body: modPayload,
+            }
+        );
+
+        const modId = savedMod?.id;
+        const lessons = Array.isArray(mod.lessons) ? mod.lessons : [];
+        const savedLessons = [];
+
+        for (let lIdx = 0; lIdx < lessons.length; lIdx += 1) {
+            const lesson = lessons[lIdx];
+            const lessonPayload = {
+                title: String(lesson.title || `Aula ${lIdx + 1}`).trim(),
+                description:
+                    String(lesson.summary || lesson.description || lesson.title || `Conteúdo da aula ${lIdx + 1}`).trim(),
+                videoUrl: buildLessonVideoUrl(lesson, courseId, mIdx, lIdx),
+                position: lIdx + 1,
+                durationInMinutes: parseDurationMinutes(lesson.durationInMinutes ?? lesson.duration),
+                moduleId: Number(modId),
+            };
+
+            const numericLessonId = /^\d+$/.test(String(lesson.id)) ? Number(lesson.id) : null;
+            const savedLesson = await apiClient(
+                numericLessonId ? `/aulas/${numericLessonId}` : '/aulas',
+                {
+                    method: numericLessonId ? 'PUT' : 'POST',
+                    body: lessonPayload,
+                }
+            );
+            if (savedLesson) savedLessons.push(savedLesson);
+        }
+
+        savedModules.push({ ...savedMod, lessons: savedLessons });
+    }
+
+    return savedModules;
 }
 
 export const coursesService = {
@@ -139,7 +303,9 @@ export const coursesService = {
             return applyCourseFilters(all, filters);
         }
 
-        const res = await apiClient('/cursos');
+        const res = await apiClient('/cursos', {
+            params: { page: 0, size: 100 },
+        });
         const rawList = Array.isArray(res) ? res : res?.content ?? res?.items ?? [];
         const normalized = rawList
             .map(normalizeCourse)
@@ -154,7 +320,9 @@ export const coursesService = {
             return applyCourseFilters(all, filters);
         }
 
-        const res = await apiClient('/cursos');
+        const res = await apiClient('/cursos', {
+            params: { page: 0, size: 100 },
+        });
         const rawList = Array.isArray(res) ? res : res?.content ?? res?.items ?? [];
         const normalized = rawList.map(normalizeCourse);
         return applyCourseFilters(normalized, filters);
@@ -175,7 +343,6 @@ export const coursesService = {
                 if (courseData) return normalizeCourse(courseData);
             }
 
-            // Se for slug textual ou id não numérico, busca na listagem da API
             const allCourses = await this.getCourses();
             const found = allCourses.find(
                 (c) => String(c.id) === String(courseId) || slugify(c.title) === String(courseId)
@@ -186,7 +353,7 @@ export const coursesService = {
                         const detailed = await apiClient(`/cursos/${found.id}`);
                         if (detailed) return normalizeCourse(detailed);
                     } catch {
-                        // fallback para o curso encontrado na listagem
+                        // usa o objeto encontrado
                     }
                 }
                 return found;
@@ -213,19 +380,32 @@ export const coursesService = {
             return normalized;
         }
 
+        const [categoryId, authorId] = await Promise.all([
+            resolveCategoryId(payload),
+            resolveAuthorId(payload),
+        ]);
+
         const requestBody = {
             title: payload.title,
             description: payload.description || 'Trilha de formação cívica e auditoria cidadã.',
-            videoUrl: payload.videoUrl || 'https://www.youtube.com/watch?v=intro',
-            categoryId: typeof payload.categoryId === 'number' ? payload.categoryId : 1,
-            authorId: typeof payload.authorId === 'number' ? payload.authorId : 1,
+            videoUrl: /^https?:\/\/.+/i.test(String(payload.videoUrl || ''))
+                ? payload.videoUrl.trim()
+                : undefined,
+            categoryId,
+            authorId,
         };
 
         const created = await apiClient('/cursos', {
             method: 'POST',
             body: requestBody,
         });
-        return normalizeCourse({ ...created, modules: payload.modules });
+
+        let syncedModules = [];
+        if (created?.id && Array.isArray(payload.modules) && payload.modules.length > 0) {
+            syncedModules = await persistCurriculumForCourse(created.id, payload.modules);
+        }
+
+        return normalizeCourse({ ...created, modules: syncedModules.length > 0 ? syncedModules : payload.modules });
     },
 
     async updateCourse(courseId, payload) {
@@ -246,19 +426,37 @@ export const coursesService = {
             return normalized;
         }
 
+        const [categoryId, authorId] = await Promise.all([
+            resolveCategoryId(payload),
+            resolveAuthorId(payload),
+        ]);
+
         const requestBody = {
             title: payload.title,
             description: payload.description || 'Trilha de formação cívica e auditoria cidadã.',
-            videoUrl: payload.videoUrl || 'https://www.youtube.com/watch?v=intro',
-            categoryId: typeof payload.categoryId === 'number' ? payload.categoryId : 1,
-            authorId: typeof payload.authorId === 'number' ? payload.authorId : 1,
+            videoUrl: /^https?:\/\/.+/i.test(String(payload.videoUrl || ''))
+                ? payload.videoUrl.trim()
+                : undefined,
+            categoryId,
+            authorId,
         };
 
         const updated = await apiClient(`/cursos/${encodeURIComponent(courseId)}`, {
             method: 'PUT',
             body: requestBody,
         });
-        return normalizeCourse({ ...updated, modules: payload.modules });
+
+        let syncedModules = payload.modules;
+        if (updated?.id && Array.isArray(payload.modules) && payload.modules.length > 0) {
+            try {
+                const persisted = await persistCurriculumForCourse(updated.id, payload.modules);
+                if (persisted.length > 0) syncedModules = persisted;
+            } catch (syncErr) {
+                console.warn('Falha parcial ao sincronizar módulos/aulas do curso', syncErr);
+            }
+        }
+
+        return normalizeCourse({ ...updated, modules: syncedModules });
     },
 
     async updateCourseStatus(courseId, status) {
@@ -278,7 +476,7 @@ export const coursesService = {
         }
 
         const existing = await this.getCourseById(courseId);
-        if (!existing) throw new Error('Course not found');
+        if (!existing) throw new Error('Curso não encontrado.');
         return this.updateCourse(courseId, { ...existing, status });
     },
 
@@ -301,37 +499,76 @@ export const coursesService = {
         if (USE_MOCKS) {
             const store = readMockStore();
             const dynamicNames = store.map((c) => c.category).filter(Boolean);
-            return ['All', ...new Set([...COURSE_CATEGORIES.filter((c) => c !== 'All'), ...dynamicNames])];
+            return ['Todas', ...new Set([...COURSE_CATEGORIES.filter((c) => c !== 'All'), ...dynamicNames])];
         }
 
+        const res = await apiClient('/categorias', { params: { page: 0, size: 100 } });
+        const list = Array.isArray(res) ? res : res?.content ?? res?.items ?? [];
+        const names = list.map((c) => (typeof c === 'string' ? c : c.name)).filter(Boolean);
+        return ['Todas', ...new Set(names)];
+    },
+
+    async getCategoriesDetailed() {
+        if (USE_MOCKS) {
+            return COURSE_CATEGORIES.filter((c) => c !== 'All').map((name, idx) => ({
+                id: idx + 1,
+                name,
+            }));
+        }
+        const res = await apiClient('/categorias', { params: { page: 0, size: 100 } });
+        return Array.isArray(res) ? res : res?.content ?? res?.items ?? [];
+    },
+
+    async ensureEnrolled(courseId) {
+        if (USE_MOCKS || !/^\d+$/.test(String(courseId))) {
+            return { enrolled: true };
+        }
         try {
-            const res = await apiClient('/categorias');
-            const list = Array.isArray(res) ? res : res?.content ?? res?.items ?? [];
-            if (list.length > 0) {
-                const names = list.map((c) => (typeof c === 'string' ? c : c.name)).filter(Boolean);
-                return ['All', ...new Set(names)];
+            await apiClient('/matriculas', {
+                method: 'POST',
+                body: { courseId: Number(courseId) },
+            });
+            return { enrolled: true };
+        } catch (err) {
+            if (err?.status === 409) {
+                return { enrolled: true, alreadyEnrolled: true };
             }
-            return COURSE_CATEGORIES;
-        } catch {
-            return COURSE_CATEGORIES;
+            throw err;
         }
     },
 
-    async toggleLesson(courseId, lessonId) {
+    async getCompletedLessonIds() {
         if (USE_MOCKS) {
-            return { success: true, courseId, lessonId };
+            return [];
         }
-        try {
-            const numericLessonId = parseInt(String(lessonId).replace(/\D+/g, ''), 10) || 1;
-            return await apiClient('/progresso-aulas', {
-                method: 'POST',
-                body: {
-                    lessonId: numericLessonId,
-                    status: 'COMPLETED',
-                },
-            });
-        } catch {
-            return { success: true, courseId, lessonId };
+        const res = await apiClient('/progresso-aulas', { params: { page: 0, size: 200 } });
+        const list = res?.content ?? (Array.isArray(res) ? res : []);
+        return list
+            .filter((item) => item?.status === 'COMPLETED' && item?.lessonId != null)
+            .map((item) => String(item.lessonId));
+    },
+
+    async toggleLesson(courseId, lessonId, completed = true) {
+        if (USE_MOCKS) {
+            return { success: true, courseId, lessonId, completed };
         }
+
+        const numericCourseId = parseInt(String(courseId).replace(/\D+/g, ''), 10);
+        const numericLessonId = parseInt(String(lessonId).replace(/\D+/g, ''), 10);
+        if (!numericLessonId) {
+            throw new Error('Identificador inválido para registrar o progresso da aula.');
+        }
+
+        if (numericCourseId) {
+            await this.ensureEnrolled(numericCourseId);
+        }
+
+        return apiClient('/progresso-aulas', {
+            method: 'POST',
+            body: {
+                lessonId: numericLessonId,
+                status: completed ? 'COMPLETED' : 'IN_PROGRESS',
+            },
+        });
     },
 };

@@ -348,7 +348,12 @@ const RAW_COURSES = [
     },
 ];
 
-export const COURSE_CATEGORIES = ["All", "Beginners", "Economics", "Law"];
+export const COURSE_CATEGORIES = [
+    "Todas",
+    "Educação Cívica",
+    "Processo Legislativo",
+    "Orçamento Público",
+];
 
 export function getCourseById(id) {
     return MOCK_COURSES.find((c) => c.id === id) || MOCK_COURSES[0];
