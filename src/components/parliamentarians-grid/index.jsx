@@ -20,14 +20,15 @@ export default function ParliamentariansGrid({
 
         let isMounted = true;
 
-        lawmakersService.getLawmakers({}, { page: 1, limit: 4 })
+        lawmakersService
+            .getLawmakers({}, { page: 1, limit: 4 })
             .then((res) => {
                 if (isMounted) {
                     setFetchedLawmakers(res.items || []);
                 }
             })
             .catch((err) => {
-                console.error('Failed to load featured lawmakers in grid', err);
+                console.error('Falha ao carregar parlamentares em destaque', err);
             })
             .finally(() => {
                 if (isMounted) {
@@ -45,10 +46,10 @@ export default function ParliamentariansGrid({
     return (
         <section
             className={`parliamentarians-grid ${className}`.trim()}
-            aria-label="Featured Lawmakers Grid"
+            aria-label="Grade de parlamentares em destaque"
         >
             {isLoading && list.length === 0 ? (
-                <div className="parliamentarians-cards-list" role="status" aria-label="Loading featured lawmakers">
+                <div className="parliamentarians-cards-list" role="status" aria-label="Carregando parlamentares">
                     {Array.from({ length: 4 }).map((_, idx) => (
                         <ParliamentarianCardSkeleton key={idx} />
                     ))}
@@ -56,8 +57,8 @@ export default function ParliamentariansGrid({
             ) : list.length === 0 ? (
                 <div className="parliamentarians-grid-empty">
                     <EmptyState
-                        title="No lawmakers available"
-                        description="Featured congressional records will appear here."
+                        title="Nenhum parlamentar encontrado"
+                        description="Os mandatos cadastrados na base aparecerão aqui assim que forem sincronizados."
                     />
                 </div>
             ) : (

@@ -18,7 +18,8 @@ export default function ParliamentarianCard({
     role,
     party,
     state,
-    attendance,
+    chamber,
+    billsCount,
     projects,
     expenses,
     avatar,
@@ -27,15 +28,15 @@ export default function ParliamentarianCard({
     const navigate = useNavigate();
     const { isBookmarked, toggleBookmark } = useApp() || {};
 
-    // Support either whole lawmaker object prop or destructured individual props
     const cardId = lawmaker?.id ?? id;
-    const cardName = lawmaker?.name ?? name ?? 'Lawmaker';
-    const cardPosition = lawmaker?.position ?? lawmaker?.role ?? position ?? role ?? 'Federal Deputy';
-    const cardParty = lawmaker?.party ?? party ?? 'PL';
-    const cardState = lawmaker?.state ?? state ?? 'DF';
-    const cardAttendance = lawmaker?.attendance ?? attendance ?? '0%';
-    const cardProjects = lawmaker?.projects ?? projects ?? '0';
-    const cardExpenses = lawmaker?.expenses ?? expenses ?? 'R$ 0';
+    const cardName = lawmaker?.name ?? name ?? 'Parlamentar';
+    const cardPosition = lawmaker?.position ?? lawmaker?.role ?? position ?? role ?? 'Deputado Federal';
+    const cardParty = lawmaker?.party ?? party ?? '—';
+    const cardState = lawmaker?.state ?? state ?? '—';
+    const resolvedChamber = lawmaker?.chamber ?? chamber;
+    const chamberShort = resolvedChamber === 'FEDERAL_SENATE' ? 'Senado' : 'Câmara';
+    const cardBills = lawmaker?.billsCount ?? lawmaker?.projects ?? billsCount ?? projects ?? '0';
+    const cardExpenses = lawmaker?.expenses ?? expenses ?? 'Sem registros';
     const rawAvatar =
         lawmaker?.avatar ??
         lawmaker?.photoUrl ??
@@ -79,8 +80,8 @@ export default function ParliamentarianCard({
                     className={`parliamentarian-bookmark ${bookmarked ? 'is-favorite' : ''}`}
                     aria-label={
                         bookmarked
-                            ? `Remove ${cardName} from saved lawmakers`
-                            : `Save ${cardName} to bookmarks`
+                            ? `Remover ${cardName} dos parlamentares salvos`
+                            : `Salvar ${cardName} para acompanhar`
                     }
                     aria-pressed={bookmarked}
                     onClick={handleToggleBookmark}
@@ -110,18 +111,18 @@ export default function ParliamentarianCard({
 
             <div className="parliamentarian-stats">
                 <div className="parliamentarian-stat">
-                    <span className="stat-label">Attendance</span>
-                    <strong className="stat-value">{cardAttendance}</strong>
+                    <span className="stat-label">Casa</span>
+                    <strong className="stat-value">{chamberShort}</strong>
                 </div>
 
                 <div className="parliamentarian-stat">
-                    <span className="stat-label">Bills</span>
-                    <strong className="stat-value">{cardProjects}</strong>
+                    <span className="stat-label">Projetos</span>
+                    <strong className="stat-value tabular-nums">{cardBills}</strong>
                 </div>
 
                 <div className="parliamentarian-stat">
-                    <span className="stat-label">Spending</span>
-                    <strong className="stat-value">{cardExpenses}</strong>
+                    <span className="stat-label">Despesas CEAP</span>
+                    <strong className="stat-value tabular-nums">{cardExpenses}</strong>
                 </div>
             </div>
 
@@ -130,7 +131,7 @@ export default function ParliamentarianCard({
                 className="parliamentarian-view-button"
                 onClick={handleView}
             >
-                View Profile
+                Ver mandato
             </button>
         </article>
     );
@@ -144,7 +145,8 @@ ParliamentarianCard.propTypes = {
         role: PropTypes.string,
         party: PropTypes.string,
         state: PropTypes.string,
-        attendance: PropTypes.string,
+        chamber: PropTypes.string,
+        billsCount: PropTypes.number,
         projects: PropTypes.string,
         expenses: PropTypes.string,
         avatar: PropTypes.string,
@@ -155,7 +157,8 @@ ParliamentarianCard.propTypes = {
     role: PropTypes.string,
     party: PropTypes.string,
     state: PropTypes.string,
-    attendance: PropTypes.string,
+    chamber: PropTypes.string,
+    billsCount: PropTypes.number,
     projects: PropTypes.string,
     expenses: PropTypes.string,
     avatar: PropTypes.string,

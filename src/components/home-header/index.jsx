@@ -14,27 +14,21 @@ export default function HomeHeader({
     onOpenChat,
 }) {
     const navigate = useNavigate();
-
     const handleViewLawmakers = onViewParliamentarians || (() => navigate('/lawmakers'));
     const handleExploreLearn = onExploreLearn || (() => navigate('/learn'));
     const handleOpenChat = onOpenChat || (() => navigate('/chat'));
 
     return (
-        <header className="home-header" aria-label="Platform Hero Banner">
+        <header className="home-header" aria-label="Apresentação da plataforma">
             <div className="home-header-content">
-                <div className="home-header-badge">
-                    <span className="home-header-badge-dot" />
-                    <span>Real-Time Civic Oversight Platform</span>
-                </div>
-
                 <h1 className="text-h1-bold">
-                    Political transparency at your
+                    Transparência política
                     <br className="home-header-title-break" />
-                    fingertips
+                    ao alcance de todos
                 </h1>
 
                 <p className="text-p-regular home-header-description">
-                    Track public spending data on lawmakers in real-time, learn about the political system through interactive courses, and audit governance with Huari AI.
+                    Acompanhe despesas da Cota Parlamentar, consulte projetos de lei em tramitação e entenda decisões públicas em linguagem acessível.
                 </p>
 
                 <div className="home-header-actions">
@@ -43,7 +37,7 @@ export default function HomeHeader({
                         className="home-header-button home-header-button-light"
                         onClick={handleViewLawmakers}
                     >
-                        <span>View Lawmakers</span>
+                        <span>Ver parlamentares</span>
                         <RiArrowRightLine aria-hidden="true" />
                     </button>
 
@@ -52,7 +46,7 @@ export default function HomeHeader({
                         className="home-header-button home-header-button-light"
                         onClick={handleExploreLearn}
                     >
-                        <span>Explore Courses</span>
+                        <span>Trilhas de ensino</span>
                         <RiBookOpenLine aria-hidden="true" />
                     </button>
 
@@ -61,7 +55,7 @@ export default function HomeHeader({
                         className="home-header-button home-header-button-accent"
                         onClick={handleOpenChat}
                     >
-                        <span>Ask Civic AI</span>
+                        <span>Perguntar à Huari IA</span>
                         <RiSparklingLine aria-hidden="true" />
                     </button>
                 </div>

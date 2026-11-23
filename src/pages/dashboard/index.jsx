@@ -10,7 +10,6 @@ import EducationalBanner from '../../components/educational-banner';
 import { RiArrowRightLine } from 'react-icons/ri';
 import './style.css';
 
-// Re-export subcomponents for architecture clarity and direct consumption
 export { AdminDashboardView, UserHeroCarousel };
 
 export default function Dashboard() {
@@ -20,26 +19,24 @@ export default function Dashboard() {
     return (
         <PageTransition className="dashboard-page">
             {isAdmin ? (
-                /* Visão Exclusiva do Administrador: Central de Controle & KPIs */
                 <AdminDashboardView />
             ) : (
-                /* Visão do Cidadão: Carrossel Dinâmico & Acompanhamento Parlamentar */
                 <div className="dashboard-citizen-layout">
                     <UserHeroCarousel />
 
-                    <section className="dashboard-section" aria-label="Platform Key Metrics">
+                    <section className="dashboard-section" aria-label="Indicadores da plataforma">
                         <HomeStats />
                     </section>
 
                     <section
                         className="dashboard-section dashboard-featured-lawmakers"
-                        aria-label="Featured Lawmakers"
+                        aria-label="Parlamentares em destaque"
                     >
                         <div className="dashboard-section-header">
                             <div>
-                                <h2 className="dashboard-section-title">Featured Lawmakers</h2>
+                                <h2 className="dashboard-section-title">Parlamentares em destaque</h2>
                                 <p className="dashboard-section-subtitle">
-                                    Real-time congressional activity, verified attendance, and CEAP quota expenses.
+                                    Consulte registros de projetos de lei e despesas da Cota Parlamentar diretamente da base pública.
                                 </p>
                             </div>
                             <button
@@ -47,7 +44,7 @@ export default function Dashboard() {
                                 className="dashboard-view-all-btn"
                                 onClick={() => navigate('/lawmakers')}
                             >
-                                <span>View all lawmakers</span>
+                                <span>Ver diretório completo</span>
                                 <RiArrowRightLine size={16} aria-hidden="true" />
                             </button>
                         </div>
@@ -57,7 +54,7 @@ export default function Dashboard() {
 
                     <section
                         className="dashboard-section dashboard-education-section"
-                        aria-label="Civic Academy Banner"
+                        aria-label="Academia Cívica"
                     >
                         <EducationalBanner />
                     </section>

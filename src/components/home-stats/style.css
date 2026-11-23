@@ -1,21 +1,86 @@
-.home-stats {
+.home-stats-strip {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1rem;
+    grid-template-columns: 1.45fr 1fr 0.9fr 0.9fr;
     width: 100%;
-    padding: 0 0 1.5rem 0;
+    background-color: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: var(--radius-md, 12px);
+    overflow: hidden;
     box-sizing: border-box;
 }
 
-@media (max-width: 1100px) {
-    .home-stats {
+.home-stat-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.35rem;
+    padding: 1.25rem 1.4rem;
+    border-right: 1px solid var(--color-border, #e5e7eb);
+    min-width: 0;
+}
+
+.home-stat-cell:last-child {
+    border-right: none;
+}
+
+.home-stat-cell--lead {
+    background-color: var(--color-scale-primary-50, #fff8f4);
+}
+
+.home-stat-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-text-secondary, #4b5563);
+}
+
+.home-stat-value {
+    font-size: clamp(1.3rem, 2vw, 1.65rem);
+    font-weight: 800;
+    color: var(--color-text-primary, #111827);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.home-stat-cell--lead .home-stat-value {
+    color: var(--color-scale-primary-700, #ad3300);
+}
+
+.home-stat-note {
+    font-size: 0.78rem;
+    color: var(--color-text-muted, #6b7280);
+    line-height: 1.4;
+}
+
+.home-stats-strip.is-loading .home-stat-value {
+    opacity: 0.45;
+}
+
+@media (max-width: 1024px) {
+    .home-stats-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-stat-cell:nth-child(2) {
+        border-right: none;
+    }
+
+    .home-stat-cell:nth-child(1),
+    .home-stat-cell:nth-child(2) {
+        border-bottom: 1px solid var(--color-border, #e5e7eb);
     }
 }
 
-@media (max-width: 540px) {
-    .home-stats {
+@media (max-width: 560px) {
+    .home-stats-strip {
         grid-template-columns: 1fr;
-        gap: 0.75rem;
+    }
+
+    .home-stat-cell {
+        border-right: none;
+        border-bottom: 1px solid var(--color-border, #e5e7eb);
+    }
+
+    .home-stat-cell:last-child {
+        border-bottom: none;
     }
 }

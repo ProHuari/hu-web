@@ -1,84 +1,84 @@
 .educational-banner {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1.25rem;
-    padding: 3.5rem 2rem;
-    border-radius: var(--radius-xl, 20px);
-    background-color: var(--color-scale-primary-100, #FFEDE8);
-    border: 1px solid var(--color-scale-primary-200, #FAD1C0);
-    color: var(--color-scale-primary-1000, #3A0B00);
-    text-align: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2rem 2.25rem;
+    border-radius: var(--radius-lg, 16px);
+    background-color: var(--color-scale-primary-50, #fff6f2);
+    border: 1px solid var(--color-scale-primary-200, #fad1c0);
+    color: var(--color-scale-primary-1000, #3a0b00);
+    text-align: left;
     box-sizing: border-box;
 }
 
-.educational-banner-icon {
+.educational-banner-copy {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 4.5rem;
-    height: 4.5rem;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background-color: var(--color-scale-primary-700, #AD3300);
-    color: #FFFFFF;
-    box-shadow: 0 8px 20px rgba(173, 51, 0, 0.22);
+    flex-direction: column;
+    gap: 0.45rem;
+    max-width: 42rem;
+}
+
+.educational-banner-kicker {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-scale-primary-700, #ad3300);
 }
 
 .educational-banner-title {
-    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    font-size: clamp(1.2rem, 2.2vw, 1.55rem);
     font-weight: 800;
-    color: var(--color-scale-primary-1000, #3A0B00);
-    max-width: 44rem;
+    color: var(--color-text-primary, #111827);
     margin: 0;
     line-height: 1.25;
 }
 
 .educational-banner-desc {
-    max-width: 42rem;
     margin: 0;
-    font-size: clamp(0.92rem, 1.5vw, 1.02rem);
-    color: var(--color-scale-primary-900, #5D1800);
-    line-height: 1.6;
+    font-size: 0.94rem;
+    color: var(--color-text-secondary, #4b5563);
+    line-height: 1.55;
 }
 
 .educational-banner-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    min-width: 15rem;
-    padding: 0.875rem 1.75rem;
+    gap: 0.65rem;
+    flex-shrink: 0;
+    padding: 0.85rem 1.5rem;
     border: none;
-    border-radius: var(--radius-pill, 999px);
-    background-color: var(--color-scale-primary-700, #AD3300);
-    color: #FFFFFF;
+    border-radius: var(--radius-md, 10px);
+    background-color: var(--color-scale-primary-700, #ad3300);
+    color: #ffffff;
     font-family: inherit;
-    font-size: 0.96rem;
+    font-size: 0.92rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+    transition: background-color 0.18s ease, transform 0.15s ease;
 }
 
 .educational-banner-button:hover {
     background-color: var(--color-scale-primary-800, #842500);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(132, 37, 0, 0.28);
+    transform: translateY(-1px);
 }
 
 .educational-banner-button:focus-visible {
-    outline: 2px solid var(--color-scale-primary-700, #AD3300);
+    outline: 2px solid var(--color-scale-primary-700, #ad3300);
     outline-offset: 4px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .educational-banner {
-        gap: 1rem;
-        padding: 2.25rem 1.25rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        padding: 1.5rem;
     }
 
     .educational-banner-button {
         width: 100%;
-        min-width: 0;
     }
 }
