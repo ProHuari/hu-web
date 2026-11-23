@@ -160,6 +160,8 @@ hu-web/
 └── README.md
 ```
 
+obs: código sendo alterado para adaptação de aliases
+
 ---
 
 ## 👥 Equipe do Projeto
