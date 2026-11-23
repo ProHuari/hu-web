@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import PasswordInput from "../../components/password-input";
 import Button from "../../components/button";
-import { authService } from "../../services/authService";
+import { authService } from "../../services/auth-service";
 import {
     RiArrowRightLine,
     RiShieldCheckLine,

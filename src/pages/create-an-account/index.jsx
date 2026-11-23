@@ -6,7 +6,7 @@ import PasswordInput from "../../components/password-input";
 import Button from "../../components/button";
 import { GoogleIcon, GithubIcon, AppleIcon } from "../../components/icons";
 import { useApp } from "../../context/AppContext";
-import { authService } from "../../services/authService";
+import { authService } from "../../services/auth-service";
 import {
     RiUserLine,
     RiMailLine,

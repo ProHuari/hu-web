@@ -7,7 +7,7 @@ import PasswordInput from "../../components/password-input";
 import { GoogleIcon, GithubIcon, AppleIcon } from "../../components/icons";
 import { useApp } from "../../context/AppContext";
 import { useToast } from "../../context/useToast";
-import { authService } from "../../services/authService";
+import { authService } from "../../services/auth-service";
 import {
     RiUserAddFill,
     RiDoorOpenLine,
