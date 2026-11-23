@@ -103,16 +103,20 @@ function renderFormattedMessage(text) {
         }
 
         const lines = paragraph.split("\n");
-        const isList = lines.every((line) => line.match(/^(\*|\d+\.)\s/));
+        const isStructuredGroup = lines.every((line) => line.match(/^(\*|-|\d+\.)\s/));
 
-        if (isList) {
+        if (isStructuredGroup) {
             return (
-                <ul key={idx} className="bubble-list">
+                <div key={idx} className="bubble-editorial-group">
                     {lines.map((item, itemIdx) => {
-                        const cleanItem = item.replace(/^(\*|\d+\.)\s/, "");
-                        return <li key={itemIdx}>{renderInlineBold(cleanItem)}</li>;
+                        const cleanItem = item.replace(/^(\*|-|\d+\.)\s/, "");
+                        return (
+                            <p key={itemIdx} className="bubble-editorial-item">
+                                {renderInlineBold(cleanItem)}
+                            </p>
+                        );
                     })}
-                </ul>
+                </div>
             );
         }
 

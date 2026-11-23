@@ -271,13 +271,18 @@
     margin-bottom: 0;
 }
 
-.bubble-list {
-    margin: 0.35rem 0 0.625rem 1.25rem;
-    padding: 0;
+.bubble-editorial-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin: 0.4rem 0 0.75rem 0;
+    padding-left: 0.85rem;
+    border-left: 2px solid #fad1c0;
 }
 
-.bubble-list li {
-    margin-bottom: 0.25rem;
+.bubble-editorial-item {
+    margin: 0 !important;
+    line-height: 1.55;
 }
 
 .bubble-text strong {

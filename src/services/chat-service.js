@@ -8,39 +8,27 @@ import { apiClient } from './api';
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
 const KNOWLEDGE_RESPONSES = {
-    expenses: `A **Cota para o Exercício da Atividade Parlamentar (CEAP)** é um benefício mensal concedido a deputados e senadores para custear despesas exclusivamente ligadas ao mandato.
+    expenses: `A **Cota para o Exercício da Atividade Parlamentar (CEAP)** é uma verba pública mensal destinada a deputados e senadores para cobrir despesas diretamente vinculadas ao trabalho legislativo.
 
-As principais categorias de gastos permitidas incluem:
-1. **Divulgação da Atividade Parlamentar:** Produção de vídeos, relatórios de prestação de contas, informativos e gerenciamento de redes sociais.
-2. **Passagens Aéreas e Hospedagem:** Deslocamento regular entre a base eleitoral do parlamentar e Brasília.
-3. **Locação de Veículos e Combustíveis:** Transporte terrestre para vistorias e compromissos no estado de origem.
-4. **Consultorias e Pareceres Técnicos:** Pesquisas especializadas de apoio à redação de projetos de lei e fiscalização de políticas públicas.
+Entre os gastos amparados pela cota estão a **divulgação da atividade parlamentar** por meio de relatórios e canais institucionais, a emissão de **passagens aéreas e hospedagem** para atuação entre Brasília e o estado de origem, a **locação de veículos e combustíveis** em agendas regionais e a contratação de **consultorias e pesquisas técnicas** que apoiam a elaboração de projetos de lei.
 
-> **Nota de Transparência:** Todas as notas fiscais, recibos e CNPJs dos fornecedores contratados são dados públicos e ficam disponíveis nos Portais de Dados Abertos da Câmara e do Senado!`,
+> **Nota de Transparência:** Cada nota fiscal, recibo e CNPJ contratado compõe o patrimônio de dados abertos da sociedade e pode ser verificado integralmente nos portais da Câmara e do Senado.`,
 
-    pec: `Uma **Proposta de Emenda à Constituição (PEC)** altera o texto da Constituição de 1988 e segue o rito legislativo mais exigente do país:
+    pec: `Uma **Proposta de Emenda à Constituição (PEC)** modifica diretamente o texto constitucional de 1988 e por isso atravessa o rito mais rigoroso do Parlamento brasileiro.
 
-1. **Iniciativa:** Deve ser proposta por no mínimo 1/3 dos deputados (171) ou senadores (27), pelo Presidente da República ou por mais da metade das Assembleias Legislativas.
-2. **Comissão de Constituição e Justiça (CCJ):** Avalia a admissibilidade jurídica e o respeito às cláusulas pétreas.
-3. **Comissão Especial:** Debate o mérito do texto e emendas sugeridas por deputados.
-4. **Dois Turnos com Quórum Qualificado:** Precisa ser aprovada por **3/5 dos votos** (308 na Câmara e 49 no Senado) em dois turnos de votação em cada uma das Casas.
+A apresentação do texto exige o apoio mínimo de **um terço da Câmara (171 deputados) ou do Senado (27 senadores)**, além da possibilidade de iniciativa pelo Presidente da República ou por mais da metade das Assembleias Legislativas. Na sequência, a proposta passa pela **Comissão de Constituição e Justiça (CCJ)** para verificação das cláusulas pétreas e segue para uma **Comissão Especial** dedicada ao debate de mérito. Para ser aprovada, precisa conquistar **três quintos dos votos** (308 deputados e 49 senadores) em dois turnos de votação em cada Casa.
 
-Não há sanção nem veto presidencial: a emenda promulgada pelas Mesas da Câmara e do Senado entra em vigor imediatamente!`,
+Após a aprovação bicameral, a emenda é promulgada diretamente pelas Mesas da Câmara e do Senado, entrando em vigor sem necessidade de sanção presidencial.`,
 
-    quotient: `Nas eleições para Deputado Federal, Deputado Estadual e Vereador no Brasil, o sistema adotado é o **proporcional de lista aberta**:
+    quotient: `Nas eleições para Deputado Federal, Deputado Estadual e Vereador, o Brasil adota o **sistema proporcional de lista aberta**, pensado para refletir a pluralidade de ideias da sociedade no Parlamento.
 
-* **Quociente Eleitoral (QE):** Divide-se o número de votos válidos da eleição pelo número de vagas disponíveis na Casa.
-* **Quociente Partidário (QP):** Divide-se o total de votos recebidos por um partido pelo QE. O resultado inteiro indica o número de vagas diretas conquistadas pela legenda.
-* **Distribuição das Sobras:** As vagas remanescentes são distribuídas pela regra da maior média (D'Hondt) entre os partidos que atingiram a cláusula de barreira mínima.
+O cálculo começa pelo **Quociente Eleitoral (QE)**, obtido ao dividir o total de votos válidos pelo número de cadeiras em disputa. Em seguida, calcula-se o **Quociente Partidário (QP)** dividindo a votação acumulada por cada partido pelo QE, o que define quantas vagas diretas a legenda conquistou. Quando restam cadeiras a preencher, a **distribuição das sobras** aplica a regra da maior média entre os partidos que superaram o desempenho mínimo exigido.
 
-Esse cálculo assegura que a composição do Parlamento represente de forma plural o percentual ideológico escolhido pela população!`,
+Dessa forma, o voto dado a um candidato fortalece simultaneamente sua candidatura individual e a bancada do partido ou federação.`,
 
-    auditing: `Qualquer cidadão pode auditar parlamentares usando dados abertos e instrumentos institucionais:
+    auditing: `Acompanhar de perto o mandato de deputados e senadores é um direito cidadão amparado por ferramentas públicas abertas e acessíveis.
 
-1. **Portais de Transparência da Câmara e do Senado:** Consulta aberta de reembolsos da CEAP, notas fiscais digitalizadas e presenças em votações nominais.
-2. **Plataforma Huari:** Cruzamos votações nominais, índice de presença e despesas em gráficos acessíveis para facilitar o monitoramento.
-3. **Portal da Transparência da CGU:** Consulta a contratos públicos, emendas parlamentares e transferências de recursos federais.
-4. **Lei de Acesso à Informação (LAI - Lei 12.527/11):** Permite a qualquer pessoa solicitar documentos e explicações a órgãos públicos com prazo legal máximo de resposta de 20 dias.`,
+Nos **Portais de Transparência da Câmara e do Senado**, você encontra o histórico completo de reembolsos da CEAP com notas fiscais digitalizadas e o registro de presença em plenário. Aqui na **Plataforma Huari**, reunimos essas informações em painéis visuais claros que cruzam votações nominais, frequência e despesas de gabinete. Para investigar repasses federais e emendas na sua cidade, o **Portal da Transparência da CGU** detalha contratos e convênios, enquanto a **Lei de Acesso à Informação (LAI — Lei 12.527/11)** garante o direito de solicitar documentos oficiais a qualquer órgão público com resposta em até 20 dias.`,
 };
 
 function getMockResponse(query) {
@@ -94,7 +82,7 @@ function getMockResponse(query) {
         return KNOWLEDGE_RESPONSES.auditing;
     }
 
-    return `Olá! Sou a assistente de inteligência cívica e transparência da **Huari**.\n\nMinha missão é analisar dados públicos da Câmara dos Deputados, Senado Federal e TCU para fortalecer o controle social e a fiscalização dos gastos públicos.\n\nVocê pode me perguntar sobre:\n* Detalhamento de notas fiscais e reembolsos da Cota Parlamentar (CEAP)\n* Como tramitam e são votados Projetos de Lei (PLs) e PECs\n* Como consultar presença e fidelidade partidária em votações nominais\n* Como fiscalizar contratos e emendas orçamentárias no seu estado ou município.`;
+    return `Olá! Sou a assistente de inteligência cívica e transparência da **Huari**.\n\nMinha missão é traduzir dados públicos da Câmara dos Deputados, do Senado Federal e do TCU em informações claras para apoiar o acompanhamento cidadão.\n\nPodemos conversar sobre o detalhamento de notas fiscais e reembolsos da **Cota Parlamentar (CEAP)**, o rito de tramitação e votação de **Projetos de Lei e PECs**, os registros de **presença e votações nominais** em plenário ou caminhos práticos para **fiscalizar contratos e emendas orçamentárias** no seu estado e município.`;
 }
 
 export const chatService = {
