@@ -1,7 +1,7 @@
 # 🏛️ Huari Web — Inteligência Cívica e Transparência Política
 
 <p align="center">
-  <img src="src/assets/images/logoHuari.svg" alt="Logo Huari" width="120" />
+  <img src="src/assets/images/logo-huari.svg" alt="Logo Huari" width="120" />
 </p>
 
 <p align="center">
